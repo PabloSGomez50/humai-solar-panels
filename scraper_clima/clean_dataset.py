@@ -3,6 +3,8 @@ import numpy as np
 import re
 from IPython.display import display
 
+DEBUG = True
+
 def main():
     URL = 'https://raw.githubusercontent.com/PabloSGomez50/humai-solar-panels/main/scraper_clima/clima_sidney_2.csv'
 
@@ -10,49 +12,103 @@ def main():
     df = df.drop(columns='Unnamed: 0')
     
     df = clean_and_convert(df)
+    df['Visibility'] = df['Visibility'].interpolate(method='pad')
+    df = weather_one_hot(df)
     df = normalizacion(df)
+    df = fix_datetime(df)
 
-    df.to_csv('./clima_sydney_limpio.csv')
+    df.to_csv('./clima_sydney_limpio2.csv')
 
 
-def clean_and_convert(df):
-    df['Temp'] = df['Temp'].apply(extract)
-    df['Wind'] = df['Wind'].apply(extract)
-    df['Humidity'] = df['Humidity'].apply(extract)
-    df['Barometer'] = df['Barometer'].apply(extract)
-    df['Visibility'] = df['Visibility'].apply(extract)
-    df = df.convert_dtypes()
+def weather_one_hot(df_temp):
 
-    return df
+    if DEBUG:
+        print('DEBUG: Limpieza de la variable *Weather*')
+
+    df_temp['Weather'] = var_categorica(5, df_temp)
+    df_temp['Weather'] = df_temp['Weather'].interpolate(method='pad')
+    df_temp = df_temp.join(pd.get_dummies(df_temp['Weather']))
+    df_temp = df_temp.drop(columns='Weather')
+
+    return df_temp.copy()
+
+def var_categorica(n, df_temp):
+    select = list(df_temp['Weather'].value_counts().head(n).index)
+    serie_filtrada = df_temp['Weather'].apply(lambda x: x[:-1] if x in select else None)
+
+    if DEBUG:
+        total = df_temp['Weather'].shape[0]
+        vacias = serie_filtrada.isna().sum()
+        ratio = vacias * 100 / total
+
+        print(f'\tQuedaron {vacias} filas vacias de un total de {total} filas. Un ratio de {ratio:0.2f}%')
+
+    return serie_filtrada.copy()
+
+def clean_and_convert(df_temp):
+
+    if DEBUG:
+        print('DEBUG: Limpieza y convercion de datos numericos')
+
+    df_temp['Temp'] = df_temp['Temp'].apply(extract)
+    df_temp['Wind'] = df_temp['Wind'].apply(extract)
+    df_temp['Humidity'] = df_temp['Humidity'].apply(extract)
+    df_temp['Barometer'] = df_temp['Barometer'].apply(extract)
+    df_temp['Visibility'] = df_temp['Visibility'].apply(extract)
+    df_temp = df_temp.convert_dtypes()
+
+    return df_temp.copy()
 
 def extract(string):
-  
+  """
+  Limpiar una cadena de caracteres utilizando regex.
+  input: pandas.Series => str
+  output: pandas.Series => int || str(sin convertir)
+  extra: 
+    'No wind' => 0
+    '('N/A',)' => np.NAN
+  """
   number = re.search(r'(\d+)', str(string))
-  if number is None:
+
+  if number is not None:
+    return int(number.group())
+
+  else:
     if string == 'No wind':
       return 0
 
     if string == "('N/A',)":
-    #   print(np.NAN)
       return np.NAN
 
-    # print(string)
     return string
 
-  else:
-    return int(number.group())
+def normalize_df(df_temp):
+    return df_temp.apply(lambda x: (x - x.mean()) / x.std(), axis=0)
 
-def normalizacion(df):
-    df['Humidity'] = df['Humidity'] / 100
-    return df
+def normalizacion(df_temp):
+    """
+    Normalizacion de las variables numericas para utilizar en modelos de ML
+    """
 
-def fix_datetime(df):
+    if DEBUG:
+        print('DEBUG: Normalizacion de datos numericos')
 
-    df['Date'] = df['Date'] + df['Hour']
-    df = df.drop(columns='Hour')
-    df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d%H:%M')
+    df_temp.loc[:,'Temp':'Visibility'] = normalize_df(df_temp.loc[:,'Temp':'Visibility'])
 
-    return df
+    return df_temp.copy()
+
+def fix_datetime(df_temp):
+    """
+    Usar la columna Date y Hour para generar una sola columna que contenga objetos datetime 
+    """
+    if DEBUG:
+        print('DEBUG: Creando la variable datetime')
+
+    df_temp['Date'] = df_temp['Date'] + df_temp['Hour']
+    df_temp = df_temp.drop(columns='Hour')
+    df_temp['Date'] = pd.to_datetime(df_temp['Date'], format='%Y-%m-%d%H:%M')
+
+    return df_temp.copy()
 
 if __name__ == '__main__':
     main()
