@@ -47,50 +47,57 @@ def get_data(date, month, year):
     soup = BeautifulSoup(response.content, 'html.parser')
     return demjson.decode(soup.text)
 
-ls_datos_clima = []
-date_from = datetime(year=2012, month=7, day=1)
-date_to = datetime(year=2013, month=6, day=30)
-date_to = datetime(year=2012, month=7, day=1)
-date_iterador = date_from
-#regular_expresion_hora = '^(\d){1,2}:(\d){2} (am|pm)'
-regular_expresion_hora = '^(\d){1,2}:(\d){2}'
+def main():
 
-while(date_iterador <= date_to):
-    print (date_iterador, date_to)
-    day = str(date_iterador.day)
-    year = str(date_iterador.year)
-    month = str(date_iterador.month)
-    date = str(year) + ('00' + month)[-2:] + ('00' + day)[-2:]
+    ls_datos_clima = []
+    date_from = datetime(year=2012, month=7, day=1)
+    date_to = datetime(year=2013, month=6, day=30)
+    date_to = datetime(year=2012, month=7, day=1)
+    date_iterador = date_from
+    #regular_expresion_hora = '^(\d){1,2}:(\d){2} (am|pm)'
+    regular_expresion_hora = '^(\d){1,2}:(\d){2}'
 
-    json_data = get_data(date, month, year)
+    while(date_iterador <= date_to):
+        print (date_iterador, date_to)
+        day = str(date_iterador.day)
+        year = str(date_iterador.year)
+        month = str(date_iterador.month)
+        date = str(year) + ('00' + month)[-2:] + ('00' + day)[-2:]
 
-    for index in range(len(json_data)):
-        date = date_iterador.strftime('%Y-%m-%d')
-        hour_am_pm = re.search(regular_expresion_hora, json_data[index]['c'][0]['h']).group()
-        #hour_24 = datetime.strftime(datetime.strptime(hour_am_pm, "%I:%M %p"), "%H:%M")
-        hour_24 = hour_am_pm
-        temp = normalize('NFKD', json_data[index]['c'][2]['h'])
-        weather = json_data[index]['c'][3]['h']
-        wind = json_data[index]['c'][4]['h']
-        humidity = json_data[index]['c'][6]['h'],
-        barometer = json_data[index]['c'][7]['h'],
-        visibility = normalize('NFKD', json_data[index]['c'][8]['h'])
+        json_data = get_data(date, month, year)
 
-        json_record = {
-            'Date': date,
-            'Hour': hour_24,
-            'Temp': temp,
-            'Weather': weather,
-            'Wind': wind,
-            'Humidity': humidity,
-            'Barometer': barometer,
-            'Visibility': visibility
-        }
+        for index in range(len(json_data)):
+            date = date_iterador.strftime('%Y-%m-%d')
+            hour_am_pm = re.search(regular_expresion_hora, json_data[index]['c'][0]['h']).group()
+            #hour_24 = datetime.strftime(datetime.strptime(hour_am_pm, "%I:%M %p"), "%H:%M")
+            hour_24 = hour_am_pm
+            temp = normalize('NFKD', json_data[index]['c'][2]['h'])
+            weather = json_data[index]['c'][3]['h']
+            wind = json_data[index]['c'][4]['h']
+            humidity = json_data[index]['c'][6]['h'],
+            barometer = json_data[index]['c'][7]['h'],
+            visibility = normalize('NFKD', json_data[index]['c'][8]['h'])
 
-        ls_datos_clima.append(json_record)
+            json_record = {
+                'Date': date,
+                'Hour': hour_24,
+                'Temp': temp,
+                'Weather': weather,
+                'Wind': wind,
+                'Humidity': humidity,
+                'Barometer': barometer,
+                'Visibility': visibility
+            }
 
-    date_iterador = (date_iterador + timedelta(days=1))
+            ls_datos_clima.append(json_record)
+
+        date_iterador = (date_iterador + timedelta(days=1))
 
 
-df_clima = pd.DataFrame.from_records(ls_datos_clima)
-df_clima.to_csv('./scraper_clima/clima_sidney.csv')  
+    df_clima = pd.DataFrame.from_records(ls_datos_clima)
+    df_clima.to_csv('./scraper_clima/clima_sidney.csv')  
+
+
+
+if __name__ == '__main__':
+    main()
