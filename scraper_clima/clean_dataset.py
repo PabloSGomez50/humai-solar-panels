@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
 import re
-from IPython.display import display
 
 DEBUG = True
+FILE_NAME = './clima_sydney_limpio3.csv'
+VAR_CAT_N = 5
 
 def main():
     URL = 'https://raw.githubusercontent.com/PabloSGomez50/humai-solar-panels/main/scraper_clima/clima_sidney_2.csv'
@@ -17,7 +18,7 @@ def main():
     df = normalizacion(df)
     df = fix_datetime(df)
 
-    df.to_csv('./clima_sydney_limpio2.csv')
+    df.to_csv(FILE_NAME)
 
 
 def weather_one_hot(df_temp):
@@ -25,7 +26,7 @@ def weather_one_hot(df_temp):
     if DEBUG:
         print('DEBUG: Limpieza de la variable *Weather*')
 
-    df_temp['Weather'] = var_categorica(5, df_temp)
+    df_temp['Weather'] = var_categorica(VAR_CAT_N, df_temp)
     df_temp['Weather'] = df_temp['Weather'].interpolate(method='pad')
     df_temp = df_temp.join(pd.get_dummies(df_temp['Weather']))
     df_temp = df_temp.drop(columns='Weather')
