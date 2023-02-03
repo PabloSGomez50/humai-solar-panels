@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import re
 
 
+
 def get_data(date, month, year):
     cookies = {
         '_pbjs_userid_consent_data': '3524755945110770',
@@ -52,7 +53,7 @@ def main():
     ls_datos_clima = []
     date_from = datetime(year=2012, month=7, day=1)
     date_to = datetime(year=2013, month=6, day=30)
-    date_to = datetime(year=2012, month=7, day=1)
+    #date_to = datetime(year=2012, month=7, day=1)
     date_iterador = date_from
     #regular_expresion_hora = '^(\d){1,2}:(\d){2} (am|pm)'
     regular_expresion_hora = '^(\d){1,2}:(\d){2}'
@@ -95,7 +96,7 @@ def main():
 
 
     df_clima = pd.DataFrame.from_records(ls_datos_clima)
-    df_clima.to_csv('./scraper_clima/clima_sidney.csv')  
+    df_clima.to_csv('./scraper_clima/clima_sidney_3.csv')  
 
 
 
