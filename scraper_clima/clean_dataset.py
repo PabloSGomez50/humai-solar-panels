@@ -3,7 +3,7 @@ import numpy as np
 import re
 
 DEBUG = True
-FILE_NAME = './clima_sydney_limpio3.csv'
+FILE_NAME = './scraper_clima/clima_sydney_limpio3.csv'
 VAR_CAT_N = 5
 
 def main():
@@ -15,7 +15,7 @@ def main():
     df = clean_and_convert(df)
     df['Visibility'] = df['Visibility'].interpolate(method='pad')
     df = weather_one_hot(df)
-    df = normalizacion(df)
+    #df = normalizacion(df)
     df = fix_datetime(df)
 
     df.to_csv(FILE_NAME)
