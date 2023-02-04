@@ -29,7 +29,7 @@ def weather_one_hot(df_temp):
     df_temp['Weather'] = var_categorica(VAR_CAT_N, df_temp)
     df_temp['Weather'] = df_temp['Weather'].interpolate(method='pad')
     df_temp = df_temp.join(pd.get_dummies(df_temp['Weather']))
-    df_temp = df_temp.drop(columns='Weather')
+    #df_temp = df_temp.drop(columns='Weather')
 
     return df_temp.copy()
 
