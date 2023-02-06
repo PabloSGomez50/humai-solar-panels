@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: none;
+}
+
+#root {
+  max-width: 100vw;
+  min-height: 100vh;
+  /* overflow-x: hidden; */
+}
+
+.app{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+.content {
+  width: 100%;
+  height: 100%;
+}
