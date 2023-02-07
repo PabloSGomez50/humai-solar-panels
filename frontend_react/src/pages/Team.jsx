@@ -1,11 +1,12 @@
-
+import { Box, Typography, useTheme } from "@mui/material";
+import { DataGrid } from '@mui/x-data-grid';
 
 const Team = () => {
 
     return (
-        <div>
+        <Box>
             Team
-        </div>
+        </Box>
     )
 }
 
