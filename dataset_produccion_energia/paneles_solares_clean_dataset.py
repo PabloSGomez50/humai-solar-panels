@@ -3,7 +3,7 @@ from pathlib import Path
 import zipfile
 
 
-FILE_NAME_CSV_SOLAR_HOME = './dataset_produccion_energia/2012-2013 Solar home electricity data v2.csv.zip'
+FILE_NAME_ZIP_SOLAR_HOME = './dataset_produccion_energia/2012-2013 Solar home electricity data v2.csv.zip'
 
 
 def save_compressed_df(df, dirPath, fileName):
@@ -27,7 +27,7 @@ def save_compressed_df(df, dirPath, fileName):
         
         
 def main():
-    df = pd.read_csv(FILE_NAME_CSV_SOLAR_HOME, header = [1])
+    df = pd.read_csv(FILE_NAME_ZIP_SOLAR_HOME, header = [1])
 
     df = df[df['Consumption Category'] == 'GG'] #nos quedamos solo con la categoría 'GG'
     df = df.drop(['Generator Capacity','Postcode','Consumption Category','Row Quality'], axis = 1)
