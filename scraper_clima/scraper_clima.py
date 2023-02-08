@@ -1,13 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import json
 import demjson
 from unicodedata import normalize
 from datetime import datetime, timedelta
 import re
 
-OUTPUT_CSV = './clima_sidney_4.csv'
+
+# OUTPUT_CSV = './clima_sidney_4.csv'
+# LOCAL = False
 
 def get_data(date):
     """
@@ -26,7 +27,7 @@ def get_data(date):
     soup = BeautifulSoup(response.content, 'html.parser')
     return demjson.decode(soup.text)
 
-def main():
+def get_clima():
     """
     Obtener datos del clima entre dos fechas y guardarlos en archivo CSV
 
@@ -37,8 +38,8 @@ def main():
 
     ls_datos_clima = []
     date_from = datetime(year=2012, month=7, day=1)
-    date_to = datetime(year=2013, month=6, day=30)
-    # date_to = datetime(year=2012, month=7, day=4)
+    # date_to = datetime(year=2013, month=6, day=30)
+    date_to = datetime(year=2012, month=7, day=5)
     date_iterador = date_from
     #regular_expresion_hora = '^(\d){1,2}:(\d){2} (am|pm)'
     regular_expresion_hora = '^(\d){1,2}:(\d){2}'
@@ -79,10 +80,9 @@ def main():
         date_iterador = (date_iterador + timedelta(days=1))
 
 
-    df_clima = pd.DataFrame.from_records(ls_datos_clima)
-    df_clima.to_csv(OUTPUT_CSV)  
+    return pd.DataFrame.from_records(ls_datos_clima)
 
 
 
 if __name__ == '__main__':
-    main()
+    get_clima()

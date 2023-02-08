@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 from io import StringIO
 import os
 
-from pathlib import Path
-print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resolve())
+# from pathlib import Path
+# print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resolve())
 
 load_dotenv()
 
