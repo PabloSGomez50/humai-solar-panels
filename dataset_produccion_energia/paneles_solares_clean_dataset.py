@@ -2,8 +2,8 @@ import pandas as pd
 from pathlib import Path
 import zipfile
 
-
 FILE_NAME_ZIP_SOLAR_HOME = './dataset_produccion_energia/2012-2013 Solar home electricity data v2.csv.zip'
+FILE_NAME_ZIP_SOLAR_HOME = './2012-2013 Solar home electricity data v2.csv.zip'
 
 
 def save_compressed_df(df, dirPath, fileName):
@@ -45,7 +45,8 @@ def main():
     df_ = df_.rename(columns={'value': 'Produccion'})
     df_.sort_values(['Customer','datetime'], inplace = True)
 
-    #df_.to_csv('produccion.csv')
+    # print(df_.head())
+    # df_.to_csv('produccion.csv')
     save_compressed_df(df_, './dataset_produccion_energia','produccion')
     
     
