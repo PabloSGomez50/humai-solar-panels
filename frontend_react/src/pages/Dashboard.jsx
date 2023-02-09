@@ -15,7 +15,9 @@ const Dashboard = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
-    const [daily, setDaily] = useState([]);
+    const [ daily, setDaily ] = useState([]);
+    const [ calendarData, setCalendarData ] = useState([]);
+    const [ lineData, setLineData ] = useState([]);
 
     const stats = [
         // {
@@ -61,20 +63,32 @@ const Dashboard = () => {
     ]
 
     useEffect(() => {
-        const requestData = async () => {
+        const requestConsumo = async () => {
             const response = await axios(
-                'http://127.0.0.1:8000/data'
+                'http://127.0.0.1:8000/consumo'
             )
 
+            setDaily(response.data);
+        }
+        const requestProd = async () => {
+            const response = await axios(
+                'http://127.0.0.1:8000/prod'
+            )
+
+            setCalendarData(response.data);
+        }
+        const requestRendimiento = async () => {
+            const response = await axios(
+                'http://127.0.0.1:8000/months'
+            )
+            
             console.log(response.data);
-            const total = response.data.reduce(
-                (prev, current) => Math.round((prev + current.value) * 100) / 100
-                , 0)
-            const arr = [...response.data, {day: 'Total', value: total}]
-            setDaily(arr);
+            setLineData(response.data);
         }
 
-        requestData()
+        requestConsumo();
+        requestProd();
+        requestRendimiento();
     }, [])
 
     return (
@@ -100,7 +114,7 @@ const Dashboard = () => {
             <Box
                 display="grid"
                 gridTemplateColumns="repeat(12, 1fr)"
-                gridAutoRows="140px"
+                gridAutoRows="170px"
                 gap="1.25rem"
                 m='1rem'
             >
@@ -114,6 +128,7 @@ const Dashboard = () => {
                     <Typography
                         variant="h4"
                         fontWeight="bold"
+                        mb='0.5rem'
                         sx={{ color: colors.grey[100] }}
                     >
                         Consumo Total
@@ -168,7 +183,7 @@ const Dashboard = () => {
                 )}
 
                 <Box
-                    gridColumn="span 8"
+                    gridColumn="span 6"
                     gridRow="span 2"
                     backgroundColor={colors.primary[400]}
                 >
@@ -179,22 +194,24 @@ const Dashboard = () => {
                         justifyContent="space-between"
                         alignItems="center"
                     >
+                        
                         <Box>
                             <Typography
-                                variant="h5"
+                                variant="h4"
                                 fontWeight="600"
                                 color={colors.grey[100]}
                             >
-                                Revenue Generated
+                                Produccion mensual
                             </Typography>
-                            <Typography
+                            {/* <Typography
                                 variant="h3"
                                 fontWeight="bold"
                                 color={colors.greenAccent[500]}
                             >
                                 $59,342.32
-                            </Typography>
-                        </Box>
+                            </Typography> */}
+                        </Box> 
+                       
                         <Box>
                             <IconButton>
                                 <DownloadOutlinedIcon
@@ -204,17 +221,30 @@ const Dashboard = () => {
                         </Box>
                     </Box>
                     <Box height="250px" m="-20px 0 0 0">
-                        <LineChart isDashboard={true} />
+                        <LineChart 
+                            isDashboard={true} 
+                            data={lineData}
+                        />
                     </Box>
                 </Box>
 
 
                 <Box
-                    gridColumn="span 4"
+                    gridColumn="span 6"
                     gridRow="span 2"
                     backgroundColor={colors.primary[400]}
                 >
-                    <Calendar />
+                    <Calendar 
+                        data={calendarData}
+                    />
+                </Box>
+
+                <Box
+                    gridColumn="span 4"
+                    gridRow="span 1"
+                    backgroundColor={colors.primary[400]}
+                >
+
                 </Box>
             </Box>
         </Box>

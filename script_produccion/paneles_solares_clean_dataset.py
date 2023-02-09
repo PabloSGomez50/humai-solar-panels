@@ -6,24 +6,24 @@ FILE_NAME_ZIP_SOLAR_GLOBAL = './dataset_produccion_energia/2012-2013 Solar home 
 FILE_NAME_ZIP_SOLAR_HOME = './2012-2013 Solar home electricity data v2.csv.zip'
 
 
-def save_compressed_df(df, dirPath, fileName):
+def save_compressed_df(df, dir_path, file_name):
     """Save a Pandas dataframe as a zipped .csv file.
 
     Parameters
     ----------
     df : pandas.core.frame.DataFrame
         Input dataframe.
-    dirPath : str or pathlib.PosixPath
+    dir_path : str or pathlib.PosixPath
         Parent directory of the zipped file.
-    fileName : str
+    file_name : str
         File name without extension.
     """
 
-    dirPath = Path(dirPath)
-    path_zip = dirPath / f'{fileName}.csv.zip'
+    dir_path = Path(dir_path)
+    path_zip = dir_path / f'{file_name}.csv.zip'
     txt = df.to_csv(index=False)
     with zipfile.ZipFile(path_zip, 'w', zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr(f'{fileName}.csv', txt)
+        zf.writestr(f'{file_name}.csv', txt)
         
         
 def main():

@@ -1,52 +1,53 @@
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { ResponsiveCalendar } from '@nivo/calendar';
+import { mockCalendar } from "../../fake_data/data";
 
-const Calendar = () => {
+const Calendar = ({data}) => {
+
+    let from = "2015-09-02";
+    let to = "2016-11-26";
+
+
+    if (data && data.length > 0) {
+        const len = data.length;
+        from = data[0].day;
+        to = data[len - 1].day;
+        
+    } else {
+        data = mockCalendar;
+    }
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
-    const data = [
-        {
-            "value": 128,
-            "day": "2016-11-26"
-        },
-        {
-            "value": 185,
-            "day": "2017-08-03"
-        },
-        {
-            "value": 257,
-            "day": "2017-03-28"
-        },
-        {
-            "value": 12,
-            "day": "2015-10-24"
-        },
-        {
-            "value": 366,
-            "day": "2015-09-02"
-        },
-    ]
-
     const colorSchema = {
         textColor: '#FFF',
-        fontSize: '16px'
+        fontSize: '16px',
+        tooltip: {
+            container: {
+                color: colors.grey[400]
+            }
+        }
     }
 
     return (
         <ResponsiveCalendar
             data={data}
             theme={colorSchema}
-            from="2015-03-01"
-            to="2016-07-12"
-            emptyColor='#a3a3a3'
-            colors={[ colors.redAccent[500], '#97e3d5', '#e8c1a0', '#f47560']}
+            from={from}
+            to={to}
+            colors={[ 
+                colors.blueAccent[200], 
+                colors.blueAccent[400], 
+                colors.blueAccent[500], 
+                colors.blueAccent[700]
+            ]}
             margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
             yearSpacing={40}
-            monthBorderColor='#e3e3e3'
+            monthBorderColor={colors.grey[500]}
             dayBorderColor='#e3e3e3'
+            emptyColor='transparent'
             dayBorderWidth={2}
             legends={[
                 {

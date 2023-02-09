@@ -27,5 +27,7 @@ if __name__ == '__main__':
 
     print('DEBUG: Este archivo se encarga de generar dataframes y enviarlos al bucket en aws')
     # send_clima()
-    send_prod(5)
+    # send_prod(5)
+    archivos = aws_s3.get_list()
+    print(archivos)
     

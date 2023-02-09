@@ -230,3 +230,26 @@ export const teamData = [
       ],
     },
   ];
+
+export const mockCalendar = [
+  {
+      "value": 128,
+      "day": "2016-11-26"
+  },
+  {
+      "value": 185,
+      "day": "2017-08-03"
+  },
+  {
+      "value": 257,
+      "day": "2017-03-28"
+  },
+  {
+      "value": 12,
+      "day": "2015-10-24"
+  },
+  {
+      "value": 366,
+      "day": "2015-09-02"
+  },
+]

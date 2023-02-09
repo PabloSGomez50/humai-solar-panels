@@ -11,7 +11,7 @@ def get_prod_customer(customer_id: int = CUSTOMER_ID):
     Funcion para limpiar el dataset de los paneles
     Devuelve la produccion del cliente *customer_id*
 
-    Columnas: Datetime | Produccion
+    Columnas: Datetime | Produccion (Kw)
     """
 
     if DEBUG:

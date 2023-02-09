@@ -2,9 +2,9 @@
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import { mockLineData as data } from "../../fake_data/data";
+import { mockLineData } from "../../fake_data/data";
 
-const Line = ({ isCustomLineColors = false, isDashboard = false }) => {
+const Line = ({ data = mockLineData, isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -26,7 +26,7 @@ const Line = ({ isCustomLineColors = false, isDashboard = false }) => {
           ticks: {
             line: {
               stroke: colors.grey[100],
-              strokeWidth: 1,
+              strokeWidth: 11,
             },
             text: {
               fill: colors.grey[100],
@@ -78,7 +78,7 @@ const Line = ({ isCustomLineColors = false, isDashboard = false }) => {
         legendPosition: "middle",
       }}
       enableGridX={false}
-      enableGridY={false}
+      // enableGridY={false}
       pointSize={8}
       pointColor={{ theme: "background" }}
       pointBorderWidth={2}
