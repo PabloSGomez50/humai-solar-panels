@@ -31,7 +31,8 @@ const Calendar = () => {
     ]
 
     const colorSchema = {
-        textColor: '#FFF'
+        textColor: '#FFF',
+        fontSize: '16px'
     }
 
     return (
