@@ -3,9 +3,6 @@ from dotenv import load_dotenv
 from io import StringIO
 import os
 
-# from pathlib import Path
-# print('Running' if __name__ == '__main__' else 'Importing', Path(__file__).resolve())
-
 load_dotenv()
 
 BUCKET_NAME = 'humai-solar-project'
@@ -46,7 +43,18 @@ def send_object_s3(name, df):
 
     bucket.put_object(Body=csv_file, Key=name)
 
+
+def get_list():
+    """
+    Lista de los archivos cargados en el bucket
+    Output: dict [str]
+    """
+    bucket = get_bucket()
+
+    return [x.key for x in bucket.objects.all()]
+
 if __name__ == '__main__':
     print()
     print('DEBUG: Este archivo permite trabajar con AWS S3')
     print()
+    

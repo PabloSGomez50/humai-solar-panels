@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 import zipfile
 
-FILE_NAME_ZIP_SOLAR_HOME = './dataset_produccion_energia/2012-2013 Solar home electricity data v2.csv.zip'
+FILE_NAME_ZIP_SOLAR_GLOBAL = './dataset_produccion_energia/2012-2013 Solar home electricity data v2.csv.zip'
 FILE_NAME_ZIP_SOLAR_HOME = './2012-2013 Solar home electricity data v2.csv.zip'
 
 

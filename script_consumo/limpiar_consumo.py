@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 URL = 'https://humai-solar-project.s3.amazonaws.com/2012-2013_Solar_data.csv'
 CUSTOMER_ID = 1
@@ -30,10 +29,10 @@ def format_date(df_):
     if DEBUG:
         print('DEBUG: funcion format_date')
 
-    df_['datetime'] = pd.to_datetime(df_['date'] + df_['time'], format='%d/%m/%Y%H:%M')
+    df_['Datetime'] = pd.to_datetime(df_['date'] + df_['time'], format='%d/%m/%Y%H:%M')
     df_.drop(columns=['date', 'time'], inplace=True)
     df_ = df_.loc[:,::-1]
-    df_.sort_values('datetime', inplace=True)
+    df_.sort_values('Datetime', inplace=True)
     df_.reset_index(drop=True, inplace=True)
 
     return df_.copy()
@@ -65,7 +64,7 @@ def get_df_consumo():
     Funcion para limpiar el dataset de los paneles
     Devuelve el consumo del cliente *CUSTOMER_ID*
 
-    Columnas: datetime | GC | CL | total
+    Columnas: Datetime | GC | CL | Total
     """
 
     if DEBUG:
@@ -80,7 +79,7 @@ def get_df_consumo():
 
     df = format_date(df)
 
-    df['total'] = df['GC'] + df['CL']
+    df['Total'] = df['GC'] + df['CL']
 
     return df
 
