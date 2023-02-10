@@ -28,10 +28,18 @@ def total_diario():
     return response
 
 
+@app.get('/cards')
+def total_diario():
+
+    response = api_utils.prod_last_7(1)
+
+    return response
+
+
 @app.get('/prod')
 def produccion(span='1d'):
 
-    response = api_utils.prod_history(span)
+    response = api_utils.prod_history(1, span)
 
     return response
 

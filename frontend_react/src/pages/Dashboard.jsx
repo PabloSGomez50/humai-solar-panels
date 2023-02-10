@@ -1,14 +1,18 @@
 import { Box, Button, IconButton, useTheme, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { tokens } from '../theme';
 import Header from "../components/Header";
 import axios from 'axios';
 
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import SolarPowerIcon from '@mui/icons-material/SolarPower';
+
 import EmailIcon from "@mui/icons-material/Email";
 import StatBox from "../components/StatBox";
 import LineChart from "./Graficos/Line";
 import Calendar from "./Graficos/Calendar";
-import { useEffect, useState } from "react";
+import BarChart from "./Graficos/Bar";
 
 const Dashboard = () => {
 
@@ -16,12 +20,13 @@ const Dashboard = () => {
     const colors = tokens(theme.palette.mode);
 
     const [ daily, setDaily ] = useState([]);
+    const [ barData, setbarData ] = useState({});
     const [ calendarData, setCalendarData ] = useState([]);
     const [ lineData, setLineData ] = useState([]);
 
     const stats = [
         // {
-        //     title: 'Total de produccion',
+        //     title: 'Promedio diario',
         //     subtitle: 'En los ultimos 7 dias',
         //     progress: 0.75,
         //     increase: 14,
@@ -30,26 +35,16 @@ const Dashboard = () => {
         //         sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
         //     />
         // },
-        {
-            title: 'Promedio diario',
-            subtitle: 'En los ultimos 7 dias',
-            progress: 0.75,
-            increase: 14,
-            icon:
-            <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-            />
-        },
-        {
-            title: 'Hora de mayor produccion',
-            subtitle: 'En los ultimos 7 dias',
-            progress: 0.33,
-            increase: 14,
-            icon:
-            <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-            />
-        },
+        // {
+        //     title: 'Hora de mayor produccion',
+        //     subtitle: 'En los ultimos 7 dias',
+        //     progress: 0.33,
+        //     increase: 14,
+        //     icon:
+        //     <EmailIcon
+        //         sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+        //     />
+        // },
         {
             title: 'Desvio estandar',
             subtitle: 'En los ultimos 7 dias',
@@ -70,24 +65,36 @@ const Dashboard = () => {
 
             setDaily(response.data);
         }
-        const requestProd = async () => {
+
+        const requestProdCards = async () => {
+            const response = await axios(
+                'http://127.0.0.1:8000/cards'
+            )
+            // console.log(response.data);
+            setbarData(response.data);
+        }
+
+        const requestProdCalendar = async () => {
             const response = await axios(
                 'http://127.0.0.1:8000/prod'
             )
 
+            console.log(response.data);
             setCalendarData(response.data);
         }
+
         const requestRendimiento = async () => {
             const response = await axios(
                 'http://127.0.0.1:8000/months'
             )
             
-            console.log(response.data);
+            // console.log(response.data);
             setLineData(response.data);
         }
 
+        requestProdCards();
         requestConsumo();
-        requestProd();
+        requestProdCalendar();
         requestRendimiento();
     }, [])
 
@@ -114,31 +121,36 @@ const Dashboard = () => {
             <Box
                 display="grid"
                 gridTemplateColumns="repeat(12, 1fr)"
-                gridAutoRows="170px"
+                gridAutoRows="105px"
                 gap="1.25rem"
                 m='1rem'
             >
+                {/* 1ra fila 1er columna */}
                 <Box
-                    gridColumn='span 3'
+                    gridColumn='span 4'
+                    gridRow='span 2'
                     backgroundColor={colors.primary[400]}
                     display='flex'
                     flexDirection='column'
                     p='0.75rem'
                 >
-                    <Typography
-                        variant="h4"
-                        fontWeight="bold"
-                        mb='0.5rem'
-                        sx={{ color: colors.grey[100] }}
-                    >
-                        Consumo Total
-                    </Typography>
+                    <Box display='flex' gap='0.5rem'>
+                        <ElectricBoltIcon sx={{color: colors.greenAccent[500]}} />
+                        <Typography
+                            variant="h4"
+                            fontWeight="bold"
+                            mb='0.75rem'
+                            sx={{ color: colors.grey[100] }}
+                        >
+                            Consumo Total
+                        </Typography>
+                    </Box>
 
                     <Box
                         display='flex'
                         height='90%'
                         flexDirection='column'
-                        gap='0.25rem'
+                        gap='0.5rem'
                         flexWrap='wrap'
                     >
                         {daily.map(item =>
@@ -160,31 +172,66 @@ const Dashboard = () => {
                     </Box>
                 </Box>
 
-
-
-                {stats.map(stat =>     
-                    <Box
-                        key={stat.title}
-                        gridColumn='span 3'
-                        backgroundColor={colors.primary[400]}
-                        display='flex'
-                        alignItems='center'
-                        justifyContent='center'
-                    >
-
-                        <StatBox
-                            title={stat.title}
-                            subtitle={stat.subtitle}
-                            progress={stat.progress}
-                            increase={`+${stat.increase}%`}
-                            icon={stat.icon}
-                        />
+                {/* 1ra fila 2er columna */}
+                <Box
+                    gridColumn='span 4'
+                    gridRow='span 2'
+                    backgroundColor={colors.primary[400]}
+                    display='flex'
+                    flexDirection='column'
+                    p='0.75rem'
+                >
+                    <Box display='flex' gap='0.5rem'>
+                        <ElectricBoltIcon sx={{color: colors.greenAccent[500]}} />
+                        <Typography
+                            variant="h4"
+                            fontWeight="bold"
+                            mb='0.5rem'
+                            sx={{ color: colors.grey[100] }}
+                        >
+                            Promedio produccion diaria
+                        </Typography>
                     </Box>
-                )}
 
+                    <BarChart 
+                        data={barData.prom}
+                        keys={['promedio']}
+                        indexBy={'dia'}
+                    />
+                </Box>
+
+                {/* 1ra fila 3er columna */}
+                <Box
+                    gridColumn='span 4'
+                    gridRow='span 2'
+                    backgroundColor={colors.primary[400]}
+                    display='flex'
+                    flexDirection='column'
+                    p='0.75rem'
+                >
+                    <Box display='flex' gap='0.5rem'>
+                        <ElectricBoltIcon sx={{color: colors.greenAccent[500]}} />
+                        <Typography
+                            variant="h4"
+                            fontWeight="bold"
+                            mb='0.5rem'
+                            sx={{ color: colors.grey[100] }}
+                        >
+                            Horas de mayor produccion
+                        </Typography>
+                    </Box>
+
+                    <BarChart 
+                        data={barData.horas}
+                        keys={['total']}
+                        indexBy={'hora'}
+                    />
+                </Box>
+
+                {/* Segunda Fila */}
                 <Box
                     gridColumn="span 6"
-                    gridRow="span 2"
+                    gridRow="span 3"
                     backgroundColor={colors.primary[400]}
                 >
                     <Box
@@ -231,7 +278,7 @@ const Dashboard = () => {
 
                 <Box
                     gridColumn="span 6"
-                    gridRow="span 2"
+                    gridRow="span 3"
                     backgroundColor={colors.primary[400]}
                 >
                     <Calendar 

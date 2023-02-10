@@ -13,7 +13,7 @@ const Calendar = ({data}) => {
         const len = data.length;
         from = data[0].day;
         to = data[len - 1].day;
-        
+
     } else {
         data = mockCalendar;
     }
@@ -45,8 +45,8 @@ const Calendar = ({data}) => {
             ]}
             margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
             yearSpacing={40}
-            monthBorderColor={colors.grey[500]}
-            dayBorderColor='#e3e3e3'
+            monthBorderColor={colors.grey[800]}
+            dayBorderColor={colors.grey[500]}
             emptyColor='transparent'
             dayBorderWidth={2}
             legends={[

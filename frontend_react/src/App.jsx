@@ -1,6 +1,6 @@
 import './App.css'
 import { ColorModeContext, useMode } from './theme';
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import { Box, CssBaseline, ThemeProvider } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 
@@ -26,20 +26,21 @@ function App() {
           <div className="app">
             <Sidebar />
             <main className='content'>
-              <TopBar /> 
-              <Routes>
-                <Route path='/' element={<Dashboard />}/>
-                <Route path='/team' element={<Team />}/>
-                <Route path='/pie' element={<Pie />}/>
-                <Route path='/bar' element={<Bar />}/>
-                <Route path='/line' element={<Line />}/>
-                <Route path='/calendar' element={<Calendar />}/>
+              <TopBar />
+                <Box height='90vh'>
+                  <Routes>
+                    <Route path='/' element={<Dashboard />}/>
+                    <Route path='/team' element={<Team />}/>
+                    <Route path='/pie' element={<Pie />}/>
+                    <Route path='/bar' element={<Bar />}/>
+                    <Route path='/line' element={<Line />}/>
+                    <Route path='/calendar' element={<Calendar />}/>
 
-
-                <Route path='/faq' element={<FAQ />}/>
-                <Route path='/contacts' element={<Contacts />}/>
-                <Route path='/settings' element={<Contacts />}/>
-              </Routes>
+                    <Route path='/faq' element={<FAQ />}/>
+                    <Route path='/contacts' element={<Contacts />}/>
+                    <Route path='/settings' element={<Contacts />}/>
+                  </Routes>
+                </Box>
             </main>
           </div>
         </ThemeProvider>

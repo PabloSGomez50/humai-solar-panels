@@ -4,46 +4,48 @@ import { useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { mockLineData } from "../../fake_data/data";
 
-const Line = ({ data = mockLineData, isCustomLineColors = false, isDashboard = false }) => {
+const LineChart = ({ data = mockLineData, isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const chartTheme = {
+    axis: {
+      domain: {
+        line: {
+          stroke: colors.grey[100],
+        },
+      },
+      legend: {
+        text: {
+          fill: colors.grey[100],
+        },
+      },
+      ticks: {
+        line: {
+          stroke: colors.grey[100],
+          strokeWidth: 11,
+        },
+        text: {
+          fill: colors.grey[100],
+        },
+      },
+    },
+    legends: {
+      text: {
+        fill: colors.grey[100],
+      },
+    },
+    tooltip: {
+      container: {
+        color: colors.primary[500],
+      },
+    },
+  }
 
   return (
     <ResponsiveLine
       data={data}
-      theme={{
-        axis: {
-          domain: {
-            line: {
-              stroke: colors.grey[100],
-            },
-          },
-          legend: {
-            text: {
-              fill: colors.grey[100],
-            },
-          },
-          ticks: {
-            line: {
-              stroke: colors.grey[100],
-              strokeWidth: 11,
-            },
-            text: {
-              fill: colors.grey[100],
-            },
-          },
-        },
-        legends: {
-          text: {
-            fill: colors.grey[100],
-          },
-        },
-        tooltip: {
-          container: {
-            color: colors.primary[500],
-          },
-        },
-      }}
+      theme={chartTheme}
       colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }} // added
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
@@ -51,7 +53,7 @@ const Line = ({ data = mockLineData, isCustomLineColors = false, isDashboard = f
         type: "linear",
         min: "auto",
         max: "auto",
-        stacked: true,
+        stacked: false,
         reverse: false,
       }}
       yFormat=" >-.2f"
@@ -60,25 +62,25 @@ const Line = ({ data = mockLineData, isCustomLineColors = false, isDashboard = f
       axisRight={null}
       axisBottom={{
         orient: "bottom",
-        tickSize: 0,
-        tickPadding: 5,
+        tickSize: 1,
+        tickPadding: 10,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "transportation", // added
         legendOffset: 36,
         legendPosition: "middle",
       }}
       axisLeft={{
         orient: "left",
         tickValues: 5, // added
-        tickSize: 3,
-        tickPadding: 5,
+        tickSize: 1,
+        tickPadding: 7,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "count", // added
         legendOffset: -40,
         legendPosition: "middle",
       }}
+      // enableSlices='x'
       enableGridX={false}
-      // enableGridY={false}
+      enableGridY={false}
+      enableCrosshair={false}
       pointSize={8}
       pointColor={{ theme: "background" }}
       pointBorderWidth={2}
@@ -115,4 +117,4 @@ const Line = ({ data = mockLineData, isCustomLineColors = false, isDashboard = f
   );
 };
 
-export default Line;
+export default LineChart;
