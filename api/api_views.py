@@ -1,9 +1,30 @@
 import pandas as pd
 import api_formato
+from datetime import datetime, timedelta
 # import json
 
 CSV_CONSUMO = './consumo_user_{0}.csv'
 CSV_PROD = './user_{0}.csv'
+
+DAYS_DIFF = 2 + 365 * 10
+
+def get_datetimes(days = 6, months = 0):
+    """
+    Funcion para obtener los registros de interes, de una semana o varios meses
+    """
+    
+    max_day = datetime.today() - timedelta(days=DAYS_DIFF)
+
+    if months == 0:
+        min_day = max_day - timedelta(days=days)
+    else:
+        min_day = datetime(year=max_day.year, month=1, day=1)
+
+    lim_min = min_day.strftime('%Y-%m-%d')
+    lim_max = max_day.strftime('%Y-%m-%d') + ' 23:59'
+
+    return (lim_min, lim_max)
+
 
 def consumo_last_7d(user_id: int) -> list:
     """
@@ -13,9 +34,10 @@ def consumo_last_7d(user_id: int) -> list:
     Input: user_id -> int
     Output: response -> list[{'day', 'value'}]
     """
+    
     df = pd.read_csv(CSV_CONSUMO.format(user_id))
-
-    df = df[df['Datetime'].between('2013-02-01', '2013-02-07 23:30')].copy()
+    t_min, t_max = get_datetimes()
+    df = df[df['Datetime'].between(t_min, t_max)].copy()
     df['Datetime'] = pd.to_datetime(df['Datetime'])
     df['Dia'] = df['Datetime'].dt.day
 
@@ -43,11 +65,13 @@ def prod_last_7(user_id: int) -> dict:
     """
     df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'])
 
-    df = df[df['Datetime'].between('2013-02-01', '2013-02-07 23:30')].copy()
+    t_min, t_max = get_datetimes()
+    df = df[df['Datetime'].between(t_min, t_max)].copy()
     df['Datetime'] = pd.to_datetime(df['Datetime'])
     df['Dia'] = df['Datetime'].dt.day
     df['Hora'] = df['Datetime'].dt.hour
 
+    # Info 1
     df1 = df.groupby('Dia').aggregate({'Datetime': 'first', 'Produccion': 'mean'})
     df1['Datetime'] = df1['Datetime'].dt.strftime('%A')
 
@@ -55,6 +79,7 @@ def prod_last_7(user_id: int) -> dict:
     
     data1 = [{'dia': x[0], 'promedio': round(x[1], 3)} for x in data1]
 
+    # Info 2
     df2 = df.groupby('Hora').aggregate({'Produccion': 'sum'})
     df2 = df2[df2['Produccion'] > 0.1]
 
@@ -75,21 +100,16 @@ def prod_history(user_id: int, span: str) -> list:
     
     df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'])
 
-    df = df[df['Datetime'].between('2013-01-02', '2013-06-31 23:30')].copy()
+    # df = df[df['Datetime'].between('2013-01-02', '2013-06-31 23:30')].copy()
 
     df['Datetime'] = pd.to_datetime(df['Datetime'])
     df['Dia'] = df['Datetime'].dt.day
     df['Mes'] = df['Datetime'].dt.month
+    df['Anio'] = df['Datetime'].dt.year
 
-    df_ = df.groupby(by=['Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
+    df_ = df.groupby(by=['Anio','Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
 
     return api_formato.format_calendario(df_)
-    # df_['Datetime'] = df_['Datetime'].dt.strftime('%Y-%m-%d')
-
-    # data = df_.to_records(index=False)
-
-
-    # return [{'day': x[0], 'value': round(x[1], 2)} for x in data]
 
 def prod_by_month() -> list:
     """
@@ -99,8 +119,10 @@ def prod_by_month() -> list:
 
     df = pd.read_csv(CSV_PROD.format(1), usecols=['Datetime', 'Produccion'])
 
+    t_min, t_max = get_datetimes(months=1)
+
     # Filtrar un par de meses
-    df1 = df[df['Datetime'].between('2013-01-01', '2013-03-31 23:30')].copy()
+    df1 = df[df['Datetime'].between(t_min, t_max)].copy()
     df1['Datetime'] = pd.to_datetime(df1['Datetime'])
 
     # Agrupar por mes y dia

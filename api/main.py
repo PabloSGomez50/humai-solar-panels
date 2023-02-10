@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import api_utils
+import api_views
 
 app = FastAPI()
 
@@ -23,7 +23,7 @@ def root():
 @app.get('/consumo')
 def total_diario():
 
-    response = api_utils.consumo_last_7d(1)
+    response = api_views.consumo_last_7d(1)
 
     return response
 
@@ -31,7 +31,7 @@ def total_diario():
 @app.get('/cards')
 def total_diario():
 
-    response = api_utils.prod_last_7(1)
+    response = api_views.prod_last_7(1)
 
     return response
 
@@ -39,7 +39,7 @@ def total_diario():
 @app.get('/prod')
 def produccion(span='1d'):
 
-    response = api_utils.prod_history(1, span)
+    response = api_views.prod_history(1, span)
 
     return response
 
@@ -47,6 +47,6 @@ def produccion(span='1d'):
 @app.get('/months')
 def produccion():
 
-    response = api_utils.prod_by_month()
+    response = api_views.prod_by_month()
 
     return response
