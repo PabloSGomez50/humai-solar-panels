@@ -87,8 +87,7 @@ def get_df_consumo():
 if __name__ == '__main__':
 
     df = get_df_consumo()
-
-    df.to_csv(f'./consumo_user_{CUSTOMER_ID}.csv')
+    # df.to_csv(f'./consumo_user_{CUSTOMER_ID}.csv')
 
     message = """
         En este script de python se accede al dataset completo y seleccion un customer.
@@ -96,3 +95,4 @@ if __name__ == '__main__':
         Columnas: datetime | GC | CL | total
         """
     print(message)
+    print(df.sample(10))

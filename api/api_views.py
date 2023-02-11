@@ -35,10 +35,9 @@ def consumo_last_7d(user_id: int) -> list:
     Output: response -> list[{'day', 'value'}]
     """
     
-    df = pd.read_csv(CSV_CONSUMO.format(user_id))
+    df = pd.read_csv(CSV_CONSUMO.format(user_id), parse_dates=['Datetime'])
     t_min, t_max = get_datetimes()
-    df = df[df['Datetime'].between(t_min, t_max)].copy()
-    df['Datetime'] = pd.to_datetime(df['Datetime'])
+    df = df[df['Datetime'].between(t_min, t_max)]
     df['Dia'] = df['Datetime'].dt.day
 
     df_ = df.groupby('Dia').aggregate({'Datetime': 'first','Total': 'sum'})
@@ -63,11 +62,10 @@ def prod_last_7(user_id: int) -> dict:
     Input: user_id -> int
     Output: response -> list[dict]
     """
-    df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'])
+    df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'], parse_dates=['Datetime'])
 
     t_min, t_max = get_datetimes()
-    df = df[df['Datetime'].between(t_min, t_max)].copy()
-    df['Datetime'] = pd.to_datetime(df['Datetime'])
+    df = df[df['Datetime'].between(t_min, t_max)]
     df['Dia'] = df['Datetime'].dt.day
     df['Hora'] = df['Datetime'].dt.hour
 
@@ -98,18 +96,15 @@ def prod_history(user_id: int, span: str) -> list:
     Output: response -> list['day', 'value']
     """
     
-    df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'])
+    df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'], parse_dates=['Datetime'])
 
-    # df = df[df['Datetime'].between('2013-01-02', '2013-06-31 23:30')].copy()
-
-    df['Datetime'] = pd.to_datetime(df['Datetime'])
     df['Dia'] = df['Datetime'].dt.day
     df['Mes'] = df['Datetime'].dt.month
     df['Anio'] = df['Datetime'].dt.year
 
-    df_ = df.groupby(by=['Anio','Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
+    df1 = df.groupby(by=['Anio','Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
 
-    return api_formato.format_calendario(df_)
+    return api_formato.format_calendario(df1)
 
 def prod_by_month() -> list:
     """
@@ -117,23 +112,22 @@ def prod_by_month() -> list:
     Busca clasificar la produccion de los ultimos tres meses por dia
     """
 
-    df = pd.read_csv(CSV_PROD.format(1), usecols=['Datetime', 'Produccion'])
+    df = pd.read_csv(CSV_PROD.format(1), usecols=['Datetime', 'Produccion'], parse_dates=['Datetime'])
 
     t_min, t_max = get_datetimes(months=1)
 
     # Filtrar un par de meses
-    df1 = df[df['Datetime'].between(t_min, t_max)].copy()
-    df1['Datetime'] = pd.to_datetime(df1['Datetime'])
+    df = df[df['Datetime'].between(t_min, t_max)]
 
     # Agrupar por mes y dia
-    df1['Dia'] = df1['Datetime'].dt.day
-    df1['Mes'] = df1['Datetime'].dt.month
-    df1 = df1.groupby(by=['Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
+    df['Dia'] = df['Datetime'].dt.day
+    df['Mes'] = df['Datetime'].dt.month
+    df = df.groupby(by=['Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
 
     # Set indices finales
-    df1.reset_index(drop=True, inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
     # Filtrar los datos
-    response = api_formato.format_linea(df1)
+    response = api_formato.format_linea(df)
 
     return response

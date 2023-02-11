@@ -7,8 +7,9 @@ from datetime import datetime, timedelta
 import re
 
 
-# OUTPUT_CSV = './clima_sidney_4.csv'
-# LOCAL = False
+FROM_DEFAULT = datetime(year=2012, month=7, day=1)
+TO_DEFAULT = datetime(year=2012, month=7, day=5)
+
 
 def get_data(date):
     """
@@ -27,7 +28,7 @@ def get_data(date):
     soup = BeautifulSoup(response.content, 'html.parser')
     return demjson.decode(soup.text)
 
-def get_clima():
+def get_clima(date_from = FROM_DEFAULT, date_to = TO_DEFAULT) -> pd.DataFrame:
     """
     Obtener datos del clima entre dos fechas y guardarlos en archivo CSV
 
@@ -37,23 +38,22 @@ def get_clima():
     """
 
     ls_datos_clima = []
-    date_from = datetime(year=2012, month=7, day=1)
-    # date_to = datetime(year=2013, month=6, day=30)
-    date_to = datetime(year=2012, month=7, day=5)
-    date_iterador = date_from
+    # date_from = datetime(year=2012, month=7, day=1)
+    # date_to = datetime(year=2012, month=7, day=5)
+    # date_iterador = date_from
     #regular_expresion_hora = '^(\d){1,2}:(\d){2} (am|pm)'
     regular_expresion_hora = '^(\d){1,2}:(\d){2}'
 
-    while(date_iterador <= date_to):
-        print (date_iterador, date_to)
+    while(date_from <= date_to):
+        print (date_from, date_to)
 
-        json_data = get_data(date_iterador)
+        json_data = get_data(date_from)
 
         for fila in json_data:
 
             fila = fila['c']
 
-            date = date_iterador.strftime('%Y-%m-%d')
+            date = date_from.strftime('%Y-%m-%d')
             #hour_24 = datetime.strftime(datetime.strptime(hour_am_pm, "%I:%M %p"), "%H:%M")
             hour_am_pm = re.search(regular_expresion_hora, fila[0]['h']).group()
             hour_24 = hour_am_pm
@@ -77,7 +77,7 @@ def get_clima():
 
             ls_datos_clima.append(json_record)
 
-        date_iterador = (date_iterador + timedelta(days=1))
+        date_from = (date_from + timedelta(days=1))
 
 
     return pd.DataFrame.from_records(ls_datos_clima)
