@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import api_views
+import api_formato
 
 app = FastAPI()
 
@@ -21,15 +22,16 @@ def root():
 
 
 @app.get('/consumo')
-def total_diario():
+def consumo_7d():
 
-    response = api_views.consumo_last_7d(1)
+    df_response = api_views.consumo_last_7d(1)
+    response = api_formato.format_bar(df_response)
 
     return response
 
 
 @app.get('/cards')
-def total_diario():
+def resumen():
 
     response = api_views.prod_last_7(1)
 
@@ -37,16 +39,34 @@ def total_diario():
 
 
 @app.get('/prod')
-def produccion(span='1d'):
+def calendario():
 
-    response = api_views.prod_history(1, span)
+    df_response = api_views.prod_calendar(1)
+    response = api_formato.format_calendario(df_response)
 
     return response
 
 
 @app.get('/months')
-def produccion():
+def prod_by_month():
 
-    response = api_views.prod_by_month()
+    df_response = api_views.prod_by_month(1)
+    response = api_formato.format_linea(df_response)
+
+    return response
+
+@app.get('/line/{span}')
+def historia(span='1D'):
+
+    df_response = api_views.prod_history(1)
+    response = api_formato.format_linea(df_response)
+
+    return response
+
+@app.get('/table')
+def table():
+
+    df_response = api_views.get_table(1)
+    response = df_response.to_dict(orient='records')
 
     return response

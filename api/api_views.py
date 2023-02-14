@@ -1,7 +1,6 @@
 import pandas as pd
 import api_formato
 from datetime import datetime, timedelta
-# import json
 
 CSV_CONSUMO = './consumo_user_{0}.csv'
 CSV_PROD = './user_{0}.csv'
@@ -25,6 +24,25 @@ def get_datetimes(days = 6, months = 0):
 
     return (lim_min, lim_max)
 
+def get_prod(user_id: int) -> pd.DataFrame:
+    """
+    Obtener el dataframe a partir del csv del usuario
+
+    Input:
+        - user_id: int
+    Output:
+        - Dataframe con fecha parseada ['index', 'Datetime', 'Produccion']
+
+    """
+    columns = ['Datetime', 'Produccion']
+
+    return pd.read_csv(CSV_PROD.format(user_id), usecols=columns, parse_dates=['Datetime'])
+
+
+def get_consumo(user_id: int) -> pd.DataFrame:
+    
+    return pd.read_csv(CSV_CONSUMO.format(user_id), parse_dates=['Datetime'])
+
 
 def consumo_last_7d(user_id: int) -> list:
     """
@@ -35,7 +53,7 @@ def consumo_last_7d(user_id: int) -> list:
     Output: response -> list[{'day', 'value'}]
     """
     
-    df = pd.read_csv(CSV_CONSUMO.format(user_id), parse_dates=['Datetime'])
+    df = get_consumo(user_id)
     t_min, t_max = get_datetimes()
     df = df[df['Datetime'].between(t_min, t_max)]
     df['Dia'] = df['Datetime'].dt.day
@@ -43,13 +61,19 @@ def consumo_last_7d(user_id: int) -> list:
     df_ = df.groupby('Dia').aggregate({'Datetime': 'first','Total': 'sum'})
     df_['Datetime'] = df_['Datetime'].dt.strftime('%A')
 
-    data = df_.to_records(index=False)
+    # data = df_.to_records(index=False)
     
-    total = round(sum(map(lambda x: x[1], data)), 2)
-    response = [{'day': x[0], 'value': x[1]} for x in data]
-    response.append({'day': 'Total', 'value': total})
+    # total = round(sum(map(lambda x: x[1], data)), 2)
+    
+    # response = [{
+    #     'day': x[0], 
+    #     'value': round(x[1], 2)
+    #     } 
+    #     for x in data ]
 
-    return response
+    # response.append({'day': 'Total', 'value': total})
+
+    return df_
 
 
 def prod_last_7(user_id: int) -> dict:
@@ -62,7 +86,7 @@ def prod_last_7(user_id: int) -> dict:
     Input: user_id -> int
     Output: response -> list[dict]
     """
-    df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'], parse_dates=['Datetime'])
+    df = get_prod(user_id)
 
     t_min, t_max = get_datetimes()
     df = df[df['Datetime'].between(t_min, t_max)]
@@ -88,7 +112,7 @@ def prod_last_7(user_id: int) -> dict:
     return {'prom': data1,'horas': data2}
 
 
-def prod_history(user_id: int, span: str) -> list:
+def prod_calendar(user_id: int) -> list:
     """
     Accede al dataset y devuelvo un json con los datos de los ultimos 7 dias
 
@@ -96,38 +120,87 @@ def prod_history(user_id: int, span: str) -> list:
     Output: response -> list['day', 'value']
     """
     
-    df = pd.read_csv(CSV_PROD.format(user_id), usecols=['Datetime', 'Produccion'], parse_dates=['Datetime'])
+    df = get_prod(user_id)
 
-    df['Dia'] = df['Datetime'].dt.day
-    df['Mes'] = df['Datetime'].dt.month
-    df['Anio'] = df['Datetime'].dt.year
+    df1 = df.resample('1D', on='Datetime').sum()
+    df1['Fecha'] = df1.index.strftime('%Y-%m-%d')
+    
+    return df1
 
-    df1 = df.groupby(by=['Anio','Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
-
-    return api_formato.format_calendario(df1)
-
-def prod_by_month() -> list:
+def prod_by_month(user_id: int) -> list:
     """
     Funcion para el grafico de lineas
     Busca clasificar la produccion de los ultimos tres meses por dia
     """
 
-    df = pd.read_csv(CSV_PROD.format(1), usecols=['Datetime', 'Produccion'], parse_dates=['Datetime'])
+    df = get_prod(user_id)
+
+    t_min, t_max = get_datetimes(months=1)
+
+    # print(t_min, t_max)
+
+    # Filtrar un par de meses
+    df = df[df['Datetime'].between(t_min, t_max)]
+
+    # Dimensionar l
+    df1 = df.resample('1D', on='Datetime').sum()
+
+    # # Filtrar los datos
+    # response = api_formato.format_linea(df)
+
+    return df1
+
+
+def prod_history(user_id: int) -> list:
+    """
+    Funcion para el grafico de lineas
+    Busca clasificar la produccion de los ultimos tres meses por dia
+    """
+
+    df = get_prod(user_id)
 
     t_min, t_max = get_datetimes(months=1)
 
     # Filtrar un par de meses
     df = df[df['Datetime'].between(t_min, t_max)]
 
-    # Agrupar por mes y dia
-    df['Dia'] = df['Datetime'].dt.day
-    df['Mes'] = df['Datetime'].dt.month
-    df = df.groupby(by=['Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
+    df = df.resample('1D', on='Datetime').sum()
+    # # Agrupar por mes y dia
+    # df['Dia'] = df['Datetime'].dt.day
+    # df['Mes'] = df['Datetime'].dt.month
+    # df = df.groupby(by=['Mes','Dia']).aggregate({'Datetime': 'first','Produccion': 'sum'})
 
-    # Set indices finales
-    df.reset_index(drop=True, inplace=True)
+    # # Set indices finales
+    # df.reset_index(drop=True, inplace=True)
 
     # Filtrar los datos
-    response = api_formato.format_linea(df)
+    # response = api_formato.format_linea(df)
 
-    return response
+    return df
+
+def get_table(user_id: int) -> list:
+
+    df_con = get_consumo(user_id)
+    df_prod = get_prod(user_id)
+
+    df_con = df_con.resample('1D', on='Datetime').sum()
+    df_prod = df_prod.resample('1D', on='Datetime').sum()
+
+    df_final = df_con.join(df_prod, how='inner')
+
+    names = {
+        # 'Datetime': 'Fecha',
+        'GC': 'Consumo general',
+        'CL': 'Consumo controlado',
+        'Total': 'Consumo Total'
+        }
+
+    df_final = df_final.round(decimals=3)
+    df_final['Fecha'] = df_final.index.strftime('%Y-%m-%d')
+    df_final.reset_index(drop=True, inplace=True)
+    df_final['id'] = df_final.index
+    df_final.rename(columns=names,inplace=True)
+
+    # data = df_final.to_dict(orient='records')
+
+    return df_final
