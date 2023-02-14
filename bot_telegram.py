@@ -1,6 +1,7 @@
 import telebot
 from telebot.types import ForceReply #para citar un mensaje
-
+import requests
+import json
 
 token = '6113092305:AAEQFPxaNDtn5JIocQlP1SmEVLKqsNPG35I'
 bot = telebot.TeleBot(token)
@@ -19,6 +20,7 @@ def datos(message):
     msg = bot.send_message(message.chat.id, '¿Cuál es tu nombre?', reply_markup=markup)
     bot.register_next_step_handler(msg, cliente_id)
 
+
 def cliente_id(message):
     '''Pregunta al usuario su número de cliente'''
     nombre = message.text
@@ -31,7 +33,18 @@ def cliente_id(message):
 @bot.message_handler(content_types=['text'])
 def mensajes_texto(message):
     '''Gestiona los mensajes de texto recibidos'''
-    bot.send_message(message.chat.id,'aca va el texto para cuando el usuario envia un mensaje y no una funcion')
+    response = requests.get('http://127.0.0.1:8000/consumo_now')
+    print(type(response.text))
+    data = json.loads(response.text)
+    print(type(data))
+    print(data)
+
+    hora = data['Datetime'].split('T')[1]
+
+    mensaje = f'El consumo a las {hora} es de {data["Total"]} Kw.'
+
+    bot.send_message(message.chat.id, mensaje)
+    # bot.send_message(message.chat.id,'aca va el texto para cuando el usuario envia un mensaje y no una funcion')
 
 
 if __name__ == '__main__':

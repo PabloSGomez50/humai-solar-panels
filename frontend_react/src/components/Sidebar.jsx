@@ -43,7 +43,7 @@ const SideBar = () => {
                 display: 'flex',
                 height: '100%',
                 '& .ps-sidebar-container': {
-                    background: `${colors.primary[400]} !important`
+                    background: `${colors.primary[800]} !important`
                 },
                 '& .ps-menu-button': {
                     backgroundColor: 'transparent !important',
@@ -58,10 +58,13 @@ const SideBar = () => {
                 }
                 ,
                 '& .ps-menu-button:hover': {
-                    color: '#9ca2ff !important'
+                    color: `${colors.primary[100]} !important` // #9ca2ff
                 },
                 '& .ps-menu-button.ps-active': {
-                    color: '#6870fa !important'
+                    marginRight: '1.5rem',
+                    color: `${colors.primary[400]} !important`, // #6870fa
+                    backgroundColor: `${colors.grey[100]} !important`,
+                    borderRadius: '0.25rem'
                 },
             }}
         >

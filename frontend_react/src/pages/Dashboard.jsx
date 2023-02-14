@@ -2,7 +2,6 @@ import { Box, Button, IconButton, useTheme, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { tokens } from '../theme';
 import Header from "../components/Header";
-import axios from 'axios';
 
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
@@ -38,18 +37,14 @@ const Dashboard = () => {
         }
 
         const requestProdCalendar = async () => {
-            const response = await axiosI(
-                'prod'
-            )
+            const response = await axiosI('prod');
 
             // console.log(response.data);
             setCalendarData(response.data);
         }
 
         const requestRendimiento = async () => {
-            const response = await axiosI(
-                'months'
-            )
+            const response = await axiosI('months');
             
             // console.log(response.data);
             setLineData(response.data);
@@ -62,7 +57,7 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <Box m='1.25rem'>
+        <Box m='1.25rem' backgroundColor={colors.grey[400]}>
             <Box display='flex' justifyContent='space-between' alignItems='center'>
                 <Header title='DASHBOARD' subtitle='Este es el resumen de tu sistema'/>
 
@@ -86,7 +81,7 @@ const Dashboard = () => {
                 gridTemplateColumns="repeat(12, 1fr)"
                 gridAutoRows="105px"
                 gap="1.25rem"
-                m='1rem'
+                m='1rem' 
             >
                 {/* 1ra fila 1er columna */}
                 <Box

@@ -70,3 +70,12 @@ def table():
     response = df_response.to_dict(orient='records')
 
     return response
+
+
+@app.get('/consumo_now')
+def test_bot():
+
+    df_response = api_views.consumo_now(1)
+    response = df_response.to_dict(orient='records')
+
+    return response[0]

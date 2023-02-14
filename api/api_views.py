@@ -61,17 +61,27 @@ def consumo_last_7d(user_id: int) -> list:
     df_ = df.groupby('Dia').aggregate({'Datetime': 'first','Total': 'sum'})
     df_['Datetime'] = df_['Datetime'].dt.strftime('%A')
 
-    # data = df_.to_records(index=False)
-    
-    # total = round(sum(map(lambda x: x[1], data)), 2)
-    
-    # response = [{
-    #     'day': x[0], 
-    #     'value': round(x[1], 2)
-    #     } 
-    #     for x in data ]
+    return df_
 
-    # response.append({'day': 'Total', 'value': total})
+
+def consumo_now(user_id: int) -> pd.DataFrame:
+    """
+    Accede al dataset y devuelve una lista con los datos de la ultima media hora
+
+    Input: user_id -> int
+    Output: response -> DataFrame
+    """
+
+    df = get_consumo(user_id)
+    # Trae el dia de 2012/2013
+    now = datetime.now() - timedelta(days=DAYS_DIFF)
+    delay = now - timedelta(minutes=55)
+
+    lower = delay.strftime('%Y-%m-%d %H:%M')
+    upper = now.strftime('%Y-%m-%d %H:%M')
+
+    df = df[df['Datetime'].between(lower, upper)]
+    df_ = df.tail(1)
 
     return df_
 
@@ -204,3 +214,4 @@ def get_table(user_id: int) -> list:
     # data = df_final.to_dict(orient='records')
 
     return df_final
+

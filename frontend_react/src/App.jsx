@@ -15,8 +15,12 @@ import Bar from './Graficos/Bar';
 import Calendar from './Graficos/Calendar';
 import FAQ from './pages/FAQ';
 
+import { tokens } from './theme';
+
 function App() {
   const [theme, colorMode] = useMode();
+  const colors = tokens(theme.palette.mode);
+
 
   return (
     <ProSidebarProvider>
@@ -27,7 +31,7 @@ function App() {
             <Sidebar />
             <main className='content'>
               <TopBar />
-                <Box height='90vh'>
+                <Box height='100%' backgroundColor={colors.primary[900]}>
                   <Routes>
                     <Route path='/' element={<Dashboard />}/>
                     <Route path='/table' element={<Table />}/>

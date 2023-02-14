@@ -17,18 +17,23 @@ const TopBar = () => {
     const colorMode = useContext(ColorModeContext);
 
     return (
-        <Box display='flex' justifyContent='space-between' p={2}>
+        <Box 
+            display='flex' 
+            justifyContent='flex-end' // 'space-between' 
+            backgroundColor={colors.primary[800]}
+            p={2}
+        >
 
-            <Box 
+            {/* <Box 
                 display='flex' 
-                backgroundColor={colors.primary[400]}
+                backgroundColor={colors.primary[600]}
                 borderRadius='0.25rem'
             >
                 <InputBase sx={{ml: 2, flex: 1}} placeholder='Search' />
                 <IconButton type="button" sx={{ p: 1 }}>
                     <SearchIcon />
                 </IconButton>
-            </Box>
+            </Box> */}
             
             <Box display='flex' >
                 <IconButton onClick={colorMode.toggleColorMode}>
