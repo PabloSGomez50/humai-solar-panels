@@ -1,6 +1,7 @@
 import pandas as pd
 
 URL = 'https://humai-solar-project.s3.amazonaws.com/2012-2013_Solar_data.csv'
+PATH_LOCAL = '../script_produccion/2012-2013 Solar home electricity data v2.csv.zip'
 CUSTOMER_ID = 1
 DEBUG = True
 
@@ -33,7 +34,7 @@ def format_date(df_):
     df_.drop(columns=['date', 'time'], inplace=True)
     df_ = df_.loc[:,::-1]
     df_.sort_values('Datetime', inplace=True)
-    df_.reset_index(drop=True, inplace=True)
+    df_.set_index('Datetime', inplace=True)
 
     return df_.copy()
 
@@ -68,9 +69,11 @@ def get_df_consumo():
     """
 
     if DEBUG:
-        print('DEBUG: funcion get_df_consumo')    
-
-    df = pd.read_csv('https://humai-solar-project.s3.amazonaws.com/2012-2013_Solar_data.csv')
+        print('DEBUG: funcion get_df_consumo')
+        df = pd.read_csv(PATH_LOCAL, header = [1])
+    else:
+        df = pd.read_csv('https://humai-solar-project.s3.amazonaws.com/2012-2013_Solar_data.csv')
+        
     print('Leyo el archivo')
     # Limpiar las columnas y hacer el melt
     df = drop_columns(df)
@@ -89,10 +92,10 @@ if __name__ == '__main__':
     df = get_df_consumo()
     # df.to_csv(f'./consumo_user_{CUSTOMER_ID}.csv')
 
-    message = """
-        En este script de python se accede al dataset completo y seleccion un customer.
+    message = """En este script de python se accede al dataset completo y seleccion un customer.
         Se devuelve un dataset:
         Columnas: datetime | GC | CL | total
         """
     print(message)
     print(df.sample(10))
+    # df.to_csv('test.csv')

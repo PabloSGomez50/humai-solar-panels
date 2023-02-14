@@ -40,6 +40,7 @@ def weather_one_hot(df_temp):
 
     return df_temp.copy()
 
+
 def var_categorica(n, df_temp):
     select = list(df_temp['Weather'].value_counts().head(n).index)
     serie_filtrada = df_temp['Weather'].apply(lambda x: x[:-1] if x in select else None)
@@ -52,6 +53,7 @@ def var_categorica(n, df_temp):
         print(f'\tQuedaron {vacias} filas vacias de un total de {total} filas. Un ratio de {ratio:0.2f}%')
 
     return serie_filtrada.copy()
+
 
 def clean_and_convert(df_temp):
 
@@ -66,6 +68,7 @@ def clean_and_convert(df_temp):
     df_temp = df_temp.convert_dtypes()
 
     return df_temp.copy()
+
 
 def extract(string):
   """
@@ -90,6 +93,7 @@ def extract(string):
 
     return string
 
+
 def normalize_df(df_temp):
     return df_temp.apply(lambda x: (x - x.mean()) / x.std(), axis=0)
 
@@ -105,6 +109,7 @@ def normalizacion(df_temp):
 
     return df_temp.copy()
 
+
 def fix_datetime(df_temp):
     """
     Usar la columna Date y Hour para generar una sola columna que contenga objetos datetime 
@@ -113,12 +118,16 @@ def fix_datetime(df_temp):
         print('DEBUG: Creando la variable datetime')
 
     df_temp['Date'] = df_temp['Date'] + df_temp['Hour']
-    df_temp = df_temp.drop(columns='Hour')
-    df_temp['Date'] = pd.to_datetime(df_temp['Date'], format='%Y-%m-%d%H:%M')
+    df_temp['Datetime'] = pd.to_datetime(df_temp['Date'], format='%Y-%m-%d%H:%M')
+    df_temp.drop(columns=['Hour', 'Date'], inplace=True)
+    df_temp.set_index('Datetime', inplace=True)
 
     return df_temp.copy()
+
+
 
 if __name__ == '__main__':
     df_init = get_clima()
     df_final = clean_df()
+    # df_final.to_csv('clima.csv')
     print(df_final.head())

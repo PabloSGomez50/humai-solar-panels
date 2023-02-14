@@ -41,7 +41,7 @@ def get_prod_customer(customer_id: int = CUSTOMER_ID):
     
     # Arreglar indices ylas columnas restantes 
     df_ = df_.drop(columns=['date', 'variable', 'Customer'])
-    df_.reset_index(drop=True, inplace=True)
+    df_.set_index('Datetime', inplace=True)
     df_ = df_.loc[:,::-1]
 
     return df_
@@ -53,3 +53,4 @@ if __name__ == '__main__':
 
      print('\nDEBUG: 10 datos del Dataframe resultante:')
      print(df.sample(10))
+    #  df.to_csv('user_1.csv')
