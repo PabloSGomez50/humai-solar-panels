@@ -6,45 +6,46 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import TableChartIcon from '@mui/icons-material/TableChart';
 
 export default [
     {
-        name: 'Graficos',
+        name: 'Informacion del sistema',
         data: [
+    //         {
+    //             title: 'Grafico Torta',
+    //             to: '/pie',
+    //             icon: PieChartOutlineOutlinedIcon
+    //         },
+    //         {
+    //             title: 'Grafico Linea',
+    //             to: '/line',
+    //             icon: TimelineOutlinedIcon
+    //         },
+    //         {
+    //             title: 'Grafico Barras',
+    //             to: '/bar',
+    //             icon: BarChartOutlinedIcon
+    //         },
+    //         {
+    //             title: 'Calendario',
+    //             to: '/calendar',
+    //             icon: CalendarMonthOutlinedIcon
+    //         },
             {
-                title: 'Grafico Torta',
-                to: '/pie',
-                icon: PieChartOutlineOutlinedIcon
-            },
-            {
-                title: 'Grafico Linea',
-                to: '/line',
-                icon: TimelineOutlinedIcon
-            },
-            {
-                title: 'Grafico Barras',
-                to: '/bar',
-                icon: BarChartOutlinedIcon
-            },
-            {
-                title: 'Calendario',
-                to: '/calendar',
-                icon: CalendarMonthOutlinedIcon
+                title: 'Tabla completa',
+                to: '/table',
+                icon: TableChartIcon
             },
         ]
     },
     {
-        name: 'Informacion',
+        name: 'Control',
         data: [
-            {
-                title: 'Editar Equipo',
-                to: '/team',
-                icon: PersonOutlinedIcon
-            },
             {
                 title: 'Contacto',
                 to: '/contacts',
-                icon: ChromeReaderModeOutlinedIcon
+                icon: PersonOutlinedIcon
             },
             {
                 title: 'FAQ',

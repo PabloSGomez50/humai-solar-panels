@@ -1,6 +1,6 @@
 import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
-import { tokens } from "../../theme";
+import { tokens } from "../theme";
 
 const BarChart = ({ data = [], keys = [], indexBy = '', tickLeft = 5}) => {
     const theme = useTheme();

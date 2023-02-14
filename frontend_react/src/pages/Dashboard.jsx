@@ -8,11 +8,10 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import SolarPowerIcon from '@mui/icons-material/SolarPower';
 
-import EmailIcon from "@mui/icons-material/Email";
-import StatBox from "../components/StatBox";
-import LineChart from "./Graficos/Line";
-import Calendar from "./Graficos/Calendar";
-import BarChart from "./Graficos/Bar";
+import LineChart from "../Graficos/Line";
+import Calendar from "../Graficos/Calendar";
+import BarChart from "../Graficos/Bar";
+import axiosI from "../api";
 
 const Dashboard = () => {
 
@@ -24,68 +23,32 @@ const Dashboard = () => {
     const [ calendarData, setCalendarData ] = useState([]);
     const [ lineData, setLineData ] = useState([]);
 
-    const stats = [
-        // {
-        //     title: 'Promedio diario',
-        //     subtitle: 'En los ultimos 7 dias',
-        //     progress: 0.75,
-        //     increase: 14,
-        //     icon:
-        //     <EmailIcon
-        //         sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-        //     />
-        // },
-        // {
-        //     title: 'Hora de mayor produccion',
-        //     subtitle: 'En los ultimos 7 dias',
-        //     progress: 0.33,
-        //     increase: 14,
-        //     icon:
-        //     <EmailIcon
-        //         sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-        //     />
-        // },
-        {
-            title: 'Desvio estandar',
-            subtitle: 'En los ultimos 7 dias',
-            progress: 0.5,
-            increase: 14,
-            icon:
-            <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-            />
-        },
-    ]
-
     useEffect(() => {
         const requestConsumo = async () => {
-            const response = await axios(
-                'http://127.0.0.1:8000/consumo'
-            )
+            const response = await axiosI('consumo');
 
             setDaily(response.data);
         }
 
         const requestProdCards = async () => {
-            const response = await axios(
-                'http://127.0.0.1:8000/cards'
-            )
+            const response = await axiosI('cards');
+            
             // console.log(response.data);
             setbarData(response.data);
         }
 
         const requestProdCalendar = async () => {
-            const response = await axios(
-                'http://127.0.0.1:8000/prod'
+            const response = await axiosI(
+                'prod'
             )
 
-            console.log(response.data);
+            // console.log(response.data);
             setCalendarData(response.data);
         }
 
         const requestRendimiento = async () => {
-            const response = await axios(
-                'http://127.0.0.1:8000/months'
+            const response = await axiosI(
+                'months'
             )
             
             // console.log(response.data);
@@ -210,7 +173,7 @@ const Dashboard = () => {
                     p='0.75rem'
                 >
                     <Box display='flex' gap='0.5rem'>
-                        <ElectricBoltIcon sx={{color: colors.greenAccent[500]}} />
+                        <SolarPowerIcon sx={{color: colors.greenAccent[500]}} />
                         <Typography
                             variant="h4"
                             fontWeight="bold"
@@ -244,19 +207,19 @@ const Dashboard = () => {
                         
                         <Box>
                             <Typography
-                                variant="h4"
+                                variant="h3"
                                 fontWeight="600"
                                 color={colors.grey[100]}
                             >
                                 Produccion mensual
                             </Typography>
-                            {/* <Typography
-                                variant="h3"
+                            <Typography
+                                variant="h4"
                                 fontWeight="bold"
                                 color={colors.greenAccent[500]}
                             >
-                                $59,342.32
-                            </Typography> */}
+                                Año 2013
+                            </Typography>
                         </Box> 
                        
                         <Box>
@@ -268,6 +231,7 @@ const Dashboard = () => {
                         </Box>
                     </Box>
                     <Box height="250px" m="-20px 0 0 0">
+                        
                         <LineChart 
                             isDashboard={true} 
                             data={lineData}
@@ -281,18 +245,37 @@ const Dashboard = () => {
                     gridRow="span 3"
                     backgroundColor={colors.primary[400]}
                 >
+                    <Box
+                        pl='1rem'
+                        pt='0.5rem'
+                    >
+                        <Typography
+                            variant="h3"
+                            fontWeight="600"
+                            color={colors.grey[100]}
+                        >
+                            Produccion historia
+                        </Typography>
+                        <Typography
+                            variant="h4"
+                            fontWeight="bold"
+                            color={colors.greenAccent[500]}
+                        >
+                            Por dia
+                        </Typography>
+                    </Box> 
                     <Calendar 
                         data={calendarData}
                     />
                 </Box>
 
-                <Box
+                {/* <Box
                     gridColumn="span 4"
                     gridRow="span 1"
                     backgroundColor={colors.primary[400]}
                 >
 
-                </Box>
+                </Box> */}
             </Box>
         </Box>
     )

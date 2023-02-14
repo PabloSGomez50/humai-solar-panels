@@ -110,11 +110,11 @@ const SideBar = () => {
                                 >
                                     Pablo Gomez
                                 </Typography>
-                                <Typography
+                                {/* <Typography
 
                                 >
                                     Full Stack dev
-                                </Typography>
+                                </Typography> */}
                             </Box>
                         </Box>
                     )}

@@ -2,46 +2,78 @@ import { Box, useTheme } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 
 import { tokens } from '../theme';
-import { teamData } from "../fake_data/data";
+import { useEffect, useState } from "react";
 
 import Header from "../components/Header";
-
+import axiosI from "../api";
 
 const columns = [
     { field: "id", headerName: "ID" },
     {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-      cellClassName: "name-column--cell",
+        field: "Fecha",
+        //   headerName: "Name",
+        type: 'date',
+        //   width: '5rem',
+        cellClassName: "name-column--cell",
     },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      headerAlign: "left",
-      align: "left",
+        field: "Produccion",
+        headerName: "Produccion (unidad: Kw)",
+        type: "number",
+        headerAlign: "left",
+        align: "center",
+        flex: 1,
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
+        field: "Consumo general",
+        headerName: "Consumo general (unidad: Kw)",
+        type: "number",
+        headerAlign: "left",
+        align: "center",
+        
+        flex: 1,
     },
     {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
+        field: "Consumo controlado",
+        headerName: "Consumo controlado (unidad: Kw)",
+        type: "number",
+        headerAlign: "left",
+        align: "center",
+        
+        flex: 1,
     },
-  ];
+    {
+        field: "Consumo Total",
+        headerName: "Consumo Total (unidad: Kw)",
+        type: "number",
+        headerAlign: "left",
+        align: "center",
+        
+        flex: 1,
+    },
+];
 
-const Team = () => {
-    
+const Table = () => {
+
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
+    const [tableData, setTableData] = useState([]);
+
+    useEffect(() => {
+        const requestData = async () => {
+            const response = await axiosI('table')
+            console.log(response.data)
+
+            setTableData(response.data);
+        }
+
+        requestData();
+    }, [])
+
     return (
         <Box m="20px">
-            <Header title="TEAM" subtitle="Managing the Team Members" />
+            <Header title="Table" subtitle="Managing the Table Members" />
             <Box
                 m="40px 0 0 0"
                 height="75vh"
@@ -71,10 +103,10 @@ const Team = () => {
                     },
                 }}
             >
-                <DataGrid checkboxSelection rows={teamData} columns={columns} />
+                <DataGrid checkboxSelection rows={tableData} columns={columns} />
             </Box>
         </Box>
     )
 }
 
-export default Team;
+export default Table;

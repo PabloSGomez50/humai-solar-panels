@@ -7,12 +7,12 @@ import { ProSidebarProvider } from 'react-pro-sidebar';
 import TopBar from './components/TopBar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
-import Team from './pages/Team';
+import Table from './pages/Table';
 import Contacts from './pages/Contacts';
-import Pie from './pages/Graficos/Pie';
-import Line from './pages/Graficos/Line';
-import Bar from './pages/Graficos/Bar';
-import Calendar from './pages/Graficos/Calendar';
+import Pie from './Graficos/Pie';
+import Line from './Graficos/Line';
+import Bar from './Graficos/Bar';
+import Calendar from './Graficos/Calendar';
 import FAQ from './pages/FAQ';
 
 function App() {
@@ -30,11 +30,13 @@ function App() {
                 <Box height='90vh'>
                   <Routes>
                     <Route path='/' element={<Dashboard />}/>
-                    <Route path='/team' element={<Team />}/>
+                    <Route path='/table' element={<Table />}/>
+                    {/* 
                     <Route path='/pie' element={<Pie />}/>
                     <Route path='/bar' element={<Bar />}/>
                     <Route path='/line' element={<Line />}/>
                     <Route path='/calendar' element={<Calendar />}/>
+                    */}
 
                     <Route path='/faq' element={<FAQ />}/>
                     <Route path='/contacts' element={<Contacts />}/>
