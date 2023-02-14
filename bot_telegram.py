@@ -46,6 +46,14 @@ def mensajes_texto(message):
     bot.send_message(message.chat.id, mensaje)
     # bot.send_message(message.chat.id,'aca va el texto para cuando el usuario envia un mensaje y no una funcion')
 
+#comando 1
+@bot.message_handler(content_types= '1')
+def consumo_actual(message):
+    '''Consultar el consumo actual: Permite al usuario ver la cantidad de energía que está consumiendo en tiempo real.'''
+    markup = ForceReply()
+    bot.send_message(message.chat.id,'')
+
+#comando 2
 
 if __name__ == '__main__':
     bot.set_my_commands([
