@@ -6,9 +6,10 @@ import { ProSidebarProvider } from 'react-pro-sidebar';
 
 import TopBar from './components/TopBar';
 import Sidebar from './components/Sidebar';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
 import Table from './pages/Table';
 import Contacts from './pages/Contacts';
+import Config from './pages/Config';
 import Pie from './Graficos/Pie';
 import Line from './Graficos/Line';
 import Bar from './Graficos/Bar';
@@ -21,7 +22,6 @@ function App() {
   const [theme, colorMode] = useMode();
   const colors = tokens(theme.palette.mode);
 
-
   return (
     <ProSidebarProvider>
       <ColorModeContext.Provider value={colorMode}>
@@ -31,20 +31,18 @@ function App() {
             <Sidebar />
             <main className='content'>
               <TopBar />
-                <Box height='100%' backgroundColor={colors.primary[800]}>
+                <Box 
+                  height='100%' 
+                  // backgroundColor={colors.primary[700]} 
+                  backgroundColor={colors.grey[800]} 
+                  p='1.25rem 2rem'
+                >
                   <Routes>
                     <Route path='/' element={<Dashboard />}/>
                     <Route path='/table' element={<Table />}/>
-                    {/* 
-                    <Route path='/pie' element={<Pie />}/>
-                    <Route path='/bar' element={<Bar />}/>
-                    <Route path='/line' element={<Line />}/>
-                    <Route path='/calendar' element={<Calendar />}/>
-                    */}
-
                     <Route path='/faq' element={<FAQ />}/>
                     <Route path='/contacts' element={<Contacts />}/>
-                    <Route path='/settings' element={<Contacts />}/>
+                    <Route path='/settings' element={<Config />}/>
                   </Routes>
                 </Box>
             </main>

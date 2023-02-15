@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { Sidebar, Menu, MenuItem, useProSidebar } from 'react-pro-sidebar';
 import { tokens } from '../theme';
@@ -10,17 +10,18 @@ import ProfilePic from '../assets/suprapixel.jpg';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import StarIcon from '@mui/icons-material/Star';
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
+const Item = ({ title, to, icon, selected }) => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
     return (
         <MenuItem
-            active={selected === title}
+            active={selected === to}
             style={{ color: colors.grey[100] }}
-            onClick={() => setSelected(title)}
+            // onClick={() => setSelected(title)}
             icon={icon}
             component={<Link to={to}/>}
         >
@@ -33,9 +34,16 @@ const SideBar = () => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const [selected, setSelected] = useState('Dashboard');
 
-    const { collapseSidebar, collapsed } = useProSidebar(); 
+    const location = useLocation();
+
+    const gitHubRef = useRef();
+
+    const { collapseSidebar, collapsed } = useProSidebar();
+
+    const redirectGithub = () => {
+        gitHubRef.current.click();
+    }
 
 
     return (
@@ -96,7 +104,7 @@ const SideBar = () => {
                     </MenuItem>
 
                     {!collapsed && (
-                        <Box mb='1.5rem'>
+                        <Box m='1.5rem 0'>
                             <Box display='flex' justifyContent='center' alignItems='center'>
                                 <img
                                     alt='profile-user'
@@ -116,11 +124,6 @@ const SideBar = () => {
                                 >
                                     Pablo Gomez
                                 </Typography>
-                                {/* <Typography
-
-                                >
-                                    Full Stack dev
-                                </Typography> */}
                             </Box>
                         </Box>
                     )}
@@ -131,8 +134,8 @@ const SideBar = () => {
                                 title='Dashboard'
                                 to='/'
                                 icon={<DashboardOutlinedIcon />}
-                                selected={selected}
-                                setSelected={setSelected}
+                                selected={location.pathname}
+                                // setSelected={setSelected}
                             />
 
                             {sidebarItems.map(section => 
@@ -150,8 +153,8 @@ const SideBar = () => {
                                         title={item.title}
                                         to={item.to}
                                         icon={<item.icon />}
-                                        selected={selected}
-                                        setSelected={setSelected}
+                                        selected={location.pathname}
+                                        // setSelected={setSelected}
                                     
                                     />    
                                 )}
@@ -163,18 +166,58 @@ const SideBar = () => {
                     <Box
                         sx={{
                             margin: 'auto 2.5rem 3rem',
-                            minHeight: '8rem',
-                            backgroundColor: colors.primary[500],
+                            minHeight: '9rem',
+                            p: '16px 0px',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            gap: '2px',
+
+                            backgroundColor: colors.primary[500],
                             borderRadius: '16px'
                         }}
                     >
                         <GitHubIcon sx={{height: '2rem', width: '2rem'}}/>
-                    </Box>
 
+                        <Typography
+                            mt='8px'
+                            fontSize='14px'
+                            fontWeight='bold'
+                            letterSpacing='0.5px'
+                            color='#fff'
+                        >
+                            Te gusto el proyecto?
+                        </Typography>
+
+                        <Typography fontSize='13px' color='#FAFAFA'>
+                            Mira el repositorio
+                        </Typography>
+
+                        <IconButton
+                            onClick={redirectGithub}
+                            sx={{
+                                marginTop: '6px',
+                                display: 'flex',
+                                // alignItems: 'flex-end',
+                                justifyContent: 'center',
+                                gap: '0.25rem',
+                                backgroundColor: colors.grey[100],
+                                color: colors.primary[600],
+                                borderRadius: '8px',
+                                boxShadow: 'rgba(149, 157, 165, 0.2) 0px 4px 12px;',
+                                '&:hover': {
+                                    backgroundColor: colors.grey[200]
+                                }
+                            }}
+                        >
+                            <StarIcon />
+                            <Typography>
+                                Star the repo
+                            </Typography>
+                            <a hidden ref={gitHubRef} href='https://github.com/PabloSGomez50/humai-solar-panels' target='_blank'/>
+                        </IconButton>
+                    </Box>
                 </Menu>
             </Sidebar>
         </Box>

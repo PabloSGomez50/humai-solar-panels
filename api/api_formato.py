@@ -50,14 +50,15 @@ def format_calendario(df_):
     } for x in data]
 
 
-def format_bar(df_):
-    semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+def format_summary(df_):
+    # semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+    semana = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
     data = df_.to_records(index=False)
     
     total = round(sum(map(lambda x: x[1], data)), 2)
     response = [{
-        'day': semana[x[0]], 
-        'value': round(x[1], 2)
+        'x': semana[x[0]], 
+        'y': round(x[1], 2)
         } 
         for x in data ]
 
@@ -65,10 +66,18 @@ def format_bar(df_):
 
     return {'total': total,'dias': response}
 
+# def format_summary(df_):
+#     semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+#     data = df_.to_records(index=False)
+    
+#     total = round(sum(map(lambda x: x[1], data)), 2)
+#     response = [{
+#         'day': semana[x[0]], 
+#         'value': round(x[1], 2)
+#         } 
+#         for x in data ]
 
-# def format_table(df_):
-#     """
-#     Crear una lista de diccionarios con los datos historicos
-#     con una frecuencia de 1 dia
-#     """
+#     # response.append({'day': 'Total', 'value': total})
+
+#     return {'total': total,'dias': response}
 

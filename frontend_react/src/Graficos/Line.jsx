@@ -23,7 +23,7 @@ const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) =>
       ticks: {
         line: {
           stroke: colors.grey[100],
-          strokeWidth: 11,
+          strokeWidth: 1.5,
         },
         text: {
           fill: colors.grey[100],
@@ -64,7 +64,7 @@ const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) =>
       axisRight={null}
       axisBottom={{
         orient: "bottom",
-        tickSize: 1,
+        tickSize: 5,
         tickPadding: 10,
         tickRotation: 0,
         legendOffset: 36,
@@ -73,7 +73,7 @@ const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) =>
       axisLeft={{
         orient: "left",
         tickValues: 5, // added
-        tickSize: 1,
+        tickSize: 5,
         tickPadding: 7,
         tickRotation: 0,
         legendOffset: -40,

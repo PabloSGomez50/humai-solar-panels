@@ -25,7 +25,7 @@ def root():
 def consumo_7d():
 
     df_response = api_views.consumo_last_7d(1)
-    response = api_formato.format_bar(df_response)
+    response = api_formato.format_summary(df_response)
 
     return response
 

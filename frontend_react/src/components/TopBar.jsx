@@ -1,6 +1,7 @@
 import { Box, IconButton, useTheme } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { ColorModeContext, tokens } from "../theme";
+import { useNavigate } from 'react-router-dom';
 import { InputBase } from "@mui/material";
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
@@ -15,6 +16,9 @@ const TopBar = () => {
 
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+
+    const navigate = useNavigate();
+    const instagramRef = useRef();
 
     return (
         <Box 
@@ -49,13 +53,14 @@ const TopBar = () => {
                     <NotificationsOutlinedIcon />
                 </IconButton>
 
-                <IconButton>
+                <IconButton onClick={() => navigate('/settings')}>
                     <SettingsOutlinedIcon />
                 </IconButton>
 
-                <IconButton>
+                <IconButton onClick={() => instagramRef.current.click()}>
                     <PersonOutlinedIcon />
                 </IconButton>
+                <a hidden href='https://www.instagram.com/pablito_gomez03/' target='_blank' ref={instagramRef}/>
             </Box>
         </Box>
     )

@@ -72,7 +72,7 @@ const Table = () => {
     }, [])
 
     return (
-        <Box m="20px">
+        <Box>
             <Header title="Table" subtitle="Managing the Table Members" />
             <Box
                 m="40px 0 0 0"
@@ -83,16 +83,17 @@ const Table = () => {
                     },
                     "& .MuiDataGrid-cell": {
                         borderBottom: "none",
+                        backgroundColor: colors.grey[500]
                     },
                     "& .name-column--cell": {
-                        color: colors.secondary[300],
+                        color: colors.secondary[300]
                     },
                     "& .MuiDataGrid-columnHeaders": {
                         backgroundColor: colors.blueAccent[700],
                         borderBottom: "none",
                     },
                     "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
+                        backgroundColor: colors.grey[900]
                     },
                     "& .MuiDataGrid-footerContainer": {
                         borderTop: "none",
@@ -103,7 +104,11 @@ const Table = () => {
                     },
                 }}
             >
-                <DataGrid checkboxSelection rows={tableData} columns={columns} />
+                <DataGrid 
+                    checkboxSelection 
+                    rows={tableData} 
+                    columns={columns} 
+                />
             </Box>
         </Box>
     )
