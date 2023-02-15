@@ -9,6 +9,7 @@ import sidebarItems from './SidebarItems';
 import ProfilePic from '../assets/suprapixel.jpg';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
 
@@ -43,15 +44,17 @@ const SideBar = () => {
                 display: 'flex',
                 height: '100%',
                 '& .ps-sidebar-container': {
-                    background: `${colors.primary[800]} !important`
+                    background: `${colors.grey[600]} !important`
                 },
                 '& .ps-menu-button': {
                     backgroundColor: 'transparent !important',
+                    margin: '0.25rem 0'
                 },
                 '& .pro-inner-item': {
                     padding: '6px 35px 6px 20px !important'
                 },
                 '& .ps-menu-root ul': {
+                    height: '100vh',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '1.5rem'
@@ -62,13 +65,13 @@ const SideBar = () => {
                 },
                 '& .ps-menu-button.ps-active': {
                     marginRight: '1.5rem',
-                    color: `${colors.primary[400]} !important`, // #6870fa
-                    backgroundColor: `${colors.grey[100]} !important`,
+                    color: `${colors.grey[100]} !important`, // #6870fa
+                    backgroundColor: `${colors.primary[400]} !important`,
                     borderRadius: '0.25rem'
                 },
             }}
         >
-            <Sidebar style={{ border: 'none'}} >
+            <Sidebar style={{ border: 'none', borderRight: `${colors.grey[400]} solid 2px`}} >
                 <Menu>
                     <MenuItem
                         onClick={() => collapseSidebar()}
@@ -136,7 +139,7 @@ const SideBar = () => {
                             <React.Fragment key={section.name}>
                                 <Typography
                                     variant="h6"
-                                    color={colors.grey[300]}
+                                    color={colors.grey[200]}
                                     sx={{ m: "15px 0 5px 20px" }}
                                 >
                                     {section.name}
@@ -156,6 +159,22 @@ const SideBar = () => {
                             )}
                         </Box>
                     )}
+
+                    <Box
+                        sx={{
+                            margin: 'auto 2.5rem 3rem',
+                            minHeight: '8rem',
+                            backgroundColor: colors.primary[500],
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '16px'
+                        }}
+                    >
+                        <GitHubIcon sx={{height: '2rem', width: '2rem'}}/>
+                    </Box>
+
                 </Menu>
             </Sidebar>
         </Box>

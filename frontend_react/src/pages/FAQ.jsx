@@ -48,7 +48,7 @@ const FAQ = () => {
                     >
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography
-                                color={colors.greenAccent[400]}
+                                color={colors.secondary[400]}
                                 variant='h5'
                                 >
                                 {question.title}

@@ -59,7 +59,7 @@ def consumo_last_7d(user_id: int) -> list:
     df['Dia'] = df['Datetime'].dt.day
 
     df_ = df.groupby('Dia').aggregate({'Datetime': 'first','Total': 'sum'})
-    df_['Datetime'] = df_['Datetime'].dt.strftime('%A')
+    df_['Datetime'] = df_['Datetime'].dt.dayofweek
 
     return df_
 
@@ -122,7 +122,7 @@ def prod_last_7(user_id: int) -> dict:
     return {'prom': data1,'horas': data2}
 
 
-def prod_calendar(user_id: int) -> list:
+def prod_calendar(user_id: int) -> pd.DataFrame:
     """
     Accede al dataset y devuelvo un json con los datos de los ultimos 7 dias
 
@@ -137,7 +137,7 @@ def prod_calendar(user_id: int) -> list:
     
     return df1
 
-def prod_by_month(user_id: int) -> list:
+def prod_by_month(user_id: int) -> pd.DataFrame:
     """
     Funcion para el grafico de lineas
     Busca clasificar la produccion de los ultimos tres meses por dia
@@ -161,7 +161,7 @@ def prod_by_month(user_id: int) -> list:
     return df1
 
 
-def prod_history(user_id: int) -> list:
+def prod_history(user_id: int) -> pd.DataFrame:
     """
     Funcion para el grafico de lineas
     Busca clasificar la produccion de los ultimos tres meses por dia
@@ -188,7 +188,7 @@ def prod_history(user_id: int) -> list:
 
     return df
 
-def get_table(user_id: int) -> list:
+def get_table(user_id: int) -> pd.DataFrame:
 
     df_con = get_consumo(user_id)
     df_prod = get_prod(user_id)

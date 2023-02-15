@@ -51,19 +51,19 @@ def format_calendario(df_):
 
 
 def format_bar(df_):
+    semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     data = df_.to_records(index=False)
     
     total = round(sum(map(lambda x: x[1], data)), 2)
-    
     response = [{
-        'day': x[0], 
+        'day': semana[x[0]], 
         'value': round(x[1], 2)
         } 
         for x in data ]
 
-    response.append({'day': 'Total', 'value': total})
+    # response.append({'day': 'Total', 'value': total})
 
-    return response
+    return {'total': total,'dias': response}
 
 
 # def format_table(df_):

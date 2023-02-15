@@ -1,7 +1,6 @@
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import { ResponsiveCalendar } from '@nivo/calendar';
-import { mockCalendar } from "../fake_data/data";
 
 const Calendar = ({data}) => {
 
@@ -15,7 +14,7 @@ const Calendar = ({data}) => {
         to = data[len - 1].day;
 
     } else {
-        data = mockCalendar;
+        data = [];
     }
 
     const theme = useTheme();
@@ -46,7 +45,7 @@ const Calendar = ({data}) => {
             margin={{ top: 0, right: 40, bottom: 40, left: 40 }}
             yearSpacing={40}
             monthBorderColor={colors.grey[800]}
-            dayBorderColor={colors.grey[500]}
+            dayBorderColor={colors.grey[600]}
             emptyColor='transparent'
             dayBorderWidth={2}
             legends={[

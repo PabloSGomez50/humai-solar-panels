@@ -31,7 +31,7 @@ function App() {
             <Sidebar />
             <main className='content'>
               <TopBar />
-                <Box height='100%' backgroundColor={colors.primary[900]}>
+                <Box height='100%' backgroundColor={colors.primary[800]}>
                   <Routes>
                     <Route path='/' element={<Dashboard />}/>
                     <Route path='/table' element={<Table />}/>

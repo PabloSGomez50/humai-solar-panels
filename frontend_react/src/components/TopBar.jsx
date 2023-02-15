@@ -20,7 +20,8 @@ const TopBar = () => {
         <Box 
             display='flex' 
             justifyContent='flex-end' // 'space-between' 
-            backgroundColor={colors.primary[800]}
+            backgroundColor={colors.grey[600]}
+            borderBottom={`${colors.grey[400]} solid 2px`}
             p={2}
         >
 

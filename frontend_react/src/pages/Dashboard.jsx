@@ -26,6 +26,7 @@ const Dashboard = () => {
         const requestConsumo = async () => {
             const response = await axiosI('consumo');
 
+            console.log(response.data);
             setDaily(response.data);
         }
 
@@ -57,7 +58,7 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <Box m='1.25rem' backgroundColor={colors.grey[400]}>
+        <Box m='1.25rem'>
             <Box display='flex' justifyContent='space-between' alignItems='center'>
                 <Header title='DASHBOARD' subtitle='Este es el resumen de tu sistema'/>
 
@@ -87,13 +88,13 @@ const Dashboard = () => {
                 <Box
                     gridColumn='span 4'
                     gridRow='span 2'
-                    backgroundColor={colors.primary[400]}
+                    backgroundColor={colors.grey[500]}
                     display='flex'
                     flexDirection='column'
                     p='0.75rem'
                 >
                     <Box display='flex' gap='0.5rem'>
-                        <ElectricBoltIcon sx={{color: colors.greenAccent[500]}} />
+                        <ElectricBoltIcon sx={{color: colors.secondary[500]}} />
                         <Typography
                             variant="h4"
                             fontWeight="bold"
@@ -104,6 +105,10 @@ const Dashboard = () => {
                         </Typography>
                     </Box>
 
+                    <Typography variant="h4">
+                        El total del dia es {daily.total} Kw
+                    </Typography>
+
                     <Box
                         display='flex'
                         height='90%'
@@ -111,36 +116,37 @@ const Dashboard = () => {
                         gap='0.5rem'
                         flexWrap='wrap'
                     >
-                        {daily.map(item =>
+                        {daily.dias.map(item =>
                             <Box
                                 key={item.day}
                                 display='flex'
                                 justifyContent='space-between'
                                 p='0 0.5rem'
                             >
-                                <Typography sx={{ color: colors.greenAccent[500] }}>
+                                <Typography sx={{ color: colors.grey[100] }}>
                                     {item.day}
                                 </Typography>
 
-                                <Typography sx={{ color: colors.grey[200] }}>
+                                <Typography sx={{ color: colors.primary[100] }}>
                                     {item.value} Kw
                                 </Typography>
                             </Box>
                         )}
                     </Box>
+
                 </Box>
 
                 {/* 1ra fila 2er columna */}
                 <Box
                     gridColumn='span 4'
                     gridRow='span 2'
-                    backgroundColor={colors.primary[400]}
+                    backgroundColor={colors.grey[500]}
                     display='flex'
                     flexDirection='column'
                     p='0.75rem'
                 >
                     <Box display='flex' gap='0.5rem'>
-                        <ElectricBoltIcon sx={{color: colors.greenAccent[500]}} />
+                        <ElectricBoltIcon sx={{color: colors.secondary[500]}} />
                         <Typography
                             variant="h4"
                             fontWeight="bold"
@@ -162,13 +168,13 @@ const Dashboard = () => {
                 <Box
                     gridColumn='span 4'
                     gridRow='span 2'
-                    backgroundColor={colors.primary[400]}
+                    backgroundColor={colors.grey[500]}
                     display='flex'
                     flexDirection='column'
                     p='0.75rem'
                 >
                     <Box display='flex' gap='0.5rem'>
-                        <SolarPowerIcon sx={{color: colors.greenAccent[500]}} />
+                        <SolarPowerIcon sx={{color: colors.secondary[500]}} />
                         <Typography
                             variant="h4"
                             fontWeight="bold"
@@ -190,7 +196,7 @@ const Dashboard = () => {
                 <Box
                     gridColumn="span 6"
                     gridRow="span 3"
-                    backgroundColor={colors.primary[400]}
+                    backgroundColor={colors.grey[500]}
                 >
                     <Box
                         mt="25px"
@@ -211,7 +217,7 @@ const Dashboard = () => {
                             <Typography
                                 variant="h4"
                                 fontWeight="bold"
-                                color={colors.greenAccent[500]}
+                                color={colors.secondary[500]}
                             >
                                 Año 2013
                             </Typography>
@@ -220,7 +226,7 @@ const Dashboard = () => {
                         <Box>
                             <IconButton>
                                 <DownloadOutlinedIcon
-                                sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
+                                sx={{ fontSize: "26px", color: colors.secondary[500] }}
                                 />
                             </IconButton>
                         </Box>
@@ -238,7 +244,7 @@ const Dashboard = () => {
                 <Box
                     gridColumn="span 6"
                     gridRow="span 3"
-                    backgroundColor={colors.primary[400]}
+                    backgroundColor={colors.grey[500]}
                 >
                     <Box
                         pl='1rem'
@@ -254,7 +260,7 @@ const Dashboard = () => {
                         <Typography
                             variant="h4"
                             fontWeight="bold"
-                            color={colors.greenAccent[500]}
+                            color={colors.secondary[500]}
                         >
                             Por dia
                         </Typography>
@@ -267,7 +273,7 @@ const Dashboard = () => {
                 {/* <Box
                     gridColumn="span 4"
                     gridRow="span 1"
-                    backgroundColor={colors.primary[400]}
+                    backgroundColor={colors.grey[500]}
                 >
 
                 </Box> */}

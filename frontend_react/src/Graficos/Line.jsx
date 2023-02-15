@@ -2,9 +2,9 @@
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
-import { mockLineData } from "../fake_data/data";
+// import { mockLineData } from "../fake_data/data";
 
-const LineChart = ({ data = mockLineData, isCustomLineColors = false, isDashboard = false }) => {
+const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -54,10 +54,12 @@ const LineChart = ({ data = mockLineData, isCustomLineColors = false, isDashboar
         min: "auto",
         max: "auto",
         stacked: false,
-        reverse: false,
       }}
       yFormat=" >-.2f"
-      curve="catmullRom"
+      // curve="catmullRom"
+      curve='linear'
+      lineWidth={3}
+
       axisTop={null}
       axisRight={null}
       axisBottom={{
@@ -77,16 +79,20 @@ const LineChart = ({ data = mockLineData, isCustomLineColors = false, isDashboar
         legendOffset: -40,
         legendPosition: "middle",
       }}
+
       // enableSlices='x'
       enableGridX={false}
       enableGridY={false}
-      enableCrosshair={false}
+      enableCrosshair={true}
+      enablePoints={false}
+
       pointSize={8}
       pointColor={{ theme: "background" }}
       pointBorderWidth={2}
       pointBorderColor={{ from: "serieColor" }}
       pointLabelYOffset={-12}
       useMesh={true}
+
       legends={[
         {
           anchor: "bottom-right",

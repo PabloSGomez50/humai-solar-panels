@@ -85,7 +85,7 @@ const Table = () => {
                         borderBottom: "none",
                     },
                     "& .name-column--cell": {
-                        color: colors.greenAccent[300],
+                        color: colors.secondary[300],
                     },
                     "& .MuiDataGrid-columnHeaders": {
                         backgroundColor: colors.blueAccent[700],
@@ -99,7 +99,7 @@ const Table = () => {
                         backgroundColor: colors.blueAccent[700],
                     },
                     "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
+                        color: `${colors.secondary[200]} !important`,
                     },
                 }}
             >
