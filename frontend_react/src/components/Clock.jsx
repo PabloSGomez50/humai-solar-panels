@@ -1,12 +1,17 @@
 import { Box, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 
-
+const padTime = (value) => {
+    if (value < 10){
+        return '0' + value;
+    } else {
+        return value;
+    }
+    
+}
 
 const Clock = ({ colors }) => {
-
-    console.log('Re render Clock')
-
+    
     const [ time, setTime] = useState(new Date());
 
     useEffect(() => {
@@ -26,7 +31,7 @@ const Clock = ({ colors }) => {
                 fontSize='24px'
                 p='0 1.75rem'
             >
-                {time.getHours()}:{time.getMinutes()}:{time.getSeconds()}
+                {time.getHours()}:{padTime(time.getMinutes())}:{padTime(time.getSeconds())}
             </Typography>
         </Box>
     )

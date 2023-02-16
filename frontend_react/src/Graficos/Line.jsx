@@ -2,9 +2,8 @@
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
-// import { mockLineData } from "../fake_data/data";
 
-const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) => {
+const LineChart = ({ data, isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -56,8 +55,8 @@ const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) =>
         stacked: false,
       }}
       yFormat=" >-.2f"
-      // curve="catmullRom"
-      curve='linear'
+      curve="monotoneX"
+      // curve='linear'
       lineWidth={3}
 
       axisTop={null}

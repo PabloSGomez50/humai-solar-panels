@@ -8,7 +8,6 @@ import SummaryLine from "./SummaryLine";
 const Summary = ({ colors, daily }) => {
 
     const arr = [1,2,3,4]
-    console.log(daily)
 
     return (
         <Box

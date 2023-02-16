@@ -3,7 +3,7 @@ import { ResponsiveLine } from "@nivo/line";
 
 
 const SummaryLine = ({ info, colors }) => {
-    console.log(info);
+    
     const data = [
         {id: 'Consumo', color: '#e8c1a0', data: info}
     ]

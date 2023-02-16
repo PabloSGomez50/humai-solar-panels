@@ -1,7 +1,7 @@
 import boto3
 from dotenv import load_dotenv
-from io import StringIO
 import os
+from io import StringIO
 
 load_dotenv()
 
@@ -52,6 +52,21 @@ def get_list():
     bucket = get_bucket()
 
     return [x.key for x in bucket.objects.all()]
+
+def test_lambda():
+
+    client = boto3.client('lambda', 
+                        aws_access_key_id = AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+                        )
+
+    print(type(client))
+    print(client)
+
+    response = client.create_function(
+        FunctionName='test_humai_consumo',
+        Runtime='python3.9'
+    )
 
 if __name__ == '__main__':
     print()

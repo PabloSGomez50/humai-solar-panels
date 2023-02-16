@@ -167,6 +167,7 @@ const SideBar = () => {
                         </Box>
                     )}
 
+                    {!collapsed && (
                     <Box
                         sx={{
                             margin: 'auto 2.5rem 3rem',
@@ -222,6 +223,7 @@ const SideBar = () => {
                         </IconButton>
                         <a hidden ref={gitHubRef} href='https://github.com/PabloSGomez50/humai-solar-panels' target='_blank'/>
                     </Box>
+                    )}
                 </Menu>
             </Sidebar>
         </Box>

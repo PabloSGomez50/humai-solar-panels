@@ -21,7 +21,7 @@ const Dashboard = () => {
     const colors = tokens(theme.palette.mode);
 
     const [ year, setYear ] = useState(2012);
-    const [ lineSpan, setLineSpan ] = useState('1M');
+    const [ lineSpan, setLineSpan ] = useState({span: '1M', sample: '1D'});
 
     const [daily, setDaily] = useState([]);
     const [barData, setbarData] = useState({});
@@ -33,7 +33,7 @@ const Dashboard = () => {
         const requestProdCalendar = async () => {
             const response = await axiosI('calendar/' + year);
 
-            // console.log(response.data);
+            console.log('EXECUTE: calendar');
             setCalendarData(response.data);
         }
 
@@ -43,9 +43,9 @@ const Dashboard = () => {
     useEffect(() => {
         
         const requestRendimiento = async () => {
-            const response = await axiosI(`line/${lineSpan}`);
+            const response = await axiosI(`line/${lineSpan.span}/${lineSpan.sample}`);
 
-            // console.log(response.data);
+            console.log('EXECUTE: rendimiento');
             setLineData(response.data);
         }
 
@@ -56,21 +56,19 @@ const Dashboard = () => {
         const requestConsumo = async () => {
             const response = await axiosI('consumo');
 
-            // console.log(response.data);
+            console.log('EXECUTE: Horas');
             setDaily(response.data);
         }
 
         const requestProdCards = async () => {
             const response = await axiosI('cards');
 
-            // console.log(response.data);
+            console.log('EXECUTE: Cartas');
             setbarData(response.data);
         }
 
         requestProdCards();
         requestConsumo();
-        // requestProdCalendar();
-        // requestRendimiento();
     }, [])
 
     return (
