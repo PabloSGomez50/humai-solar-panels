@@ -73,12 +73,20 @@ def calendario(year: int):
     return response
 
 
-@app.get('/line/{span}')
-def historia(span: str ='1D'):
+@app.get('/line/{span}/{sample}')
+def historia(span: str ='1M', sample: str ='1D'):
 
     df = get_prod(1)
-    df_response = api_views.prod_history(df, span)
-    response = api_formato.format_linea(df_response)
+    df_response = api_views.prod_history(df, span=span, sample=sample)
+
+    if sample.endswith('W'):
+        response = api_formato.format_linea_semana(df_response)
+
+    elif sample.endswith('D'):
+        response = api_formato.format_linea_dia(df_response, '%d')
+
+    else:
+        response = api_formato.format_linea_hora(df_response)
 
     return response
 

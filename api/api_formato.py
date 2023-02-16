@@ -1,17 +1,37 @@
 # import pandas as pd
 
 # TIMEZONE = 'America/Argentina/Buenos_Aires'
+COLORS = ['#80558C', '#E4D192', '#6096B4', 
+          '#BFDB38', '#FC7300', '#FCF9BE',
+          '#FF9F9F', '#9F8772', '#90A17D']
+# colors = ['hsl(218, 70%, 50%)',"hsl(154, 70%, 50%)", 'hsl(276, 70%, 50%)', 
+    #     'hsl(99, 70%, 50%)', 'hsl(105, 70%, 50%)', 
+    #     ]
 
-def format_linea(df_):
+
+def format_linea_semana(df_) -> list:
+    """
+    Alterar df en lista formateada para grafico de linea
+    Columnas: Datetime | Produccion (suma del semana)
+    Retorna: datos clasificados por semanas
+    """
+
+    print(df_)
+
+    return []
+
+
+def format_linea_dia(df_, format) -> list:
     """
     Alterar df en lista formateada para grafico de linea
     Columnas: Datetime | Produccion (suma del dia)
+    Retorna: datos clasificados por dias
     """
 
     # df_.index = df_.index.tz_localize(TIMEZONE)
     
-    df_['Mes'] = df_.index.strftime('%b')
-    df_['Datetime'] = df_.index.strftime('%d')
+    df_['group'] = df_.index.strftime('%b')
+    df_['index'] = df_.index.strftime('%d')
 
     # Data es lista de tuplas (valor, mes, dia)
     data = df_.to_records(index=False)
@@ -19,22 +39,29 @@ def format_linea(df_):
     final = []
     value = []
     count = 0
-    colors = ['hsl(218, 70%, 50%)',"hsl(154, 70%, 50%)", 'hsl(276, 70%, 50%)', 
-        'hsl(99, 70%, 50%)', 'hsl(105, 70%, 50%)', 
-        ]
 
     for x in data:
         if x[1] != mes:
-            final.append({'id': mes, 'color': colors[count], 'data': value})
+            final.append({'id': mes, 'color': COLORS[count], 'data': value})
             count += 1
             mes = x[1]
             value = []
 
         value.append({'x': x[2], 'y': x[0]})
 
-    final.append({'id': mes, 'color': colors[count], 'data': value})
+    final.append({'id': mes, 'color': COLORS[count], 'data': value})
 
     return final
+
+
+def format_linea_horas(df_):
+    """
+    Alterar df en lista formateada para grafico de linea
+    Columnas: Datetime | Produccion (suma del dia)
+    Retorna: datos clasificados por horas y minutos
+    """
+
+
 
 def format_calendario(df_):
     """

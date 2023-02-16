@@ -4,23 +4,28 @@ from datetime import datetime, timedelta
 
 DAYS_DIFF = 2 + 365 * 10
 
-def get_datetimes(days = 6, months = 0, span: str = None):
+def get_datetimes(days = 6, months = 0):
     """
     Funcion para obtener los registros de interes, de una semana o varios meses
     """
     
     today = datetime.today() - timedelta(days=DAYS_DIFF)
 
-    if span == '1D':
-        days = 0
-    elif span == '1M':
-        days = 1
 
 
-    if months == 0:
-        min_day = today - timedelta(days=days)
+    if months != 0:
+        mes = today.month + 1
+        dia = today.day
+        anio = today.year
+        
+        if mes - months < 1:
+            mes += 12
+            anio -= 1 
+
+        min_day = datetime(year=anio, month=mes - months, day=1)
     else:
-        min_day = datetime(year=today.year, month=1, day=1)
+        min_day = today - timedelta(days=days)
+
 
     lim_min = min_day.strftime('%Y-%m-%d')
     lim_max = today.strftime('%Y-%m-%d') + ' 23:59'
@@ -126,23 +131,24 @@ def prod_calendar(df: pd.DataFrame, year: int) -> pd.DataFrame:
     return df1
 
 
-def prod_history(df: pd.DataFrame, span: str) -> pd.DataFrame:
+def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
     """
     Funcion para el grafico de lineas
     Busca clasificar la produccion de los ultimos tres meses por dia
     """
 
     # df = get_prod(user_id)
-    print(span)
+    print(span, sample)
 
-    t_min, t_max = get_datetimes(months=1)
-
+    t_min, t_max = get_datetimes(months=2)
+    
     # Filtrar un par de meses
     df = df[df['Datetime'].between(t_min, t_max)]
 
     df = df.resample('1D', on='Datetime').sum()
 
     return df
+
 
 def get_table(df_con: pd.DataFrame, df_prod:pd.DataFrame) -> pd.DataFrame:
 
