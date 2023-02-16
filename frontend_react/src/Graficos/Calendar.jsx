@@ -4,13 +4,13 @@ import { ResponsiveCalendar } from '@nivo/calendar';
 
 const Calendar = ({data}) => {
 
-    let from = "2015-09-02";
-    let to = "2016-11-26";
+    let from = "2013-01-02";
+    let to = "2013-12-31";
 
 
     if (data && data.length > 0) {
         const len = data.length;
-        from = data[0].day;
+        from = data[0].day === '2013-01-01' ? '2013-01-02' : data[0].day;
         to = data[len - 1].day;
 
     } else {
@@ -40,9 +40,10 @@ const Calendar = ({data}) => {
                 colors.blueAccent[200], 
                 colors.blueAccent[400], 
                 colors.blueAccent[500], 
-                colors.blueAccent[700]
+                colors.blueAccent[700],
+                colors.blueAccent[800]
             ]}
-            margin={{ top: 0, right: 40, bottom: 40, left: 40 }}
+            margin={{ top: 0, right: 15, bottom: 40, left: 40 }}
             yearSpacing={40}
             monthBorderColor={colors.grey[800]}
             dayBorderColor={colors.grey[600]}

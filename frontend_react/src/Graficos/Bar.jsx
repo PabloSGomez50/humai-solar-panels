@@ -49,7 +49,7 @@ const BarChart = ({ data = [], keys = [], indexBy = '', tickLeft = 5}) => {
             padding={0.3}
             valueScale={{ type: 'linear' }}
             indexScale={{ type: 'band', round: true }}
-            colors={{ scheme: 'pastel2' }}
+            colors={{ scheme: 'category10' }} // nivo | paired | category10
             axisTop={null}
             axisRight={null}
             axisBottom={

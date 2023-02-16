@@ -37,7 +37,7 @@ const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) =>
     },
     tooltip: {
       container: {
-        color: colors.primary[500],
+        color: colors.grey[600],
       },
     },
   }
@@ -46,8 +46,8 @@ const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) =>
     <ResponsiveLine
       data={data}
       theme={chartTheme}
-      colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }} // added
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }} // nivo | paired | category10
+      margin={{ top: 24, right: 100, bottom: 32, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -84,13 +84,14 @@ const LineChart = ({ data, isCustomLineColors = false, isDashboard = false }) =>
       enableGridX={false}
       enableGridY={false}
       enableCrosshair={true}
+
       enablePoints={false}
 
-      pointSize={8}
-      pointColor={{ theme: "background" }}
-      pointBorderWidth={2}
-      pointBorderColor={{ from: "serieColor" }}
-      pointLabelYOffset={-12}
+      // pointSize={8}
+      // pointColor={{ theme: "background" }}
+      // pointBorderWidth={2}
+      // pointBorderColor={{ from: "serieColor" }}
+      // pointLabelYOffset={-12}
       useMesh={true}
 
       legends={[

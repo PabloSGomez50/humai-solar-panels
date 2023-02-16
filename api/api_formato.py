@@ -64,7 +64,7 @@ def format_summary(df_):
 
     # response.append({'day': 'Total', 'value': total})
 
-    return {'total': total,'dias': response}
+    return {'total': total, 'dias': response}
 
 # def format_summary(df_):
 #     semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']

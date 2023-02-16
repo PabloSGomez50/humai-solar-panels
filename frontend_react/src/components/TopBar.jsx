@@ -9,6 +9,7 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SearchIcon from '@mui/icons-material/Search';
+import Clock from "./Clock";
 
 
 const TopBar = () => {
@@ -20,10 +21,12 @@ const TopBar = () => {
     const navigate = useNavigate();
     const instagramRef = useRef();
 
+    console.log('Re render Top bar')
+
     return (
         <Box 
             display='flex' 
-            justifyContent='flex-end' // 'space-between' 
+            justifyContent='space-between' 
             backgroundColor={colors.grey[600]}
             borderBottom={`${colors.grey[400]} solid 2px`}
             p={2}
@@ -39,6 +42,7 @@ const TopBar = () => {
                     <SearchIcon />
                 </IconButton>
             </Box> */}
+            <Clock colors={colors}/>
             
             <Box display='flex' >
                 <IconButton onClick={colorMode.toggleColorMode}>

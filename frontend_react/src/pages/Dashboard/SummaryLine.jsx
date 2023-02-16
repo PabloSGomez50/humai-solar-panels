@@ -22,6 +22,7 @@ const SummaryLine = ({ info, colors }) => {
             }}
             yFormat=" >-.2f"
             curve="monotoneX"
+            colors={{ scheme: 'category10' }} // paired | category10
             axisTop={null}
             axisRight={null}
             axisBottom={
@@ -53,7 +54,7 @@ const SummaryLine = ({ info, colors }) => {
             pointLabelYOffset={-12}
             enableArea={true}
             areaBaselineValue={15.5}
-            areaOpacity={0.2}
+            areaOpacity={0.3}
             useMesh={true}
 
             theme={{

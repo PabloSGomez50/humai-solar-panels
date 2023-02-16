@@ -1,10 +1,11 @@
-import { Box, Button, IconButton, useTheme, Typography } from "@mui/material";
+import { Box, ButtonGroup, Button, IconButton, useTheme, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { tokens } from '../../theme';
 import Header from "../../components/Header";
 
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SolarPowerIcon from '@mui/icons-material/SolarPower';
 
 import LineChart from "../../Graficos/Line";
@@ -12,16 +13,44 @@ import Calendar from "../../Graficos/Calendar";
 import BarChart from "../../Graficos/Bar";
 import axiosI from "../../api";
 import Summary from "./Summary";
+import HistoryLine from "./HistoryLine";
 
 const Dashboard = () => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
+    const [ year, setYear ] = useState(2012);
+    const [ lineSpan, setLineSpan ] = useState('1M');
+
     const [daily, setDaily] = useState([]);
     const [barData, setbarData] = useState({});
     const [calendarData, setCalendarData] = useState([]);
     const [lineData, setLineData] = useState([]);
+
+    useEffect(() => {
+        
+        const requestProdCalendar = async () => {
+            const response = await axiosI('calendar/' + year);
+
+            // console.log(response.data);
+            setCalendarData(response.data);
+        }
+
+        requestProdCalendar();
+    }, [year])
+
+    useEffect(() => {
+        
+        const requestRendimiento = async () => {
+            const response = await axiosI(`line/${lineSpan}`);
+
+            // console.log(response.data);
+            setLineData(response.data);
+        }
+
+        requestRendimiento();
+    }, [lineSpan])
 
     useEffect(() => {
         const requestConsumo = async () => {
@@ -38,24 +67,10 @@ const Dashboard = () => {
             setbarData(response.data);
         }
 
-        const requestProdCalendar = async () => {
-            const response = await axiosI('prod');
-
-            // console.log(response.data);
-            setCalendarData(response.data);
-        }
-
-        const requestRendimiento = async () => {
-            const response = await axiosI('months');
-
-            // console.log(response.data);
-            setLineData(response.data);
-        }
-
         requestProdCards();
         requestConsumo();
-        requestProdCalendar();
-        requestRendimiento();
+        // requestProdCalendar();
+        // requestRendimiento();
     }, [])
 
     return (
@@ -88,43 +103,35 @@ const Dashboard = () => {
                 gap="1rem"
                 m='0.75rem'
             >
+                {/* 1ra fila 2da Columna */}
+                <Box
+                    gridColumn='span 2'
+                    gridRow='span 2'
+                    backgroundColor={colors.grey[500]}
+                    display='flex'
+                    flexDirection='column'
+                    gap='0.75rem'
+                    p='0.75rem'
+                >
+                    <Typography variant='h4' fontWeight="bold">
+                        Caracteristicas principales del sistema
+                    </Typography>
+                    
+                    <Typography variant='h6' color={colors.secondary[400]}>
+                        Capacidad instalada: 3.7 Kw
+                    </Typography>
+                </Box>
+
                 <Summary
                     colors={colors}
                     daily={daily}
                     barData={barData}
                 />
 
-                {/* 1ra fila 2er columna */}
-                {/* <Box
-                    gridColumn='span 2'
-                    gridRow='span 2'
-                    backgroundColor={colors.grey[500]}
-                    display='flex'
-                    flexDirection='column'
-                    p='0.75rem'
-                >
-                    <Box display='flex' gap='0.5rem'>
-                        <ElectricBoltIcon sx={{ color: colors.secondary[500] }} />
-                        <Typography
-                            variant="h4"
-                            fontWeight="bold"
-                            mb='0.5rem'
-                            sx={{ color: colors.grey[100] }}
-                        >
-                            Promedio produccion diaria
-                        </Typography>
-                    </Box>
-
-                    <BarChart
-                        data={barData.prom}
-                        keys={['promedio']}
-                        indexBy={'dia'}
-                    />
-                </Box> */}
 
                 {/* 1ra fila 3er columna */}
                 <Box
-                    gridColumn='span 4'
+                    gridColumn='span 5'
                     gridRow='span 1'
                     backgroundColor={colors.grey[500]}
                     display='flex'
@@ -152,28 +159,61 @@ const Dashboard = () => {
 
                 {/* Calendario */}
                 <Box
-                    gridColumn="span 6"
-                    gridRow="span 2"
+                    gridColumn="span 5"
+                    gridRow="span 1"
                     backgroundColor={colors.grey[500]}
+                    // display='flex'
+                    // flexDirection='column'
                 >
                     <Box
-                        pl='1rem'
-                        pt='0.5rem'
+                        p='0.75rem 0.75rem'
+                        display='flex'
+                        justifyContent='space-between'
                     >
-                        <Typography
-                            variant="h3"
-                            fontWeight="600"
-                            color={colors.grey[100]}
+                        
+                        <Box
+                            display='flex'
+                            gap='0.5rem'
                         >
-                            Produccion historia
-                        </Typography>
-                        <Typography
-                            variant="h4"
-                            fontWeight="bold"
-                            color={colors.secondary[500]}
+                            <CalendarMonthIcon sx={{ color: colors.secondary[500] }} />
+
+                            <Typography
+                                variant="h4"
+                                fontWeight="bold"
+                                color={colors.grey[100]}
+                            >
+                                Produccion historia
+                            </Typography>
+                        </Box>
+                        
+                        <ButtonGroup
+                            variant="contained"
+                            sx={{
+                                marginRight: '0.5rem',
+                                // '&:hover': {
+                                //     backgroundColor: colors.primary[300]
+                                // }
+                            }}
                         >
-                            Por dia
-                        </Typography>
+                            <Button 
+                                onClick={() => setYear(2012)}
+                                sx={{
+                                    fontWeight: 'bold',
+                                    backgroundColor: year === 2012 && colors.primary[700]
+                                }}
+                            >
+                                2012
+                            </Button>
+                            <Button 
+                                onClick={() => setYear(2013)}
+                                sx={{
+                                    fontWeight: 'bold',
+                                    backgroundColor: year === 2013 && colors.primary[700]
+                                }}
+                            >
+                                2013
+                            </Button>
+                        </ButtonGroup>
                     </Box>
                     <Calendar
                         data={calendarData}
@@ -182,59 +222,35 @@ const Dashboard = () => {
 
                 {/* Segunda Fila */}
                 <Box
-                    gridColumn="span 6"
-                    gridRow="span 2"
+                    gridColumn='span 2'
+                    gridRow='span 2'
                     backgroundColor={colors.grey[500]}
+                    display='flex'
+                    flexDirection='column'
+                    p='0.75rem'
                 >
-                    <Box
-                        mt="25px"
-                        p="0 30px"
-                        display="flex "
-                        justifyContent="space-between"
-                        alignItems="center"
-                    >
 
-                        <Box>
-                            <Typography
-                                variant="h3"
-                                fontWeight="600"
-                                color={colors.grey[100]}
-                            >
-                                Produccion mensual
-                            </Typography>
-                            <Typography
-                                variant="h4"
-                                fontWeight="bold"
-                                color={colors.secondary[500]}
-                            >
-                                Año 2013
-                            </Typography>
-                        </Box>
-
-                        <Box>
-                            <IconButton>
-                                <DownloadOutlinedIcon
-                                    sx={{ fontSize: "26px", color: colors.secondary[500] }}
-                                />
-                            </IconButton>
-                        </Box>
-                    </Box>
-                    <Box height="250px" m="-20px 0 0 0">
-
-                        <LineChart
-                            isDashboard={true}
-                            data={lineData}
-                        />
-                    </Box>
                 </Box>
 
-                {/* <Box
-                        gridColumn="span 4"
-                        gridRow="span 1"
-                        backgroundColor={colors.grey[500]}
-                    >
 
-                    </Box> */}
+                <HistoryLine
+                    lineData={lineData}
+                    colors={colors}
+                    lineSpan={lineSpan}
+                    setLineSpan={setLineSpan}
+                />
+
+                <Box
+                    gridColumn='span 3'
+                    gridRow='span 2'
+                    backgroundColor={colors.grey[500]}
+                    display='flex'
+                    flexDirection='column'
+                    p='0.75rem'
+                >
+
+                </Box>
+                
             </Box>
         </Box>
     )

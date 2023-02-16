@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+import pandas as pd
 import api_views
 import api_formato
+
+CSV_CONSUMO = './consumo_user_{0}.csv'
+CSV_PROD = './user_{0}.csv'
 
 app = FastAPI()
 
@@ -12,6 +16,25 @@ origins = [
 
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
+
+def get_prod(user_id: int) -> pd.DataFrame:
+    """
+    Obtener el dataframe a partir del csv del usuario
+
+    Input:
+        - user_id: int
+
+    Output:
+        - Dataframe con fecha parseada ['index', 'Datetime', 'Produccion']
+    """
+    columns = ['Datetime', 'Produccion']
+
+    return pd.read_csv(CSV_PROD.format(user_id), usecols=columns, parse_dates=['Datetime'])
+
+
+def get_consumo(user_id: int) -> pd.DataFrame:
+    
+    return pd.read_csv(CSV_CONSUMO.format(user_id), parse_dates=['Datetime'])
 
 
 @app.get('/')
@@ -24,7 +47,8 @@ def root():
 @app.get('/consumo')
 def consumo_7d():
 
-    df_response = api_views.consumo_last_7d(1)
+    df = get_consumo(1)
+    df_response = api_views.consumo_last_7d(df)
     response = api_formato.format_summary(df_response)
 
     return response
@@ -33,40 +57,38 @@ def consumo_7d():
 @app.get('/cards')
 def resumen():
 
-    response = api_views.prod_last_7(1)
+    df = get_prod(1)
+    response = api_views.prod_last_7(df)
 
     return response
 
 
-@app.get('/prod')
-def calendario():
+@app.get('/calendar/{year}')
+def calendario(year: int):
 
-    df_response = api_views.prod_calendar(1)
+    df = get_prod(1)
+    df_response = api_views.prod_calendar(df, year)
     response = api_formato.format_calendario(df_response)
 
     return response
 
 
-@app.get('/months')
-def prod_by_month():
-
-    df_response = api_views.prod_by_month(1)
-    response = api_formato.format_linea(df_response)
-
-    return response
-
 @app.get('/line/{span}')
-def historia(span='1D'):
+def historia(span: str ='1D'):
 
-    df_response = api_views.prod_history(1)
+    df = get_prod(1)
+    df_response = api_views.prod_history(df, span)
     response = api_formato.format_linea(df_response)
 
     return response
+
 
 @app.get('/table')
 def table():
 
-    df_response = api_views.get_table(1)
+    df_prod = get_prod(1)
+    df_con = get_consumo(1)
+    df_response = api_views.get_table(df_con, df_prod)
     response = df_response.to_dict(orient='records')
 
     return response

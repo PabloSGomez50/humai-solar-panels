@@ -92,7 +92,11 @@ const SideBar = () => {
                                 alignItems="center"
                                 ml="0.5rem"
                             >
-                                <Typography variant="h4" color={colors.grey[100]}>
+                                <Typography 
+                                    color={colors.grey[100]}
+                                    fontSize='20px'
+                                    fontWeight='bold'
+                                >
                                     Proyecto Humai
                                 </Typography>
 
@@ -174,7 +178,7 @@ const SideBar = () => {
                             justifyContent: 'center',
                             gap: '2px',
 
-                            backgroundColor: colors.primary[500],
+                            backgroundColor: colors.blueAccent[700],
                             borderRadius: '16px'
                         }}
                     >
@@ -211,12 +215,12 @@ const SideBar = () => {
                                 }
                             }}
                         >
-                            <StarIcon />
+                            <StarIcon sx={{color: colors.blueAccent[800]}}/>
                             <Typography>
-                                Star the repo
+                                Star
                             </Typography>
-                            <a hidden ref={gitHubRef} href='https://github.com/PabloSGomez50/humai-solar-panels' target='_blank'/>
                         </IconButton>
+                        <a hidden ref={gitHubRef} href='https://github.com/PabloSGomez50/humai-solar-panels' target='_blank'/>
                     </Box>
                 </Menu>
             </Sidebar>

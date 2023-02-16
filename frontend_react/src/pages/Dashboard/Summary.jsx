@@ -12,7 +12,7 @@ const Summary = ({ colors, daily }) => {
 
     return (
         <Box
-            gridColumn='span 6'
+            gridColumn='span 5'
             gridRow='span 2'
 
             // p='0.25rem'
@@ -48,9 +48,14 @@ const Summary = ({ colors, daily }) => {
                         alignItems='center'
                         justifyContent='space-around'
                     >
-                        <Typography variant="h4">
-                            Total: {daily.total} Kw
-                        </Typography>
+                        <Box>
+                            <Typography variant="h4">
+                                Total: 
+                            </Typography>
+                            <Typography variant="h4">
+                                {daily.total} Kw
+                            </Typography>
+                        </Box>
 
                         {daily.dias &&
                             <Box width='65%' height='6.5rem'>
@@ -63,36 +68,6 @@ const Summary = ({ colors, daily }) => {
                     </Box>
                 </Box>
             )}
-
-            {/* <Typography variant="h4" backgroundColor={colors.grey[400]}>
-                El total del dia es {daily.total} Kw
-            </Typography> */}
-
-            {/* <Box
-                display='flex'
-                height='90%'
-                flexDirection='column'
-                gap='0.5rem'
-                flexWrap='wrap'
-            >
-                {daily.dias && daily.dias.map(item =>
-                    <Box
-                        key={item.day}
-                        display='flex'
-                        justifyContent='space-between'
-                        p='0 0.5rem'
-                    >
-                        <Typography sx={{ color: colors.grey[100] }}>
-                            {item.day}
-                        </Typography>
-
-                        <Typography sx={{ color: colors.primary[100] }}>
-                            {item.value} Kw
-                        </Typography>
-                    </Box>
-                )}
-            </Box> */}
-
         </Box>
     )
 }
