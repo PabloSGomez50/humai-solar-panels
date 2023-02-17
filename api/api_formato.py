@@ -10,6 +10,9 @@ COLORS = ['#80558C', '#E4D192', '#6096B4',
 
 # SEMANA = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 SEMANA = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
+# MES = ['Enero', 'Febrero', 'Marzo', 'abril',
+#         'mayo', 'junio', 'julio', 'agosto', 
+#         'septiembre', 'octubre', 'noviembre', 'diciembre']
 
 def format_linea_hist(df, index, group):
     """
@@ -49,17 +52,22 @@ def format_calendario(df_):
     } for x in data]
 
 
-def format_summary(df_):
+def format_summary(df_, week=True):
     """
     Crear un diccionario con el total y la lista
     Se utiliza para resumir una semana de una variable particular
+        Input: DataFrame ->
+            Datetime: dayofweek
+            Total: float (sum)
     """
-    data = df_.to_records(index=False)
+    total = round(df_['Total'].sum(), 2)
+
+    # data = df_.to_records(index=False)
+    data = df_.to_dict(orient='records')
     
-    total = round(sum(map(lambda x: x[1], data)), 2)
     response = [{
-        'x': SEMANA[x[0]], 
-        'y': round(x[1], 2)
+        'x': SEMANA[x['Datetime']] if week else x['Datetime'], # MES[x['Datetime'] - 1]
+        'y': round(x['Total'], 2)
         } 
         for x in data ]
 

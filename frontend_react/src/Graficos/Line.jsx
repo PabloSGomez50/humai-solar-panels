@@ -8,6 +8,11 @@ const LineChart = ({ data, isDashboard = false, rotate = false }) => {
   const colors = tokens(theme.palette.mode);
 
   const chartTheme = {
+    grid: {
+      line: {
+        stroke: colors.grey[300]
+      }
+    },
     axis: {
       domain: {
         line: {
@@ -50,7 +55,7 @@ const LineChart = ({ data, isDashboard = false, rotate = false }) => {
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
-        min: "auto",
+        min: "0",
         max: "auto",
         stacked: false,
       }}
@@ -72,16 +77,16 @@ const LineChart = ({ data, isDashboard = false, rotate = false }) => {
       axisLeft={{
         orient: "left",
         tickValues: 5, // added
-        tickSize: 5,
-        tickPadding: 7,
+        tickSize: 8,
+        tickPadding: 10,
         tickRotation: 0,
         legendOffset: -40,
         legendPosition: "middle",
       }}
 
       // enableSlices='x'
-      enableGridX={false}
-      enableGridY={false}
+      enableGridX={true}
+      enableGridY={true}
       enableCrosshair={true}
 
       enablePoints={false}

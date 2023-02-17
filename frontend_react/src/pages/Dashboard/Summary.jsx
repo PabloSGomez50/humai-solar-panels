@@ -5,9 +5,17 @@ import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import SolarPowerIcon from '@mui/icons-material/SolarPower';
 import SummaryLine from "./SummaryLine";
 
-const Summary = ({ colors, daily }) => {
+const Summary = ({ colors, data }) => {
 
-    const arr = [1,2,3,4]
+    const order = ['consumo_dia', 'prod_dia', 'consumo_week', 'prod_week']
+    const textos = {
+        'consumo_dia': 'Consumo semanal', 
+        'prod_dia': 'Produccion semanal', 
+        'consumo_week': 'Consumo Mensual', 
+        'prod_week': 'Produccion Mensual'
+    }
+    console.log(data)
+    console.log(data['consumo_dia'])
 
     return (
         <Box
@@ -21,7 +29,7 @@ const Summary = ({ colors, daily }) => {
             gridTemplateRows='1fr 1fr'
             gap='0.75rem'
         >
-            {arr.map(item => 
+            {order.map(item => 
                 <Box 
                     key={item}
                     p='1rem'
@@ -33,38 +41,42 @@ const Summary = ({ colors, daily }) => {
                         <Typography
                             variant="h4"
                             fontWeight="bold"
-                            mb='0.75rem'
+                            mb='0.25rem'
                             sx={{ color: colors.grey[100] }}
                         >
-                            Consumo semanal
+                            {textos[item]}
                         </Typography>
                         <ElectricBoltIcon sx={{ color: colors.secondary[500] }} />
                     </Box>
 
+
+                    {data[item] && 
                     <Box
-                        height='100%'
-                        display='flex'
-                        alignItems='center'
-                        justifyContent='space-around'
+                    height='100%'
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-around'
                     >
                         <Box>
                             <Typography variant="h4">
                                 Total: 
                             </Typography>
                             <Typography variant="h4">
-                                {daily.total} Kw
+                                {data[item].total} Kw
                             </Typography>
                         </Box>
 
-                        {daily.dias &&
+                        {data[item].dias &&
                             <Box width='65%' height='6.5rem'>
                                 <SummaryLine
-                                    info={daily.dias}
+                                    info={data[item].dias}
                                     colors={colors}
-                                />
+                                    rotate={item.endsWith('dia')}
+                                    />
                             </Box>
                         }
                     </Box>
+                    }
                 </Box>
             )}
         </Box>

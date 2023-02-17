@@ -46,7 +46,7 @@ def root():
 
 
 @app.get('/consumo')
-def consumo_7d():
+def consumo_last_7d():
 
     df = get_consumo(1)
     df_response = api_views.consumo_last_7d(df)
@@ -55,14 +55,42 @@ def consumo_7d():
     return response
 
 
-@app.get('/cards')
+@app.get('/prod')
 def resumen():
 
     df = get_prod(1)
-    response = api_views.prod_last_7(df)
-
+    df_response = api_views.prod_last_7(df)
+    response = api_formato.format_summary(df_response)
+    
     return response
 
+@app.get('/summary')
+def summary():
+
+    df_con = get_consumo(1)
+    df_prod = get_prod(1)
+
+    consumo_7d = api_views.consumo_last_7d(df_con)
+    prod_7d = api_views.prod_last_7(df_prod)
+    prod_mes = api_views.prod_month(df_prod)
+    consumo_mes = api_views.consumo_month(df_con)
+    
+    return {
+        'consumo_dia': api_formato.format_summary(consumo_7d),
+        'prod_dia': api_formato.format_summary(prod_7d),
+        'consumo_week': api_formato.format_summary(prod_mes, week=False),
+        'prod_week': api_formato.format_summary(consumo_mes, week=False)
+    }
+
+@app.get('/hours')
+def horas():
+    df = get_prod(1)
+    df_response = api_views.horas(df)
+    response = df_response.to_dict(orient='records')
+    # response = api_formato.format_summary(df_response)
+
+    return response
+    
 
 @app.get('/calendar/{year}')
 def calendario(year: int):

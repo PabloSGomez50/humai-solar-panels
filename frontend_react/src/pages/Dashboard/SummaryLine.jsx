@@ -2,7 +2,7 @@ import { ResponsiveLine } from "@nivo/line";
 
 
 
-const SummaryLine = ({ info, colors }) => {
+const SummaryLine = ({ info, colors, rotate }) => {
     
     const data = [
         {id: 'Consumo', color: '#e8c1a0', data: info}
@@ -15,7 +15,7 @@ const SummaryLine = ({ info, colors }) => {
             xScale={{ type: 'point' }}
             yScale={{
                 type: 'linear',
-                min: 'auto',
+                min: '0',
                 max: 'auto',
                 stacked: false,
                 reverse: false
@@ -30,7 +30,7 @@ const SummaryLine = ({ info, colors }) => {
                 orient: 'bottom',
                 tickSize: 5,
                 tickPadding: 5,
-                tickRotation: 0,
+                tickRotation: rotate ? -45 : 0,
                 // legend: 'transportation',
                 // legendOffset: 36,
                 // legendPosition: 'middle'
@@ -53,7 +53,7 @@ const SummaryLine = ({ info, colors }) => {
             pointBorderColor={{ from: 'serieColor' }}
             pointLabelYOffset={-12}
             enableArea={true}
-            areaBaselineValue={15.5}
+            areaBaselineValue={0}
             areaOpacity={0.3}
             useMesh={true}
 

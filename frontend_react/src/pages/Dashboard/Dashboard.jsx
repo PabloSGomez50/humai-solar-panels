@@ -53,23 +53,24 @@ const Dashboard = () => {
     }, [lineSpan])
 
     useEffect(() => {
-        const requestConsumo = async () => {
-            const response = await axiosI('consumo');
+        
+        const requestSummary = async () => {
+            const response = await axiosI('summary');
 
             console.log('EXECUTE: Horas');
             setDaily(response.data);
         }
 
-        const requestProdCards = async () => {
-            const response = await axiosI('cards');
+        const requestProdHours = async () => {
+            const response = await axiosI('hours');
 
             console.log('EXECUTE: Cartas');
             console.log(response.data)
             setbarData(response.data);
         }
 
-        requestProdCards();
-        requestConsumo();
+        requestSummary();
+        requestProdHours();
     }, [])
 
     return (
@@ -123,7 +124,7 @@ const Dashboard = () => {
 
                 <Summary
                     colors={colors}
-                    daily={daily}
+                    data={daily}
                     barData={barData}
                 />
 

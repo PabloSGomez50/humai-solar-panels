@@ -33,6 +33,26 @@ def get_datetimes(days = 6, months = 0):
     return (lim_min, lim_max)
 
 
+def consumo_now(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Accede al dataset y devuelve una lista con los datos de la ultima media hora
+
+    Input: user_id -> int
+    Output: response -> DataFrame
+    """
+    # Trae el dia de 2012/2013
+    now = datetime.now() - timedelta(days=DAYS_DIFF)
+    delay = now - timedelta(minutes=55)
+
+    lower = delay.strftime('%Y-%m-%d %H:%M')
+    upper = now.strftime('%Y-%m-%d %H:%M')
+
+    df = df[df['Datetime'].between(lower, upper)]
+    df_ = df.tail(1)
+
+    return df_
+
+
 def consumo_last_7d(df: pd.DataFrame) -> list:
     """
     Accede al dataset y devuelve una lista con los datos de los ultimos 7 dias
@@ -53,29 +73,7 @@ def consumo_last_7d(df: pd.DataFrame) -> list:
     return df_
 
 
-def consumo_now(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Accede al dataset y devuelve una lista con los datos de la ultima media hora
-
-    Input: user_id -> int
-    Output: response -> DataFrame
-    """
-
-    # df = get_consumo(user_id)
-    # Trae el dia de 2012/2013
-    now = datetime.now() - timedelta(days=DAYS_DIFF)
-    delay = now - timedelta(minutes=55)
-
-    lower = delay.strftime('%Y-%m-%d %H:%M')
-    upper = now.strftime('%Y-%m-%d %H:%M')
-
-    df = df[df['Datetime'].between(lower, upper)]
-    df_ = df.tail(1)
-
-    return df_
-
-
-def prod_last_7(df: pd.DataFrame) -> list:
+def prod_last_7(df: pd.DataFrame) -> pd.DataFrame:
     """
     Accede al dataset de producciony devuelve una lista 
     con los datos relevantes de los ultimos 7 dias
@@ -83,33 +81,59 @@ def prod_last_7(df: pd.DataFrame) -> list:
     Datos: Total diario | Promedio diario | Horas de mayor produccion
 
     Input: user_id -> int
-    Output: response -> list[dict]
+    Output: df -> 'Datetime' | 'total'
     """
-    # df = get_prod(user_id)
 
     t_min, t_max = get_datetimes()
     df = df[df['Datetime'].between(t_min, t_max)].copy()
-    df['Dia'] = df['Datetime'].dt.day
-    df['Hora'] = df['Datetime'].dt.hour
 
-    # # Info 1
-    # df1 = df.groupby('Dia').aggregate({'Datetime': 'first', 'Produccion': 'mean'})
-    # df1['Datetime'] = df1['Datetime'].dt.strftime('%A')
-
-    # data1 = df1.to_records(index=False)
+    df1 = df.resample('1D', on='Datetime').sum()
+    # total = round(df1['Produccion'].sum(), 3)
+    df1.rename(columns={'Produccion': 'Total'}, inplace=True)
+    df1['Datetime'] = df1.index.dayofweek.astype(int)
     
-    # data1 = [{'dia': x[0], 'promedio': round(x[1], 3)} for x in data1]
+    return df1
 
-    # Info 2
-    df2 = df.groupby('Hora').aggregate({'Produccion': 'sum'})
+def prod_month(df: pd.DataFrame) -> pd.DataFrame:
+
+    df = df[df['Datetime'].between(*get_datetimes(months=7))].copy()
+
+    df1 = df.resample('1M', on='Datetime').sum()
+
+    df1.rename(columns={'Produccion': 'Total'}, inplace=True)
+    df1['Datetime'] = df1.index.month
+
+    return df1
+
+
+def consumo_month(df: pd.DataFrame) -> pd.DataFrame:
+
+    df = df[df['Datetime'].between(*get_datetimes(months=7))].copy()
+
+    df1 = df.resample('1M', on='Datetime').sum()
+
+    # df1.rename(columns={'Produccion': 'Total'}, inplace=True)
+    df1['Datetime'] = df1.index.month
+
+    return df1
+
+
+def horas(df: pd.DataFrame) -> list:
+
+    # Preparar el dataframe
+    t_min, t_max = get_datetimes()
+    df = df[df['Datetime'].between(t_min, t_max)].copy()
+    df['hora'] = df['Datetime'].dt.hour
+
+    # Hacer groupby y armar las columnas
+    df2 = df.groupby('hora').aggregate({'Produccion': 'sum'})
     df2 = df2[df2['Produccion'] > 0.1]
+    df2.reset_index(inplace=True)
 
-    data2 = df2.to_records()
+    df2.rename(columns={'Produccion': 'total'}, inplace=True)
+    df2['total'] = round(df2['total'], 3)
     
-    data2 = [{'hora': str(x[0]), 'total': round(x[1], 3)} for x in data2]
-    
-    return data2
-    # return {'prom': data1,'horas': data2}
+    return df2
 
 
 def prod_calendar(df: pd.DataFrame, year: int) -> pd.DataFrame:

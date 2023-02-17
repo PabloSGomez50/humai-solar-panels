@@ -41,7 +41,7 @@ const BarChart = ({ data, keys, indexBy, tickLeft = 5}) => {
 
     return (
         <ResponsiveBar
-            data={data.length > 1 ? data : []}
+            data={data && data.length > 1? data : []}
             theme={chartTheme}
             keys={keys}
             indexBy={indexBy}
