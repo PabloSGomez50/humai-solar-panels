@@ -35,10 +35,12 @@ def start_app():
         from_to = today - timedelta(days=3)
         df = clima_scraper.get_clima(from_to, today)
         df_clean = clima_limpiar.clean_df(df)
-        # print(df_clean.head())
-        df_test = df_clean.resample('12H').first()
-        df_test.drop(columns=['Weather', 'Visibility'], inplace=True)
-        print(df_test)
+        
+        df_test = df_clean[df_clean.index.hour == 12].copy()
+
+        df_test = df_test.loc[::2,:]
+
+        df_test.drop(columns=['Visibility'], inplace=True)
         df_test.to_csv(CSV_CLIMA.format(today.month, today.day))
 
 
@@ -87,9 +89,24 @@ def resumen():
 
 @app.get('/clima')
 def show_clima():
+    SEMANA = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 
     today = datetime.today()
-    df_clima = pd.read_csv(CSV_CLIMA.format(today.month, today.day))
+    df_clima = pd.read_csv(CSV_CLIMA.format(today.month, today.day), parse_dates=['Datetime'])
+
+    df_clima.sort_index(ascending=False, inplace=True)
+
+    df_clima['dia'] = df_clima['Datetime'].apply(lambda x: SEMANA[x.dayofweek])
+    df_clima['Datetime'] = df_clima['Datetime'].dt.strftime('%d/%m/%Y')
+
+    df_clima.rename(inplace=True, columns={
+        'Datetime': 'fecha',
+        'Temp': 'temp',
+        'Wind': 'viento',
+        'Weather': 'clima',
+        'Humidity': 'humedad',
+        'Barometer': 'presion'
+    })
     
     return df_clima.to_dict(orient='records')
 
@@ -111,6 +128,7 @@ def summary():
         'consumo_week': api_formato.format_summary(prod_mes, week=False),
         'prod_week': api_formato.format_summary(consumo_mes, week=False)
     }
+
 
 @app.get('/hours')
 def horas():

@@ -48,9 +48,9 @@ const SideBar = () => {
 
     return (
         <Box
+            display='flex'
+            height='100%'
             sx={{
-                display: 'flex',
-                height: '100%',
                 '& .ps-sidebar-container': {
                     background: `${colors.grey[600]} !important`
                 },

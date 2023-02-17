@@ -6,8 +6,6 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 
 const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
 
-    console.log(lineData)
-
     const spans = [
         {
             text: '1 Año',
@@ -33,7 +31,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
 
     return (
         <Box
-            gridColumn="span 7"
+            gridColumn="span 8"
             gridRow="span 2"
             backgroundColor={colors.grey[500]}
             display='flex'

@@ -22,8 +22,6 @@ const TopBar = () => {
     const navigate = useNavigate();
     const instagramRef = useRef();
 
-    console.log('Re render Top bar')
-
     return (
         <Box 
             display='flex' 

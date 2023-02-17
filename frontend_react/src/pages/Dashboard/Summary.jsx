@@ -14,9 +14,7 @@ const Summary = ({ colors, data }) => {
         'consumo_week': 'Consumo Mensual', 
         'prod_week': 'Produccion Mensual'
     }
-    console.log(data)
-    console.log(data['consumo_dia'])
-
+    
     return (
         <Box
             gridColumn='span 5'

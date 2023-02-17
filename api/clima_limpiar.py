@@ -16,7 +16,7 @@ def clean_df(df_input: pd.DataFrame = None):
     else:
         df = df_input
 
-    print(df.head())
+    # print(df.head())
     # df = df.drop(columns='Unnamed: 0')
     
     df = clean_and_convert(df)
@@ -24,7 +24,7 @@ def clean_df(df_input: pd.DataFrame = None):
     # df = weather_one_hot(df)
     #df = normalizacion(df)
     df = fix_datetime(df)
-
+    
     # df.to_csv(FILE_NAME)
     return df
 

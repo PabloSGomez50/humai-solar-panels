@@ -14,6 +14,9 @@ import BarChart from "../../Graficos/Bar";
 import axiosI from "../../api";
 import Summary from "./Summary";
 import HistoryLine from "./HistoryLine";
+import DashClima from "./DashClima";
+
+const test = []
 
 const Dashboard = () => {
 
@@ -230,7 +233,7 @@ const Dashboard = () => {
                 </Box>
 
                 {/* Segunda Fila */}
-                <Box
+                {/* <Box
                     gridColumn='span 2'
                     gridRow='span 2'
                     backgroundColor={colors.grey[500]}
@@ -239,7 +242,7 @@ const Dashboard = () => {
                     p='0.75rem'
                 >
 
-                </Box>
+                </Box> */}
 
 
                 <HistoryLine
@@ -249,27 +252,10 @@ const Dashboard = () => {
                     setLineSpan={setLineSpan}
                 />
 
-                <Box
-                    gridColumn='span 3'
-                    gridRow='span 2'
-                    backgroundColor={colors.grey[500]}
-                    display='flex'
-                    flexDirection='column'
-                    p='1.25rem 1rem'
-                >
-                    <Typography
-                        variant="h4"
-                        fontWeight="600"
-                        color={colors.grey[100]}
-                    >
-                        Clima En los proximos 7 dias
-                    </Typography>
-
-                    <Box>
-                        
-                    </Box>
-                </Box>
-                
+                <DashClima 
+                    clima={clima}
+                    colors={colors}
+                />
             </Box>
         </Box>
     )
