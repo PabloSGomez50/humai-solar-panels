@@ -3,7 +3,7 @@ import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 
-const LineChart = ({ data, isDashboard = false }) => {
+const LineChart = ({ data, isDashboard = false, rotate = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -46,7 +46,7 @@ const LineChart = ({ data, isDashboard = false }) => {
       data={data}
       theme={chartTheme}
       colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }} // nivo | paired | category10
-      margin={{ top: 24, right: 100, bottom: 32, left: 60 }}
+      margin={{ top: 24, right: 100, bottom: 48, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -65,7 +65,7 @@ const LineChart = ({ data, isDashboard = false }) => {
         orient: "bottom",
         tickSize: 5,
         tickPadding: 10,
-        tickRotation: 0,
+        tickRotation: rotate ? -45 : 0,
         legendOffset: 36,
         legendPosition: "middle",
       }}

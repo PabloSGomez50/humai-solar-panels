@@ -9,19 +9,7 @@ COLORS = ['#80558C', '#E4D192', '#6096B4',
     #     ]
 
 
-def format_linea_semana(df_) -> list:
-    """
-    Alterar df en lista formateada para grafico de linea
-    Columnas: Datetime | Produccion (suma del semana)
-    Retorna: datos clasificados por semanas
-    """
-
-    print(df_)
-
-    return []
-
-
-def format_linea_dia(df_, format) -> list:
+def format_linea_dia(df_) -> list:
     """
     Alterar df en lista formateada para grafico de linea
     Columnas: Datetime | Produccion (suma del dia)
@@ -30,8 +18,8 @@ def format_linea_dia(df_, format) -> list:
 
     # df_.index = df_.index.tz_localize(TIMEZONE)
     
-    df_['group'] = df_.index.strftime('%b')
-    df_['index'] = df_.index.strftime('%d')
+    df_['index'] = df_.index.strftime('%b')
+    df_['Datetime'] = df_.index.strftime('%d')
 
     # Data es lista de tuplas (valor, mes, dia)
     data = df_.to_records(index=False)
@@ -54,13 +42,28 @@ def format_linea_dia(df_, format) -> list:
     return final
 
 
-def format_linea_horas(df_):
+def format_linea_hora(df, index, group):
     """
     Alterar df en lista formateada para grafico de linea
     Columnas: Datetime | Produccion (suma del dia)
     Retorna: datos clasificados por horas y minutos
     """
 
+    df['x'] = df.index.strftime(index)
+    df['group'] = df.index.strftime(group)
+    df.rename(columns={'Produccion': 'y'}, inplace=True)
+
+    response = []
+
+    for i, key in enumerate(df['group'].unique()):
+        df_ = df[df['group'] == key][['x', 'y']]
+        response.append({
+            'id': key,
+            'color': COLORS[i],
+            'data': df_.to_dict(orient='records')
+        })
+
+    return response
 
 
 def format_calendario(df_):

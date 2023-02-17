@@ -26,6 +26,7 @@ const Clock = ({ colors }) => {
         <Box
             backgroundColor={colors.primary[600]}
             borderRadius='0.75rem'
+            sx={{userSelect: 'none'}}
         >
             <Typography
                 fontSize='24px'

@@ -6,6 +6,8 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 
 const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
 
+    console.log(lineData)
+
     const spans = [
         {
             text: '1 Año',
@@ -46,7 +48,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                 alignItems="center"
             >
 
-                <Box>
+                {/* <Box> */}
                     <Typography
                         variant="h3"
                         fontWeight="600"
@@ -54,14 +56,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                     >
                         Historial de produccion
                     </Typography>
-                    {/* <Typography
-                        variant="h4"
-                        fontWeight="bold"
-                        color={colors.secondary[500]}
-                    >
-                        Año 2013
-                    </Typography> */}
-                </Box>
+                {/* </Box> */}
 
                 <Box>
                     <IconButton>
@@ -99,6 +94,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                 <LineChart
                     isDashboard={true}
                     data={lineData}
+                    rotate={lineSpan.sample.endsWith('W') || lineSpan.sample.endsWith('H') || lineSpan.sample.endsWith('T')}
                 />
             </Box>
         </Box>

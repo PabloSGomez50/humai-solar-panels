@@ -80,13 +80,16 @@ def historia(span: str ='1M', sample: str ='1D'):
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
     if sample.endswith('W'):
-        response = api_formato.format_linea_semana(df_response)
+        # response = api_formato.format_linea_semana(df_response)
+        response = api_formato.format_linea_hora(df_response, index='%m-%d', group='%Y')
 
     elif sample.endswith('D'):
-        response = api_formato.format_linea_dia(df_response, '%d')
-
+        response = api_formato.format_linea_dia(df_response)
+        # response = api_formato.format_linea_hora(df_response, index='%d %H:%M', group='%m')
+    elif span.endswith('W'):
+        response = api_formato.format_linea_hora(df_response, index='%d %H:%M', group='%m')
     else:
-        response = api_formato.format_linea_hora(df_response)
+        response = api_formato.format_linea_hora(df_response, index='%H:%M', group='%d')
 
     return response
 

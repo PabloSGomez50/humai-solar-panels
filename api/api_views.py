@@ -138,14 +138,29 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
     """
 
     # df = get_prod(user_id)
-    print(span, sample)
+    # print(span, sample)
+    if span == '1Y':
+        days = 0
+        months = 12
+    elif span == '3M':
+        days = 0
+        months = 3
+    elif span == '1M':
+        days = 0
+        months = 1
+    elif span == '1W':
+        days = 6
+        months = 0
+    else: 
+        days = 0
+        months = 0
 
-    t_min, t_max = get_datetimes(months=2)
+    t_min, t_max = get_datetimes(days=days, months=months)
     
     # Filtrar un par de meses
     df = df[df['Datetime'].between(t_min, t_max)]
 
-    df = df.resample('1D', on='Datetime').sum()
+    df = df.resample(sample, on='Datetime').sum()
 
     return df
 
