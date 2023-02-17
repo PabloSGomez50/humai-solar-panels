@@ -11,11 +11,9 @@ def get_datetimes(days = 6, months = 0):
     
     today = datetime.today() - timedelta(days=DAYS_DIFF)
 
-
-
     if months != 0:
         mes = today.month + 1
-        dia = today.day
+        # dia = today.day
         anio = today.year
         
         if mes - months < 1:
@@ -205,4 +203,3 @@ def get_table(df_con: pd.DataFrame, df_prod:pd.DataFrame) -> pd.DataFrame:
     df_final.rename(columns=names,inplace=True)
 
     return df_final
-

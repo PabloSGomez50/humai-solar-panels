@@ -2,11 +2,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import pandas as pd
+import os 
+from datetime import datetime, timedelta
+
 import api_views
 import api_formato
+import clima_scraper
+import clima_limpiar
 
 CSV_CONSUMO = './consumo_user_{0}.csv'
 CSV_PROD = './user_{0}.csv'
+CSV_CLIMA = './clima_{0}_{1}.csv'
+DAYS_DIFF = 2 + 365 * 10
 
 app = FastAPI()
 
@@ -18,8 +25,21 @@ app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True
 
 @app.on_event('startup')
 def start_app():
+
     print('Es re flashero que pueda ejecutar funciontes de esta manera')
-    print('Y tambien de esta manera ')
+
+    today = datetime.today() - timedelta(days=DAYS_DIFF)
+    
+    if not os.path.exists(CSV_CLIMA.format(today.month, today.day)):
+        today = datetime(year=today.year, month=today.month, day=today.day)
+        from_to = today - timedelta(days=3)
+        df = clima_scraper.get_clima(from_to, today)
+        df_clean = clima_limpiar.clean_df(df)
+        # print(df_clean.head())
+        df_test = df_clean.resample('12H').first()
+        df_test.drop(columns=['Weather', 'Visibility'], inplace=True)
+        print(df_test)
+        df_test.to_csv(CSV_CLIMA.format(today.month, today.day))
 
 
 def get_prod(user_id: int) -> pd.DataFrame:
@@ -63,6 +83,16 @@ def resumen():
     response = api_formato.format_summary(df_response)
     
     return response
+
+
+@app.get('/clima')
+def show_clima():
+
+    today = datetime.today()
+    df_clima = pd.read_csv(CSV_CLIMA.format(today.month, today.day))
+    
+    return df_clima.to_dict(orient='records')
+
 
 @app.get('/summary')
 def summary():

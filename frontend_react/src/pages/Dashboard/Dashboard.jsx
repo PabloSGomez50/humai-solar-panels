@@ -27,6 +27,7 @@ const Dashboard = () => {
     const [barData, setbarData] = useState({});
     const [calendarData, setCalendarData] = useState([]);
     const [lineData, setLineData] = useState([]);
+    const [clima, setClima] = useState([]);
 
     useEffect(() => {
         
@@ -68,9 +69,17 @@ const Dashboard = () => {
             console.log(response.data)
             setbarData(response.data);
         }
+        const requestClima = async () => {
+            const response = await axiosI('clima');
+
+            console.log('EXECUTE: Clima');
+            console.log(response.data);
+            setClima(response.data);
+        }
 
         requestSummary();
         requestProdHours();
+        requestClima();
     }, [])
 
     return (
