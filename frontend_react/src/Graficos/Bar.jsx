@@ -2,7 +2,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 
-const BarChart = ({ data = [], keys = [], indexBy = '', tickLeft = 5}) => {
+const BarChart = ({ data, keys, indexBy, tickLeft = 5}) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
@@ -41,7 +41,7 @@ const BarChart = ({ data = [], keys = [], indexBy = '', tickLeft = 5}) => {
 
     return (
         <ResponsiveBar
-            data={data}
+            data={data.length > 1 ? data : []}
             theme={chartTheme}
             keys={keys}
             indexBy={indexBy}

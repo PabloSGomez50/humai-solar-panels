@@ -8,45 +8,14 @@ COLORS = ['#80558C', '#E4D192', '#6096B4',
     #     'hsl(99, 70%, 50%)', 'hsl(105, 70%, 50%)', 
     #     ]
 
+# SEMANA = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+SEMANA = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
 
-def format_linea_dia(df_) -> list:
+def format_linea_hist(df, index, group):
     """
     Alterar df en lista formateada para grafico de linea
     Columnas: Datetime | Produccion (suma del dia)
-    Retorna: datos clasificados por dias
-    """
-
-    # df_.index = df_.index.tz_localize(TIMEZONE)
-    
-    df_['index'] = df_.index.strftime('%b')
-    df_['Datetime'] = df_.index.strftime('%d')
-
-    # Data es lista de tuplas (valor, mes, dia)
-    data = df_.to_records(index=False)
-    mes = data[0][1]
-    final = []
-    value = []
-    count = 0
-
-    for x in data:
-        if x[1] != mes:
-            final.append({'id': mes, 'color': COLORS[count], 'data': value})
-            count += 1
-            mes = x[1]
-            value = []
-
-        value.append({'x': x[2], 'y': x[0]})
-
-    final.append({'id': mes, 'color': COLORS[count], 'data': value})
-
-    return final
-
-
-def format_linea_hora(df, index, group):
-    """
-    Alterar df en lista formateada para grafico de linea
-    Columnas: Datetime | Produccion (suma del dia)
-    Retorna: datos clasificados por horas y minutos
+    Retorna: datos clasificados segun index y group (DateTime Formaters)
     """
 
     df['x'] = df.index.strftime(index)
@@ -75,39 +44,25 @@ def format_calendario(df_):
     data = df_.to_records(index=False)
     
     return [{
-    'day': x[1], 
-    'value': round(x[0], 2)
+        'day': x[1], 
+        'value': round(x[0], 2)
     } for x in data]
 
 
 def format_summary(df_):
-    # semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
-    semana = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
+    """
+    Crear un diccionario con el total y la lista
+    Se utiliza para resumir una semana de una variable particular
+    """
     data = df_.to_records(index=False)
     
     total = round(sum(map(lambda x: x[1], data)), 2)
     response = [{
-        'x': semana[x[0]], 
+        'x': SEMANA[x[0]], 
         'y': round(x[1], 2)
         } 
         for x in data ]
 
-    # response.append({'day': 'Total', 'value': total})
-
     return {'total': total, 'dias': response}
 
-# def format_summary(df_):
-#     semana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
-#     data = df_.to_records(index=False)
-    
-#     total = round(sum(map(lambda x: x[1], data)), 2)
-#     response = [{
-#         'day': semana[x[0]], 
-#         'value': round(x[1], 2)
-#         } 
-#         for x in data ]
-
-#     # response.append({'day': 'Total', 'value': total})
-
-#     return {'total': total,'dias': response}
 

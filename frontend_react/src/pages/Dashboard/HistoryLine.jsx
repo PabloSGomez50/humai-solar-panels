@@ -41,8 +41,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
             gap='0.75rem'
         >
             <Box
-                mt="25px"
-                p="0 30px"
+                p="1rem 1.75rem"
                 display="flex "
                 justifyContent="space-between"
                 alignItems="center"
@@ -59,6 +58,22 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                 {/* </Box> */}
 
                 <Box>
+                    <ButtonGroup
+                        variant="contained"
+                    >
+                        {spans.map(item =>     
+                            <Button
+                                key={item.key.span}
+                                onClick={() => setLineSpan(item.key)}
+                                sx={{
+                                    backgroundColor: lineSpan.span === item.key.span && colors.primary[700]
+                                }}
+                            >
+                                {item.text}
+                            </Button>
+                        )}
+
+                    </ButtonGroup>
                     <IconButton>
                         <DownloadOutlinedIcon
                             sx={{ fontSize: "26px", color: colors.secondary[500] }}
@@ -67,30 +82,14 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                 </Box>
             </Box>
             
-            <Box 
+            {/* <Box 
                 display='flex'
-                justifyContent='center'
+                justifyContent='flex-end'
                 p='0 3rem'
             >
-                <ButtonGroup
-                    variant="contained"
-                >
-                    {spans.map(item =>     
-                        <Button
-                            key={item.key.span}
-                            onClick={() => setLineSpan(item.key)}
-                            sx={{
-                                backgroundColor: lineSpan.span === item.key.span && colors.primary[700]
-                            }}
-                        >
-                            {item.text}
-                        </Button>
-                    )}
+            </Box> */}
 
-                </ButtonGroup>
-            </Box>
-
-            <Box height="14rem">
+            <Box height="16rem">
                 <LineChart
                     isDashboard={true}
                     data={lineData}

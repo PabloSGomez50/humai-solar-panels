@@ -45,7 +45,7 @@ def get_clima(date_from = FROM_DEFAULT, date_to = TO_DEFAULT) -> pd.DataFrame:
     regular_expresion_hora = '^(\d){1,2}:(\d){2}'
 
     while(date_from <= date_to):
-        print (date_from, date_to)
+        print(date_from, date_to)
 
         json_data = get_data(date_from)
 

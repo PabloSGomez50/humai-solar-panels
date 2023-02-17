@@ -46,7 +46,7 @@ const LineChart = ({ data, isDashboard = false, rotate = false }) => {
       data={data}
       theme={chartTheme}
       colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }} // nivo | paired | category10
-      margin={{ top: 24, right: 100, bottom: 48, left: 60 }}
+      margin={{ top: 8, right: 100, bottom: 48, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",

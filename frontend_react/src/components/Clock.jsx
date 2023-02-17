@@ -32,7 +32,7 @@ const Clock = ({ colors }) => {
                 fontSize='24px'
                 p='0 1.75rem'
             >
-                {time.getHours()}:{padTime(time.getMinutes())}:{padTime(time.getSeconds())}
+                {padTime(time.getHours())}:{padTime(time.getMinutes())}:{padTime(time.getSeconds())}
             </Typography>
         </Box>
     )

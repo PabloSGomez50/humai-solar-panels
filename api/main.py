@@ -16,16 +16,17 @@ origins = [
 
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
+@app.on_event('startup')
+def start_app():
+    print('Es re flashero que pueda ejecutar funciontes de esta manera')
+    print('Y tambien de esta manera ')
+
 
 def get_prod(user_id: int) -> pd.DataFrame:
     """
     Obtener el dataframe a partir del csv del usuario
-
-    Input:
-        - user_id: int
-
-    Output:
-        - Dataframe con fecha parseada ['index', 'Datetime', 'Produccion']
+        Input: user_id: int
+        Output: Dataframe con fecha parseada ['index', 'Datetime', 'Produccion']
     """
     columns = ['Datetime', 'Produccion']
 
@@ -80,16 +81,16 @@ def historia(span: str ='1M', sample: str ='1D'):
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
     if sample.endswith('W'):
-        # response = api_formato.format_linea_semana(df_response)
-        response = api_formato.format_linea_hora(df_response, index='%m-%d', group='%Y')
+        response = api_formato.format_linea_hist(df_response, index='%m-%d', group='%Y')
 
     elif sample.endswith('D'):
-        response = api_formato.format_linea_dia(df_response)
-        # response = api_formato.format_linea_hora(df_response, index='%d %H:%M', group='%m')
-    elif span.endswith('W'):
-        response = api_formato.format_linea_hora(df_response, index='%d %H:%M', group='%m')
+        response = api_formato.format_linea_hist(df_response, index='%d', group='%m')
+        
+    elif sample.endswith('H'):
+        response = api_formato.format_linea_hist(df_response, index='%d %H:%M', group='%m')
+
     else:
-        response = api_formato.format_linea_hora(df_response, index='%H:%M', group='%d')
+        response = api_formato.format_linea_hist(df_response, index='%H:%M', group='%d')
 
     return response
 

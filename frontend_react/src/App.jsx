@@ -17,10 +17,15 @@ import Calendar from './Graficos/Calendar';
 import FAQ from './pages/FAQ';
 
 import { tokens } from './theme';
+import { useEffect } from 'react';
 
 function App() {
   const [theme, colorMode] = useMode();
   const colors = tokens(theme.palette.mode);
+
+  useEffect(() => {
+    document.body.style.backgroundColor = colors.grey[800];
+  }, [])
 
   return (
     <ProSidebarProvider>

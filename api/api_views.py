@@ -75,7 +75,7 @@ def consumo_now(df: pd.DataFrame) -> pd.DataFrame:
     return df_
 
 
-def prod_last_7(df: pd.DataFrame) -> dict:
+def prod_last_7(df: pd.DataFrame) -> list:
     """
     Accede al dataset de producciony devuelve una lista 
     con los datos relevantes de los ultimos 7 dias
@@ -92,13 +92,13 @@ def prod_last_7(df: pd.DataFrame) -> dict:
     df['Dia'] = df['Datetime'].dt.day
     df['Hora'] = df['Datetime'].dt.hour
 
-    # Info 1
-    df1 = df.groupby('Dia').aggregate({'Datetime': 'first', 'Produccion': 'mean'})
-    df1['Datetime'] = df1['Datetime'].dt.strftime('%A')
+    # # Info 1
+    # df1 = df.groupby('Dia').aggregate({'Datetime': 'first', 'Produccion': 'mean'})
+    # df1['Datetime'] = df1['Datetime'].dt.strftime('%A')
 
-    data1 = df1.to_records(index=False)
+    # data1 = df1.to_records(index=False)
     
-    data1 = [{'dia': x[0], 'promedio': round(x[1], 3)} for x in data1]
+    # data1 = [{'dia': x[0], 'promedio': round(x[1], 3)} for x in data1]
 
     # Info 2
     df2 = df.groupby('Hora').aggregate({'Produccion': 'sum'})
@@ -108,7 +108,8 @@ def prod_last_7(df: pd.DataFrame) -> dict:
     
     data2 = [{'hora': str(x[0]), 'total': round(x[1], 3)} for x in data2]
     
-    return {'prom': data1,'horas': data2}
+    return data2
+    # return {'prom': data1,'horas': data2}
 
 
 def prod_calendar(df: pd.DataFrame, year: int) -> pd.DataFrame:
@@ -118,9 +119,6 @@ def prod_calendar(df: pd.DataFrame, year: int) -> pd.DataFrame:
     Input: user_id -> int
     Output: response -> list['day', 'value']
     """
-    
-    # df = get_prod(user_id)
-
     # Seleccionar el año
     df = df[df['Datetime'].dt.year == year]
 
@@ -136,9 +134,6 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
     Funcion para el grafico de lineas
     Busca clasificar la produccion de los ultimos tres meses por dia
     """
-
-    # df = get_prod(user_id)
-    # print(span, sample)
     if span == '1Y':
         days = 0
         months = 12
@@ -167,9 +162,6 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
 
 def get_table(df_con: pd.DataFrame, df_prod:pd.DataFrame) -> pd.DataFrame:
 
-    # df_con = get_consumo(user_id)
-    # df_prod = get_prod(user_id)
-
     df_con = df_con.resample('1D', on='Datetime').sum()
     df_prod = df_prod.resample('1D', on='Datetime').sum()
 
@@ -187,8 +179,6 @@ def get_table(df_con: pd.DataFrame, df_prod:pd.DataFrame) -> pd.DataFrame:
     df_final.reset_index(drop=True, inplace=True)
     df_final['id'] = df_final.index
     df_final.rename(columns=names,inplace=True)
-
-    # data = df_final.to_dict(orient='records')
 
     return df_final
 

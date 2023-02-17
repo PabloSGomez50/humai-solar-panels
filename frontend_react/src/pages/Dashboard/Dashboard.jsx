@@ -64,6 +64,7 @@ const Dashboard = () => {
             const response = await axiosI('cards');
 
             console.log('EXECUTE: Cartas');
+            console.log(response.data)
             setbarData(response.data);
         }
 
@@ -149,9 +150,9 @@ const Dashboard = () => {
                     </Box>
 
                     <BarChart
-                        data={barData.horas}
+                        data={barData}
                         keys={['total']}
-                        indexBy={'hora'}
+                        indexBy='hora'
                     />
                 </Box>
 
@@ -244,9 +245,19 @@ const Dashboard = () => {
                     backgroundColor={colors.grey[500]}
                     display='flex'
                     flexDirection='column'
-                    p='0.75rem'
+                    p='1.25rem 1rem'
                 >
+                    <Typography
+                        variant="h4"
+                        fontWeight="600"
+                        color={colors.grey[100]}
+                    >
+                        Clima En los proximos 7 dias
+                    </Typography>
 
+                    <Box>
+                        
+                    </Box>
                 </Box>
                 
             </Box>
