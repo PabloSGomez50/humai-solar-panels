@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 
 import LightModeIcon from '@mui/icons-material/LightMode';
+import CloudQueueIcon from '@mui/icons-material/CloudQueue';
 
 const DashClima = ({ clima, colors }) => {
 
@@ -29,7 +30,7 @@ const DashClima = ({ clima, colors }) => {
                 Clima En los proximos 7 dias
             </Typography>
 
-            {clima && selected.fecha && clima.length > 0 &&
+            {clima && selected?.fecha && clima.length > 0 &&
                 <Box
                     height='100%'
                     display='flex'
@@ -63,7 +64,11 @@ const DashClima = ({ clima, colors }) => {
                         </Box>
 
                         <Box>
-                            <LightModeIcon fontSize='large' color={colors.grey[100]} />
+                            {selected.icon ?
+                                <CloudQueueIcon fontSize='large' color={colors.grey[100]} />
+                                :
+                                <LightModeIcon fontSize='large' color={colors.grey[100]} />
+                            }
                             <Typography fontSize='36px' fontWeight='bold'>
                                 {selected.temp} °C
                             </Typography>

@@ -8,7 +8,7 @@ COLORS = ['#80558C', '#E4D192', '#6096B4',
     #     'hsl(99, 70%, 50%)', 'hsl(105, 70%, 50%)', 
     #     ]
 
-# SEMANA = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+SEMANA_LONG = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 SEMANA = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
 # MES = ['Enero', 'Febrero', 'Marzo', 'abril',
 #         'mayo', 'junio', 'julio', 'agosto', 
@@ -74,3 +74,20 @@ def format_summary(df_, week=True):
     return {'total': total, 'dias': response}
 
 
+def format_clima(df) -> list:
+
+    df['dia'] = df['Datetime'].apply(lambda x: SEMANA[x.dayofweek])
+    df['Datetime'] = df['Datetime'].dt.strftime('%d/%m/%Y')
+
+    df.rename(inplace=True, columns={
+        'Datetime': 'fecha',
+        'Temp': 'temp',
+        'Wind': 'viento',
+        'Weather': 'clima',
+        'Humidity': 'humedad',
+        'Barometer': 'presion'
+    })
+
+    df['icon'] = df['clima'].apply(lambda x: 'clouds' in x)
+
+    return df.to_dict(orient='records')

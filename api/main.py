@@ -89,26 +89,15 @@ def resumen():
 
 @app.get('/clima')
 def show_clima():
-    SEMANA = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 
     today = datetime.today()
     df_clima = pd.read_csv(CSV_CLIMA.format(today.month, today.day), parse_dates=['Datetime'])
 
     df_clima.sort_index(ascending=False, inplace=True)
 
-    df_clima['dia'] = df_clima['Datetime'].apply(lambda x: SEMANA[x.dayofweek])
-    df_clima['Datetime'] = df_clima['Datetime'].dt.strftime('%d/%m/%Y')
-
-    df_clima.rename(inplace=True, columns={
-        'Datetime': 'fecha',
-        'Temp': 'temp',
-        'Wind': 'viento',
-        'Weather': 'clima',
-        'Humidity': 'humedad',
-        'Barometer': 'presion'
-    })
+    response = api_formato.format_clima(df_clima)
     
-    return df_clima.to_dict(orient='records')
+    return response
 
 
 @app.get('/summary')
