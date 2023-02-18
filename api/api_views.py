@@ -32,7 +32,7 @@ def get_datetimes(days = 6, months = 0, minutes = 0):
     return (lim_min, lim_max)
 
 
-def consumo_now(df: pd.DataFrame) -> pd.DataFrame:
+def data_now(df: pd.DataFrame) -> pd.DataFrame:
     """
     Accede al dataset y devuelve una lista con los datos de la ultima media hora
 
@@ -50,6 +50,7 @@ def consumo_now(df: pd.DataFrame) -> pd.DataFrame:
     df_ = df.tail(1)
 
     return df_
+
 
 
 def consumo_last_7d(df: pd.DataFrame) -> list:

@@ -2,9 +2,14 @@ import telebot
 from telebot.types import ForceReply #para citar un mensaje
 import requests
 import json
+from telebot import types
 
 token = '6113092305:AAEQFPxaNDtn5JIocQlP1SmEVLKqsNPG35I'
 bot = telebot.TeleBot(token)
+
+#variable donde guardamos los datos del usuario
+usuarios = {}
+
 
 #responde al comando /start
 @bot.message_handler(commands = ['start','help'])
@@ -24,25 +29,19 @@ def datos(message):
 
 def cliente_id(message):
     '''Pregunta al usuario su número de cliente'''
-    nombre = message.text
+    usuarios[message.chat.id] = {}
+    
     markup = ForceReply()
     msg = bot.send_message(message.chat.id, '¿Cuál es tu número de cliente?', reply_markup=markup)
-        
-@bot.message_handler(content_types=['text'])
-def mensajes_texto(message):
-    '''Gestiona los mensajes de texto recibidos'''
-    bot.send_message(message.chat.id,'El comando enviado no realiza ninguna función. Intente nuevamente')
-    
 
+
+    
 #comando 1
-@bot.message_handler(content_types= '1')
+@bot.message_handler(commands = ['1'])
 def consumo_actual(message):
     '''Consultar el consumo actual: Permite al usuario ver la cantidad de energía que consumió en la última media hora.'''
     response = requests.get('http://127.0.0.1:8000/consumo_now')
-    print(type(response.text))
     data = json.loads(response.text)
-    print(type(data))
-    print(data)
 
     hora = data['Datetime'].split('T')[1]
 
@@ -51,27 +50,87 @@ def consumo_actual(message):
     bot.send_message(message.chat.id, mensaje)
 
 #comando 2
-@bot.message_handler(content_types= '2')
+@bot.message_handler(commands = ['2'])
 def consumo_actual(message):
     '''Consultar la producción actual: Permite al usuario ver la cantidad de energía que está produciendo el sistema fotovoltaico en tiempo real.'''
+    response = requests.get('http://127.0.0.1:8000/produccion_now')
+    data = json.loads(response.text)
+    
+    hora = data['Datetime'].split('T')[1]
+
+    mensaje = f'El producción a las {hora} es de {data["Produccion"]} Kw.'
+
+    bot.send_message(message.chat.id, mensaje)
+
+
+
+def grafico_consumo(message):
+    respuesta_usuario = message.text.upper()
+    if respuesta_usuario == 'D':
+        # Lógica para mostrar el consumo diario
+        bot.send_message(message.chat.id, 'Mostrando consumo diario')
+    elif respuesta_usuario == 'S':
+        # Lógica para mostrar el consumo semanal
+        bot.send_message(message.chat.id, 'Mostrando consumo semanal')
+    elif respuesta_usuario == 'M':
+        # Lógica para mostrar el consumo mensual
+        bot.send_message(message.chat.id, 'Mostrando consumo mensual')
+    elif respuesta_usuario == 'A':
+        # Lógica para mostrar el consumo anual
+        bot.send_message(message.chat.id, 'Mostrando consumo anual')
+    else:
+        bot.send_message(message.chat.id, 'Opción inválida. Por favor, seleccione D, S, M o A.')
+
+
 
 #comando 3
-@bot.message_handler(content_types= '3')
-def historial(message):
+@bot.message_handler(commands = ['3'])
+def historial_consumo(message):
     '''Ver el historial de consumo: Muestra al usuario un gráfico con el consumo de energía del panel solar a lo largo del tiempo: (dia, semana, mes, año).'''
-    bot.send_message(message.chat.id,'Desea ver el consumo de energía diario, semanal, mensual o anual?')
-    telebot.types.BotCommand('/','/D: Día, /S: Semana, /M: Mes, /A: Año'),
+    bot.send_message(message.chat.id,'Desea ver el consumo de energía D: diario, S: semanal, M: mensual o A: anual?')
 
-    @bot.message_handler(content_types='D')
-    def historial_dia(message):
-        '''Muestra al usuario un gráfico con el consumo de energía del panel solar en el día'''
+    bot.register_next_step_handler(message, grafico_consumo)
+
+
+     
+
+def grafico_produccion(message):
+    respuesta_usuario = message.text.upper()
+    if respuesta_usuario == 'D':
+        # Lógica para mostrar la producción diario
+        bot.send_message(message.chat.id, 'Mostrando la producción diario')
+    elif respuesta_usuario == 'S':
+        # Lógica para mostrar la producción semanal
+        bot.send_message(message.chat.id, 'Mostrando la producción semanal')
+    elif respuesta_usuario == 'M':
+        # Lógica para mostrar la producción mensual
+        bot.send_message(message.chat.id, 'Mostrando la producción mensual')
+    elif respuesta_usuario == 'A':
+        # Lógica para mostrar la producción anual
+        bot.send_message(message.chat.id, 'Mostrando la producción anual')
+    else:
+        bot.send_message(message.chat.id, 'Opción inválida. Por favor, seleccione D, S, M o A.')
 
 #comando 4
-@bot.message_handler(content_types= '4')
-def historial(message):
+@bot.message_handler(commands = ['4'])
+def historial_produccion(message):
     '''Ver el historial de consumo: Muestra al usuario un gráfico con la producción de energía del panel solar a lo largo del tiempo: (dia, semana, mes, año).'''
     bot.send_message(message.chat.id,'Desea ver la producción de energía diario, semanal, mensual o anual?')
-    telebot.types.BotCommand('/','/D: Día, /S: Semana, /M: Mes, /A: Año')
+    bot.register_next_step_handler(message, grafico_produccion)
+
+#comando 5
+@bot.message_handler(commands = ['5'])
+def produccion_prevista(message):
+    '''Ver la producción prevista: Predice la producción de energía basándose en el clima y otros factores.'''
+    mensaje = 'aca iria la predicción de la producción'
+    bot.send_message(message.chat.id, mensaje)
+    
+
+#Comandos no válidos      
+@bot.message_handler(content_types=['text'])
+def mensajes_texto(message):
+    '''Gestiona los mensajes de texto recibidos'''
+    bot.send_message(message.chat.id,'El comando enviado no realiza ninguna función. Intente nuevamente')
 
 if __name__ == '__main__':
     bot.set_my_commands([
