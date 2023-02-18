@@ -174,10 +174,19 @@ def table():
 
 
 @app.get('/consumo_now')
-def test_bot():
+def test_bot_cons():
 
     df_con = get_consumo(1)
-    df_response = api_views.consumo_now(df_con)
+    df_response = api_views.data_now(df_con)
+    response = df_response.to_dict(orient='records')
+
+    return response[0]
+
+@app.get('/produccion_now')
+def test_bot_prod():
+
+    df = get_prod(1)
+    df_response = api_views.data_now(df)
     response = df_response.to_dict(orient='records')
 
     return response[0]
