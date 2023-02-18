@@ -21,7 +21,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
         },
         {
             text: '1 Semana',
-            key: {span: '1W', sample: '6H'}
+            key: {span: '1W', sample: '3H'}
         },
         {
             text: '1 Dia',

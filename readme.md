@@ -42,3 +42,6 @@ Los datos de los sistemas de paneles solares que se utilizaron en el proyecto se
 
 Los datos del clima se obtuvieron scrapeando la pagina , para recuperar los datos de los periodos analizados: [Time and date (Web)](https://www.timeanddate.com/weather/australia/sydney/historic?month=06&year=2012)
 
+
+## Error
+- Si se genera un error al instalar la libreria demjson, se tiene que utilizar la version 57.5.0 de la libreria setuptools debido a un error con use_2to3.

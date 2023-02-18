@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 DAYS_DIFF = 2 + 365 * 10
 
-def get_datetimes(days = 6, months = 0):
+def get_datetimes(days = 6, months = 0, minutes = 0):
     """
     Funcion para obtener los registros de interes, de una semana o varios meses
     """
@@ -22,11 +22,12 @@ def get_datetimes(days = 6, months = 0):
 
         min_day = datetime(year=anio, month=mes - months, day=1)
     else:
-        min_day = today - timedelta(days=days)
+        min_day = today - timedelta(days=days, minutes = minutes)
 
 
     lim_min = min_day.strftime('%Y-%m-%d')
-    lim_max = today.strftime('%Y-%m-%d') + ' 23:59'
+    # lim_max = today.strftime('%Y-%m-%d') + ' 23:59'
+    lim_max = today.strftime('%Y-%m-%d %H:%M')
 
     return (lim_min, lim_max)
 
@@ -39,13 +40,13 @@ def consumo_now(df: pd.DataFrame) -> pd.DataFrame:
     Output: response -> DataFrame
     """
     # Trae el dia de 2012/2013
-    now = datetime.now() - timedelta(days=DAYS_DIFF)
-    delay = now - timedelta(minutes=55)
+    # now = datetime.now() - timedelta(days=DAYS_DIFF)
+    # delay = now - timedelta(minutes=55)
 
-    lower = delay.strftime('%Y-%m-%d %H:%M')
-    upper = now.strftime('%Y-%m-%d %H:%M')
+    # lower = delay.strftime('%Y-%m-%d %H:%M')
+    # upper = now.strftime('%Y-%m-%d %H:%M')
 
-    df = df[df['Datetime'].between(lower, upper)]
+    df = df[df['Datetime'].between(get_datetimes(minutes=55))]
     df_ = df.tail(1)
 
     return df_
