@@ -1,5 +1,3 @@
-# import pandas as pd
-
 # TIMEZONE = 'America/Argentina/Buenos_Aires'
 COLORS = ['#80558C', '#E4D192', '#6096B4', 
           '#BFDB38', '#FC7300', '#FCF9BE',

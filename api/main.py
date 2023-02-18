@@ -23,27 +23,6 @@ origins = [
 
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-@app.on_event('startup')
-def start_app():
-
-    print('Es re flashero que pueda ejecutar funciontes de esta manera')
-
-    today = datetime.today() - timedelta(days=DAYS_DIFF)
-    
-    if not os.path.exists(CSV_CLIMA.format(today.month, today.day)):
-        today = datetime(year=today.year, month=today.month, day=today.day)
-        from_to = today - timedelta(days=3)
-        df = clima_scraper.get_clima(from_to, today)
-        df_clean = clima_limpiar.clean_df(df)
-        
-        df_test = df_clean[df_clean.index.hour == 12].copy()
-
-        df_test = df_test.loc[::2,:]
-
-        df_test.drop(columns=['Visibility'], inplace=True)
-        df_test.to_csv(CSV_CLIMA.format(today.month, today.day))
-
-
 def get_prod(user_id: int) -> pd.DataFrame:
     """
     Obtener el dataframe a partir del csv del usuario
@@ -58,6 +37,29 @@ def get_prod(user_id: int) -> pd.DataFrame:
 def get_consumo(user_id: int) -> pd.DataFrame:
     
     return pd.read_csv(CSV_CONSUMO.format(user_id), parse_dates=['Datetime'])
+
+
+@app.on_event('startup')
+def start_app():
+
+    print('Es re flashero que pueda ejecutar funciontes de esta manera')
+
+    today = datetime.today() - timedelta(days=DAYS_DIFF)
+    
+    if not os.path.exists(CSV_CLIMA.format(today.month, today.day)):
+        today = datetime(year=today.year, month=today.month, day=today.day)
+
+        from_to = today - timedelta(days=3)
+
+        df = clima_scraper.get_clima(from_to, today)
+        df_clean = clima_limpiar.clean_df(df)
+        
+        df_test = df_clean[df_clean.index.hour == 12].copy()
+
+        df_test = df_test.loc[::2,:]
+
+        df_test.drop(columns=['Visibility'], inplace=True)
+        df_test.to_csv(CSV_CLIMA.format(today.month, today.day))
 
 
 @app.get('/')
@@ -174,7 +176,8 @@ def table():
 @app.get('/consumo_now')
 def test_bot():
 
-    df_response = api_views.consumo_now(1)
+    df_con = get_consumo(1)
+    df_response = api_views.consumo_now(df_con)
     response = df_response.to_dict(orient='records')
 
     return response[0]
