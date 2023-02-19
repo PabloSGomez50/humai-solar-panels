@@ -57,7 +57,7 @@ const Summary = ({ colors, data }) => {
                     >
                         <Box>
                             <Typography variant="h4">
-                                Total: 
+                                {item.endsWith('dia') ? 'Total' : 'Actual'}
                             </Typography>
                             <Typography variant="h4">
                                 {data[item].total} Kw

@@ -22,13 +22,20 @@ const DashClima = ({ clima, colors }) => {
             gap='1.25rem'
             backgroundColor={colors.grey[500]}
         >
-            <Typography
-                variant="h4"
-                fontWeight="600"
-                color={colors.grey[100]}
-            >
-                Clima En los proximos 7 dias
-            </Typography>
+            <Box display='flex' gap='0.5rem' alignItems='center'>
+                {selected && selected.icon ?
+                    <CloudQueueIcon sx={{color: colors.secondary[400]}} />
+                    :
+                    <LightModeIcon sx={{color: colors.secondary[400]}} />
+                }
+                <Typography
+                    variant="h4"
+                    fontWeight="600"
+                    color={colors.grey[100]}
+                >
+                    Clima En los proximos 7 dias
+                </Typography>
+            </Box>
 
             {clima && selected?.fecha && clima.length > 0 &&
                 <Box
@@ -65,9 +72,9 @@ const DashClima = ({ clima, colors }) => {
 
                         <Box>
                             {selected.icon ?
-                                <CloudQueueIcon fontSize='large' color={colors.grey[100]} />
+                                <CloudQueueIcon fontSize='large' sx={{color: colors.grey[100]}} />
                                 :
-                                <LightModeIcon fontSize='large' color={colors.grey[100]} />
+                                <LightModeIcon fontSize='large' sx={{color: colors.grey[100]}} />
                             }
                             <Typography fontSize='36px' fontWeight='bold'>
                                 {selected.temp} °C

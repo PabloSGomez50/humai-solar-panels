@@ -58,8 +58,6 @@ def format_summary(df_, week=True):
             Datetime: dayofweek
             Total: float (sum)
     """
-    total = round(df_['Total'].sum(), 2)
-
     # data = df_.to_records(index=False)
     data = df_.to_dict(orient='records')
     
@@ -68,6 +66,11 @@ def format_summary(df_, week=True):
         'y': round(x['Total'], 2)
         } 
         for x in data ]
+
+    if week:
+        total = round(df_['Total'].sum(), 2)
+    else:
+        total = data[-1].get('Total')
 
     return {'total': total, 'dias': response}
 

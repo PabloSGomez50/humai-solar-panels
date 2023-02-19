@@ -43,7 +43,7 @@ export default [
         name: 'Control',
         data: [
             {
-                title: 'Contacto',
+                title: 'Cuenta',
                 to: '/contacts',
                 icon: PersonOutlinedIcon
             },

@@ -54,7 +54,7 @@ const Dashboard = () => {
         }
 
         requestRendimiento();
-    }, [lineSpan])
+    }, [lineSpan.span])
 
     useEffect(() => {
         
