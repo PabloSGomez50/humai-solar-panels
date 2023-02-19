@@ -7,43 +7,21 @@ DEBUG = True
 FILE_NAME = './scraper_clima/clima_sydney_limpio3.csv'
 VAR_CAT_N = 5
 
-def clean_df(df_input: pd.DataFrame = None):
+def clean_df(df: pd.DataFrame = None):
 
-    if df_input is None:
+    if df is None:
         URL = 'https://raw.githubusercontent.com/PabloSGomez50/humai-solar-panels/main/scraper_clima/clima_sidney_2.csv'
 
         df = pd.read_csv(URL, skipinitialspace = True)
-    else:
-        df = df_input
-
-    # print(df.head())
-    # df = df.drop(columns='Unnamed: 0')
     
     df = clean_and_convert(df)
     df['Visibility'] = df['Visibility'].interpolate(method='pad')
-    # df = weather_one_hot(df)
+    df = weather_one_hot(df)
     #df = normalizacion(df)
     df = fix_datetime(df)
-    
+
     # df.to_csv(FILE_NAME)
     return df
-
-
-def clean_and_convert(df_temp):
-
-    if DEBUG:
-        print('DEBUG: Limpieza y convercion de datos numericos')
-
-    df_temp['Temp'] = df_temp['Temp'].apply(extract)
-    df_temp['Wind'] = df_temp['Wind'].apply(extract)
-    df_temp['Humidity'] = df_temp['Humidity'].apply(extract)
-    df_temp['Barometer'] = df_temp['Barometer'].apply(extract)
-    df_temp['Visibility'] = df_temp['Visibility'].apply(extract)
-    df_temp = df_temp.convert_dtypes()
-    df_temp['Weather'] = var_categorica(VAR_CAT_N, df_temp)
-    df_temp['Weather'] = df_temp['Weather'].interpolate(method='pad')
-
-    return df_temp.copy()
 
 
 def weather_one_hot(df_temp):
@@ -53,7 +31,6 @@ def weather_one_hot(df_temp):
 
     df_temp['Weather'] = var_categorica(VAR_CAT_N, df_temp)
     df_temp['Weather'] = df_temp['Weather'].interpolate(method='pad')
-
     # df_temp = df_temp.join(pd.get_dummies(df_temp['Weather']))
     #df_temp = df_temp.drop(columns='Weather')
 
@@ -74,6 +51,21 @@ def var_categorica(n, df_temp):
     return serie_filtrada.copy()
 
 
+def clean_and_convert(df_temp):
+
+    if DEBUG:
+        print('DEBUG: Limpieza y convercion de datos numericos')
+
+    df_temp['Temp'] = df_temp['Temp'].apply(extract)
+    df_temp['Wind'] = df_temp['Wind'].apply(extract)
+    df_temp['Humidity'] = df_temp['Humidity'].apply(extract)
+    df_temp['Barometer'] = df_temp['Barometer'].apply(extract)
+    df_temp['Visibility'] = df_temp['Visibility'].apply(extract)
+    df_temp = df_temp.convert_dtypes()
+
+    return df_temp.copy()
+
+
 def extract(string):
   """
   Limpiar una cadena de caracteres utilizando regex.
@@ -92,7 +84,7 @@ def extract(string):
     if string == 'No wind':
       return 0
 
-    if string == "('N/A',)":
+    if string in ["('N/A',)", 'N/A']:
       return np.NAN
 
     return string
@@ -133,5 +125,7 @@ def fix_datetime(df_temp):
 if __name__ == '__main__':
     df_init = get_clima()
     df_final = clean_df(df_init)
+    # Cuantas valores quedaron en la columna Weather
+    print(len(df_final['Weather'].unique()), df_final['Weather'].unique())
     # df_final.to_csv('clima.csv')
     print(df_final.head())
