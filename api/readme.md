@@ -13,3 +13,8 @@ Crear una API REST que sirva de conexion entre los datos en S3 (formato .csv) y 
 
 - Pagina web
 - Chat Bot de Telegram
+
+## Conexion aws
+
+- sudo vim /etc/nginx/sites-enabled/fastapi_nginx
+- sudo service nginx restart
