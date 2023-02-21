@@ -113,17 +113,29 @@ def historial_consumo(message):
 def grafico_produccion(message):
     respuesta_usuario = message.text.upper()
     if respuesta_usuario == 'D':
-        # Lógica para mostrar la producción diaria
+        data = solicitar('line/true/1D/30T')
+        crear_grafico(data, 'Grafico de producción diario')
         bot.send_message(message.chat.id, 'Mostrando la producción diaria')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+        
     elif respuesta_usuario == 'S':
-        # Lógica para mostrar la producción semanal
         bot.send_message(message.chat.id, 'Mostrando la producción semanal')
+        data = solicitar('line/true/1W/2H')
+        grafico = crear_grafico(data, 'Grafico de producción semanal')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+
     elif respuesta_usuario == 'M':
-        # Lógica para mostrar la producción mensual
         bot.send_message(message.chat.id, 'Mostrando la producción mensual')
+        data = solicitar('line/true/1M/1D')
+        grafico = crear_grafico(data, 'Grafico de producción mensual')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+
     elif respuesta_usuario == 'A':
-        # Lógica para mostrar la producción anual
         bot.send_message(message.chat.id, 'Mostrando la producción anual')
+        data = solicitar('line/true/1Y/1W')
+        grafico = crear_grafico(data, 'Grafico de producción anual')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+
     else:
         bot.send_message(message.chat.id, 'Opción inválida. Por favor, seleccione D, S, M o A.')
 
