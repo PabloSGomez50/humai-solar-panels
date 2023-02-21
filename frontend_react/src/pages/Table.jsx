@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, colors, useTheme } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 
 import { tokens } from '../theme';
@@ -18,7 +18,7 @@ const columns = [
     },
     {
         field: "Produccion",
-        headerName: "Produccion (unidad: Kw)",
+        headerName: "Produccion (Kw)",
         type: "number",
         headerAlign: "left",
         align: "center",
@@ -26,7 +26,7 @@ const columns = [
     },
     {
         field: "Consumo general",
-        headerName: "Consumo general (unidad: Kw)",
+        headerName: "Consumo general (Kw)",
         type: "number",
         headerAlign: "left",
         align: "center",
@@ -35,7 +35,7 @@ const columns = [
     },
     {
         field: "Consumo controlado",
-        headerName: "Consumo controlado (unidad: Kw)",
+        headerName: "Consumo controlado (Kw)",
         type: "number",
         headerAlign: "left",
         align: "center",
@@ -43,8 +43,29 @@ const columns = [
         flex: 1,
     },
     {
+        field: "Diferencia",
+        headerName: "Diferencia (Kw)",
+        type: "number",
+        headerAlign: "left",
+        align: "center",
+        flex: 1,
+        renderCell: (d) => {
+            const value = d.formattedValue;
+            const positive = value >= 0;
+            console.log(d);
+            
+            return (
+            <Box 
+                color={positive ? '#9CFF2E': '#F00'}
+                fontWeight='bold'
+            >
+                {positive && '+'} {value} Kw
+            </Box>
+        )}
+    },
+    {
         field: "Consumo Total",
-        headerName: "Consumo Total (unidad: Kw)",
+        headerName: "Consumo Total (Kw)",
         type: "number",
         headerAlign: "left",
         align: "center",
@@ -73,7 +94,7 @@ const Table = () => {
 
     return (
         <Box>
-            <Header title="Table" subtitle="Managing the Table Members" />
+            <Header title="Tabla de datos" subtitle="Resumen diario de los datos del sistema." />
             <Box
                 m="40px 0 0 0"
                 height="75vh"

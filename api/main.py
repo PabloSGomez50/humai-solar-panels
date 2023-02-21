@@ -19,10 +19,12 @@ CUSTOMER_ID = 1
 app = FastAPI()
 
 origins = [
-    'http://127.0.0.1:5173'
+    'http://127.0.0.1:5173',
+    'https://humai-solar-panels.vercel.app'
 ]
 
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
 
 def get_prod(user_id: int) -> pd.DataFrame:
     """

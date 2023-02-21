@@ -16,6 +16,7 @@ def clean_df(df: pd.DataFrame = None):
     
     df = clean_and_convert(df)
     df['Visibility'] = df['Visibility'].interpolate(method='pad')
+    df['Visibility'] = df['Visibility'].interpolate(method='bfill')
     df = weather_one_hot(df)
     #df = normalizacion(df)
     df = fix_datetime(df)
@@ -125,7 +126,7 @@ def fix_datetime(df_temp):
 if __name__ == '__main__':
     df_init = get_clima()
     df_final = clean_df(df_init)
-    # Cuantas valores quedaron en la columna Weather
-    print(len(df_final['Weather'].unique()), df_final['Weather'].unique())
-    # df_final.to_csv('clima.csv')
+    # # Cuantas valores quedaron en la columna Weather
+    # print(len(df_final['Weather'].unique()), df_final['Weather'].unique())
+    # # df_final.to_csv('clima.csv')
     print(df_final.head())

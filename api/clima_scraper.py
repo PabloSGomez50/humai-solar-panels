@@ -83,3 +83,6 @@ def get_clima(date_from = FROM_DEFAULT, date_to = TO_DEFAULT) -> pd.DataFrame:
 
 if __name__ == '__main__':
     print(get_clima())
+    # date_from = datetime(year=2013, month=2, day=1)
+    # date_to = datetime(year=2013, month=2, day=28)
+    # get_clima(date_from, date_to).to_csv('raw_clima_02.csv')

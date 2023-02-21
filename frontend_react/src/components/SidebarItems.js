@@ -7,6 +7,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
 export default [
     {
@@ -37,16 +38,21 @@ export default [
                 to: '/table',
                 icon: TableChartIcon
             },
+            {
+                title: 'Prediccion detallada',
+                to: '/insights',
+                icon: QueryStatsIcon
+            },
         ]
     },
     {
         name: 'Control',
         data: [
-            {
-                title: 'Cuenta',
-                to: '/contacts',
-                icon: PersonOutlinedIcon
-            },
+            // {
+            //     title: 'Cuenta',
+            //     to: '/contacts',
+            //     icon: PersonOutlinedIcon
+            // },
             {
                 title: 'FAQ',
                 to: '/faq',
