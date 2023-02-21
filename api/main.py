@@ -144,13 +144,17 @@ def calendario(year: int):
     return response
 
 
-@app.get('/line/{span}/{sample}')
-def historia(span: str ='1M', sample: str ='1D', telegram: bool = False):
+@app.get('/line/{tipo}/{span}/{sample}')
+def historia(tipo: bool = True, span: str ='1M', sample: str ='1D', telegram: bool = False):
 
-    df = get_prod(CUSTOMER_ID)
+
+    if tipo:
+        df = get_prod(CUSTOMER_ID)
+        print('Usa prod')
+    else:
+        df = get_consumo(CUSTOMER_ID)
+        print('Usa CONSUMO')
     df_response = api_views.prod_history(df, span=span, sample=sample)
-
-    print(telegram, type(telegram))
 
     if sample.endswith('W'):
         index = '%m-%d'
@@ -169,10 +173,11 @@ def historia(span: str ='1M', sample: str ='1D', telegram: bool = False):
         group='%d'
 
     if telegram:
-        return api_formato.format_linea_telegram(df_response, index, group)
+        return api_formato.format_linea_telegram(df_response, index, group, tipo)
     
     else:
-        return api_formato.format_linea_hist(df_response, index, group)
+        return api_formato.format_linea_hist(df_response, index, group, tipo)
+
 
 @app.get('/table')
 def table():

@@ -12,7 +12,7 @@ SEMANA = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
 #         'mayo', 'junio', 'julio', 'agosto', 
 #         'septiembre', 'octubre', 'noviembre', 'diciembre']
 
-def format_linea_hist(df, index, group):
+def format_linea_hist(df, index, group, tipo):
     """
     Alterar df en lista formateada para grafico de linea
     Columnas: Datetime | Produccion (suma del dia)
@@ -21,7 +21,11 @@ def format_linea_hist(df, index, group):
 
     df['x'] = df.index.strftime(index)
     df['group'] = df.index.strftime(group)
-    df.rename(columns={'Produccion': 'y'}, inplace=True)
+    if tipo:
+        df.rename(columns={'Produccion': 'y'}, inplace=True)
+    else:
+        df = df[['Total','x','group']].copy()
+        df.rename(columns={'Total': 'y'}, inplace=True)
 
     response = []
 
@@ -35,13 +39,14 @@ def format_linea_hist(df, index, group):
 
     return response
 
-def format_linea_telegram(df, index, group):
-    print(df)
-    df['Datetime'] = df.index.strftime('%d %H:%M')
+def format_linea_telegram(df, index, group, tipo):
+    
+    df['Datetime'] = df.index.strftime(index)
+    key = 'Produccion' if tipo else 'Total'
 
     return {
-        'columnas': ('Horas', 'Produccion'),
-        'Produccion': list(df['Produccion']),
+        'columnas': ('Horas', key),
+        key: list(df[key]),
         'Horas': list(df['Datetime'])
     }
 
