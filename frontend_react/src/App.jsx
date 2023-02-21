@@ -8,12 +8,8 @@ import TopBar from './components/TopBar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Table from './pages/Table';
-import Contacts from './pages/Contacts';
+import Insights from './pages/Insights';
 import Config from './pages/Config';
-import Pie from './Graficos/Pie';
-import Line from './Graficos/Line';
-import Bar from './Graficos/Bar';
-import Calendar from './Graficos/Calendar';
 import FAQ from './pages/FAQ';
 
 import { tokens } from './theme';
@@ -46,7 +42,7 @@ function App() {
                     <Route path='/' element={<Dashboard />}/>
                     <Route path='/table' element={<Table />}/>
                     <Route path='/faq' element={<FAQ />}/>
-                    <Route path='/contacts' element={<Contacts />}/>
+                    <Route path='/insights' element={<Insights />}/>
                     <Route path='/settings' element={<Config />}/>
                   </Routes>
                 </Box>

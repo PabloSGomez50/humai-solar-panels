@@ -1,8 +1,8 @@
 import telebot
-from telebot.types import ForceReply #para citar un mensaje
-import requests
-import json
+from telebot.types import ForceReply, InputFile #para citar un mensaje
 from telebot import types
+
+from bot_funciones import solicitar, crear_grafico
 
 token = '6113092305:AAEQFPxaNDtn5JIocQlP1SmEVLKqsNPG35I'
 bot = telebot.TeleBot(token)
@@ -40,8 +40,7 @@ def cliente_id(message):
 @bot.message_handler(commands = ['1'])
 def consumo_actual(message):
     '''Consultar el consumo actual: Permite al usuario ver la cantidad de energía que consumió en la última media hora.'''
-    response = requests.get('http://127.0.0.1:8000/consumo_now')
-    data = json.loads(response.text)
+    data = solicitar('consumo_now')
 
     hora = data['Datetime'].split('T')[1]
 
@@ -53,8 +52,7 @@ def consumo_actual(message):
 @bot.message_handler(commands = ['2'])
 def consumo_actual(message):
     '''Consultar la producción actual: Permite al usuario ver la cantidad de energía que está produciendo el sistema fotovoltaico en tiempo real.'''
-    response = requests.get('http://127.0.0.1:8000/produccion_now')
-    data = json.loads(response.text)
+    data = solicitar('produccion_now')
     
     hora = data['Datetime'].split('T')[1]
 
@@ -68,16 +66,34 @@ def grafico_consumo(message):
     respuesta_usuario = message.text.upper()
     if respuesta_usuario == 'D':
         # Lógica para mostrar el consumo diario
-        bot.send_message(message.chat.id, 'Mostrando consumo diario')
+        data = solicitar('line/1D/30T')
+        crear_grafico(data, 'Grafico de consumo diario')
+        bot.send_message(message.chat.id, 'Mostrando consumo diario...')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+        
+
     elif respuesta_usuario == 'S':
-        # Lógica para mostrar el consumo semanal
-        bot.send_message(message.chat.id, 'Mostrando consumo semanal')
+        # Logica para mostrar el consumo semanal
+        data = solicitar('line/1W/2H')
+        grafico = crear_grafico(data, 'Grafico de consumo semanal')
+        bot.send_message(message.chat.id, 'Mostrando consumo semanal...')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+        
     elif respuesta_usuario == 'M':
-        # Lógica para mostrar el consumo mensual
-        bot.send_message(message.chat.id, 'Mostrando consumo mensual')
+        # Logica para mostrar el consumo mensual
+        
+        data = solicitar('line/1M/1D')
+        grafico = crear_grafico(data, 'Grafico de consumo mensual')
+        bot.send_message(message.chat.id, 'Mostrando consumo mensual...')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+
     elif respuesta_usuario == 'A':
         # Lógica para mostrar el consumo anual
+        data = solicitar('line/1Y/1W')
+        grafico = crear_grafico(data, 'Grafico de consumo anual')
         bot.send_message(message.chat.id, 'Mostrando consumo anual')
+        bot.send_photo(message.chat.id, InputFile('Foto.png'))
+
     else:
         bot.send_message(message.chat.id, 'Opción inválida. Por favor, seleccione D, S, M o A.')
 
@@ -97,8 +113,8 @@ def historial_consumo(message):
 def grafico_produccion(message):
     respuesta_usuario = message.text.upper()
     if respuesta_usuario == 'D':
-        # Lógica para mostrar la producción diario
-        bot.send_message(message.chat.id, 'Mostrando la producción diario')
+        # Lógica para mostrar la producción diaria
+        bot.send_message(message.chat.id, 'Mostrando la producción diaria')
     elif respuesta_usuario == 'S':
         # Lógica para mostrar la producción semanal
         bot.send_message(message.chat.id, 'Mostrando la producción semanal')

@@ -35,6 +35,16 @@ def format_linea_hist(df, index, group):
 
     return response
 
+def format_linea_telegram(df, index, group):
+    print(df)
+    df['Datetime'] = df.index.strftime('%d %H:%M')
+
+    return {
+        'columnas': ('Horas', 'Produccion'),
+        'Produccion': list(df['Produccion']),
+        'Horas': list(df['Datetime'])
+    }
+
 
 def format_calendario(df_):
     """
