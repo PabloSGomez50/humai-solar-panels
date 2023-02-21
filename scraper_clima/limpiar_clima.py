@@ -16,7 +16,7 @@ def clean_df(df_input: pd.DataFrame = None):
     else:
         df = df_input
 
-    df = df.drop(columns='Unnamed: 0')
+    # df = df.drop(columns='Unnamed: 0')
     
     df = clean_and_convert(df)
     df['Visibility'] = df['Visibility'].interpolate(method='pad')
@@ -88,7 +88,7 @@ def extract(string):
     if string == 'No wind':
       return 0
 
-    if string == "('N/A',)":
+    if string in ["('N/A',)", 'N/A']:
       return np.NAN
 
     return string
@@ -128,6 +128,8 @@ def fix_datetime(df_temp):
 
 if __name__ == '__main__':
     df_init = get_clima()
-    df_final = clean_df()
+    df_final = clean_df(df_init)
+    # Cuantas valores quedaron en la columna Weather
+    print(len(df_final['Weather'].unique()), df_final['Weather'].unique())
     # df_final.to_csv('clima.csv')
     print(df_final.head())

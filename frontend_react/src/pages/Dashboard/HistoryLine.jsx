@@ -2,9 +2,28 @@ import { Box, Button, ButtonGroup, IconButton, Typography } from "@mui/material"
 import LineChart from "../../Graficos/Line";
 
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import { useEffect, useState } from "react";
 
 
 const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
+
+    const [ticks, setTicks] = useState(undefined);
+
+    useEffect(() => {
+        const arr = [];
+        if (lineSpan.span === '1W' && lineData.length > 0) {
+            for (const value of lineData[0].data) {
+                const time = value.x.split(' ')[0];
+                if (arr.every(item => item.slice(0,2) !== time)) {
+                    arr.push(value.x);
+                }
+            }
+
+            setTicks(arr);
+        }
+
+    }, [lineData]);
 
     const spans = [
         {
@@ -21,7 +40,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
         },
         {
             text: '1 Semana',
-            key: {span: '1W', sample: '3H'}
+            key: {span: '1W', sample: '2H'}
         },
         {
             text: '1 Dia',
@@ -39,13 +58,16 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
             gap='0.75rem'
         >
             <Box
-                p="1rem 1.75rem"
-                display="flex "
+                p="1rem 1.75rem 0.75rem"
+                display="flex"
                 justifyContent="space-between"
                 alignItems="center"
             >
 
-                {/* <Box> */}
+                <Box display='flex' alignItems='center' gap='0.5rem'>
+                    <TimelineIcon
+                        sx={{ fontSize: "26px", color: colors.secondary[500] }}
+                    />
                     <Typography
                         variant="h3"
                         fontWeight="600"
@@ -53,9 +75,9 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                     >
                         Historial de produccion
                     </Typography>
-                {/* </Box> */}
+                </Box>
 
-                <Box>
+                <Box display='flex' alignItems='center' gap='0.75rem'>
                     <ButtonGroup
                         variant="contained"
                     >
@@ -86,12 +108,12 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                 p='0 3rem'
             >
             </Box> */}
-
+            
             <Box height="16rem">
                 <LineChart
-                    isDashboard={true}
                     data={lineData}
-                    rotate={lineSpan.sample.endsWith('W') || lineSpan.sample.endsWith('H') || lineSpan.sample.endsWith('T')}
+                    rotate={lineSpan.sample.endsWith('W') || lineSpan.sample.endsWith('T')}
+                    tickValues={lineSpan.span === '1W' ? ticks : undefined}
                 />
             </Box>
         </Box>

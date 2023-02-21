@@ -52,9 +52,9 @@ const TopBar = () => {
                     }
                 </IconButton>
 
-                <IconButton>
+                {/* <IconButton>
                     <NotificationsOutlinedIcon />
-                </IconButton>
+                </IconButton> */}
 
                 <IconButton onClick={() => navigate('/settings')}>
                     <SettingsOutlinedIcon />
