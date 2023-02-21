@@ -143,7 +143,7 @@ def grafico_produccion(message):
 @bot.message_handler(commands = ['4'])
 def historial_produccion(message):
     '''Ver el historial de consumo: Muestra al usuario un gráfico con la producción de energía del panel solar a lo largo del tiempo: (dia, semana, mes, año).'''
-    bot.send_message(message.chat.id,'Desea ver la producción de energía diario, semanal, mensual o anual?')
+    bot.send_message(message.chat.id,'Desea ver la producción de energía D: diaria, S: semanal, M: mensual o A: anual?')
     bot.register_next_step_handler(message, grafico_produccion)
 
 #comando 5
