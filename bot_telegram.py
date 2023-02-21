@@ -97,8 +97,8 @@ def historial_consumo(message):
 def grafico_produccion(message):
     respuesta_usuario = message.text.upper()
     if respuesta_usuario == 'D':
-        # Lógica para mostrar la producción diario
-        bot.send_message(message.chat.id, 'Mostrando la producción diario')
+        # Lógica para mostrar la producción diaria
+        bot.send_message(message.chat.id, 'Mostrando la producción diaria')
     elif respuesta_usuario == 'S':
         # Lógica para mostrar la producción semanal
         bot.send_message(message.chat.id, 'Mostrando la producción semanal')

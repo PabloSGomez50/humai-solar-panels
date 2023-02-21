@@ -46,7 +46,7 @@ def data_now(df: pd.DataFrame) -> pd.DataFrame:
     # lower = delay.strftime('%Y-%m-%d %H:%M')
     # upper = now.strftime('%Y-%m-%d %H:%M')
 
-    df = df[df['Datetime'].between(get_datetimes(minutes=55))]
+    df = df[df['Datetime'].between(*get_datetimes(minutes=55))]
     df_ = df.tail(1)
 
     return df_
