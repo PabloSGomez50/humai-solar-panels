@@ -66,7 +66,7 @@ def grafico_consumo(message):
     respuesta_usuario = message.text.upper()
     if respuesta_usuario == 'D':
         # Lógica para mostrar el consumo diario
-        data = solicitar('line/1D/30T')
+        data = solicitar('line/false/1D/30T')
         crear_grafico(data, 'Grafico de consumo diario')
         bot.send_message(message.chat.id, 'Mostrando consumo diario...')
         bot.send_photo(message.chat.id, InputFile('Foto.png'))
@@ -74,7 +74,7 @@ def grafico_consumo(message):
 
     elif respuesta_usuario == 'S':
         # Logica para mostrar el consumo semanal
-        data = solicitar('line/1W/2H')
+        data = solicitar('line/false/1W/2H')
         grafico = crear_grafico(data, 'Grafico de consumo semanal')
         bot.send_message(message.chat.id, 'Mostrando consumo semanal...')
         bot.send_photo(message.chat.id, InputFile('Foto.png'))
@@ -82,14 +82,14 @@ def grafico_consumo(message):
     elif respuesta_usuario == 'M':
         # Logica para mostrar el consumo mensual
         
-        data = solicitar('line/1M/1D')
+        data = solicitar('line/false/1M/1D')
         grafico = crear_grafico(data, 'Grafico de consumo mensual')
         bot.send_message(message.chat.id, 'Mostrando consumo mensual...')
         bot.send_photo(message.chat.id, InputFile('Foto.png'))
 
     elif respuesta_usuario == 'A':
         # Lógica para mostrar el consumo anual
-        data = solicitar('line/1Y/1W')
+        data = solicitar('line/false/1Y/1W')
         grafico = crear_grafico(data, 'Grafico de consumo anual')
         bot.send_message(message.chat.id, 'Mostrando consumo anual')
         bot.send_photo(message.chat.id, InputFile('Foto.png'))
