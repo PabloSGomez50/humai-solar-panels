@@ -18,7 +18,7 @@ import DashClima from "./DashClima";
 
 const test = []
 
-const Dashboard = () => {
+const Dashboard = ({ userId }) => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -36,62 +36,62 @@ const Dashboard = () => {
     useEffect(() => {
         
         const requestProdCalendar = async () => {
-            const response = await axiosI('calendar/' + year);
+            const response = await axiosI(`calendar/${year}?user_id=${userId}`);
 
             console.log('EXECUTE: calendar');
             setCalendarData(response.data);
         }
 
         requestProdCalendar();
-    }, [year])
+    }, [year, userId])
 
     useEffect(() => {
         
         const requestRendimiento = async () => {
-            const response = await axiosI(`hist/${selectProd}/${lineSpan.span}/${lineSpan.sample}`);
+            const response = await axiosI(`hist/${selectProd}/${lineSpan.span}/${lineSpan.sample}?user_id=${userId}`);
 
             console.log('EXECUTE: rendimiento');
             setLineData(response.data);
         }
 
         requestRendimiento();
-    }, [lineSpan.span, selectProd])
+    }, [lineSpan.span, selectProd, userId])
 
     useEffect(() => {
         
         const requestSummary = async () => {
-            const response = await axiosI('summary');
+            const response = await axiosI(`summary?user_id=${userId}`);
 
             console.log('EXECUTE: Horas');
             setDaily(response.data);
         }
 
         const requestProdHours = async () => {
-            const response = await axiosI('hours');
+            const response = await axiosI(`hours?user_id=${userId}`);
 
             console.log('EXECUTE: Cartas');
-            console.log(response.data)
+            // console.log(response.data);
             setbarData(response.data);
         }
         const requestClima = async () => {
-            const response = await axiosI('clima');
+            const response = await axiosI(`clima`);
 
             console.log('EXECUTE: Clima');
-            console.log(response.data);
+            // console.log(response.data);
             setClima(response.data);
         }
 
         requestSummary();
         requestProdHours();
         requestClima();
-    }, [])
+    }, [userId])
 
     return (
         <Box>
             <Box display='flex' justifyContent='space-between' alignItems='center'>
                 <Header 
                     title='DASHBOARD' 
-                    subtitle='Este es el resumen de tu sistema' 
+                    subtitle={`Este es el resumen del sistema ${userId}` }
                 />
 
                 <Button

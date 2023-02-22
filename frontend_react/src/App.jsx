@@ -13,11 +13,13 @@ import Config from './pages/Config';
 import FAQ from './pages/FAQ';
 
 import { tokens } from './theme';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
   const [theme, colorMode] = useMode();
   const colors = tokens(theme.palette.mode);
+
+  const [userId, setUserId] = useState(1);
 
   useEffect(() => {
     document.body.style.backgroundColor = colors.grey[800];
@@ -29,7 +31,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <div className="app">
-            <Sidebar />
+            <Sidebar userId={userId} setUserId={setUserId} />
             <main className='content'>
               <TopBar />
                 <Box 
@@ -39,11 +41,11 @@ function App() {
                   p='1.25rem 2rem'
                 >
                   <Routes>
-                    <Route path='/' element={<Dashboard />}/>
-                    <Route path='/table' element={<Table />}/>
-                    <Route path='/faq' element={<FAQ />}/>
-                    <Route path='/insights' element={<Insights />}/>
-                    <Route path='/settings' element={<Config />}/>
+                    <Route path='/' element={           <Dashboard  userId={userId} />}/>
+                    <Route path='/table' element={      <Table userId={userId} />}/>
+                    <Route path='/insights' element={   <Insights userId={userId} />}/>
+                    <Route path='/faq' element={        <FAQ />}/>
+                    <Route path='/settings' element={   <Config />}/>
                   </Routes>
                 </Box>
             </main>
