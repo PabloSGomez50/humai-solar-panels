@@ -97,9 +97,9 @@ def select_user(user_id: int):
 
 
 @app.get('/consumo')
-def consumo_last_7d():
+def consumo_last_7d(user_id: int=CUSTOMER_ID):
 
-    df = get_consumo(CUSTOMER_ID)
+    df = get_consumo(user_id)
     df_response = api_views.consumo_last_7d(df)
     response = api_formato.format_summary(df_response)
 
@@ -107,9 +107,9 @@ def consumo_last_7d():
 
 
 @app.get('/prod')
-def resumen():
+def resumen(user_id: int=CUSTOMER_ID):
 
-    df = get_prod(CUSTOMER_ID)
+    df = get_prod(user_id)
     df_response = api_views.prod_last_7(df)
     response = api_formato.format_summary(df_response)
     
@@ -130,10 +130,10 @@ def show_clima():
 
 
 @app.get('/summary')
-def summary():
+def summary(user_id: int=CUSTOMER_ID):
 
-    df_con = get_consumo(CUSTOMER_ID)
-    df_prod = get_prod(CUSTOMER_ID)
+    df_con = get_consumo(user_id)
+    df_prod = get_prod(user_id)
 
     consumo_7d = api_views.consumo_last_7d(df_con)
     prod_7d = api_views.prod_last_7(df_prod)
@@ -149,8 +149,8 @@ def summary():
 
 
 @app.get('/hours')
-def horas():
-    df = get_prod(CUSTOMER_ID)
+def horas(user_id: int=CUSTOMER_ID):
+    df = get_prod(user_id)
     df_response = api_views.horas(df)
     response = df_response.to_dict(orient='records')
     # response = api_formato.format_summary(df_response)
@@ -159,9 +159,9 @@ def horas():
     
 
 @app.get('/calendar/{year}')
-def calendario(year: int):
+def calendario(year: int, user_id: int=CUSTOMER_ID):
 
-    df = get_prod(CUSTOMER_ID)
+    df = get_prod(user_id)
     df_response = api_views.prod_calendar(df, year)
     response = api_formato.format_calendario(df_response)
 
@@ -169,12 +169,12 @@ def calendario(year: int):
 
 
 @app.get('/line/{tipo}/{span}/{sample}')
-def historia_telegram(tipo: bool, span: str='1M', sample: str='1D'):
+def historia_telegram(tipo: bool, span: str='1M', sample: str='1D', user_id: int=CUSTOMER_ID):
 
     if tipo:
-        df = get_prod(CUSTOMER_ID)
+        df = get_prod(user_id)
     else:
-        df = get_consumo(CUSTOMER_ID)
+        df = get_consumo(user_id)
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
     index, group = get_index_group(span, sample)
@@ -183,11 +183,11 @@ def historia_telegram(tipo: bool, span: str='1M', sample: str='1D'):
 
 
 @app.get('/hist/{tipo}/{span}/{sample}')
-def historia(tipo: bool, span: str='1M', sample: str='1D'):
-    df1 = get_prod(CUSTOMER_ID)
-    df2 = get_consumo(CUSTOMER_ID)
+def historia(tipo: bool, span: str='1M', sample: str='1D', user_id: int=CUSTOMER_ID):
+    df1 = get_prod(user_id)
+    df2 = get_consumo(user_id)
 
-    df2.drop(columns=['GC', 'CL'], inplace=True)
+    # df2.drop(columns=['GC', 'CL'], inplace=True)
 
     df = pd.merge(df1, df2, left_on='Datetime', right_on='Datetime')
 
@@ -201,10 +201,10 @@ def historia(tipo: bool, span: str='1M', sample: str='1D'):
 
 
 @app.get('/table')
-def table():
+def table(user_id: int=CUSTOMER_ID):
 
-    df_prod = get_prod(CUSTOMER_ID)
-    df_con = get_consumo(CUSTOMER_ID)
+    df_prod = get_prod(user_id)
+    df_con = get_consumo(user_id)
     df_response = api_views.get_table(df_con, df_prod)
     response = df_response.to_dict(orient='records')
 
@@ -212,18 +212,18 @@ def table():
 
 
 @app.get('/consumo_now')
-def test_bot_cons():
+def test_bot_cons(user_id: int=CUSTOMER_ID):
 
-    df_con = get_consumo(CUSTOMER_ID)
+    df_con = get_consumo(user_id)
     df_response = api_views.data_now(df_con)
     response = df_response.to_dict(orient='records')
 
     return response[0]
 
 @app.get('/produccion_now')
-def test_bot_prod():
+def test_bot_prod(user_id: int=CUSTOMER_ID):
 
-    df = get_prod(CUSTOMER_ID)
+    df = get_prod(user_id)
     df_response = api_views.data_now(df)
     response = df_response.to_dict(orient='records')
 
@@ -231,9 +231,9 @@ def test_bot_prod():
 
 
 @app.get('/prediccion')
-def prediccion():
+def prediccion(user_id: int=CUSTOMER_ID):
 
-    df = get_prod(CUSTOMER_ID)
+    df = get_prod(user_id)
 
     df_response = api_views.get_prediccion(df)
 

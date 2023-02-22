@@ -3,7 +3,7 @@ import json
 import matplotlib.pyplot as plt
 
 def solicitar(URL: str):
-    response = get(f'http://127.0.0.1:8000/{URL}/?telegram=True')
+    response = get(f'http://127.0.0.1:8000/{URL}?telegram=True')
     return json.loads(response.text)
 
 
