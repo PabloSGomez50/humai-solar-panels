@@ -7,14 +7,16 @@ from datetime import datetime, timedelta
 
 from api_utils import get_index_group
 from predicciones import hacer_predicciones
+from scritps.limpiar_consumo import get_df_consumo
+from scritps.limpiar_prod import get_prod_customer
 
 import api_views
 import api_formato
 import clima_scraper
 import clima_limpiar
 
-CSV_CONSUMO = './data/consumo_user_{0}.csv'
-CSV_PROD = './data/user_{0}.csv'
+CSV_CONSUMO = './data/consumo/consumo_user_{0}.csv'
+CSV_PROD = './data/produccion/user_{0}.csv'
 CSV_CLIMA = './data/clima_{0}_{1}.csv'
 DAYS_DIFF = 2 + 365 * 10
 CUSTOMER_ID = 1
@@ -75,6 +77,23 @@ def root():
 
     return {'message': 'Hello World'}
 
+
+@app.get('/select_user/{user_id}')
+def select_user(user_id: int):
+    """
+    Opcion para seleccionar un usuario desde la 
+    """
+    if not os.path.exists(CSV_CONSUMO.format(user_id)):
+        print('Se va a crear el archivo de consumo')
+        df_con = get_df_consumo(user_id)
+        df_con.to_csv(CSV_CONSUMO.format(user_id))
+    
+    if not os.path.exists(CSV_PROD.format(user_id)):
+        print('Se va a crear el archivo de produccion')
+        df_prod = get_prod_customer(user_id)
+        df_prod.to_csv(CSV_PROD.format(user_id))
+    
+    return user_id
 
 
 @app.get('/consumo')
@@ -170,23 +189,15 @@ def historia(tipo: bool, span: str='1M', sample: str='1D'):
 
     df2.drop(columns=['GC', 'CL'], inplace=True)
 
-    # print(df1.head())
-    # print(df2.head())
     df = pd.merge(df1, df2, left_on='Datetime', right_on='Datetime')
-
-    # print(df.head())
-
-    # if tipo:
-    #     df = df1
-    # else:
-    #     df = df2
 
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
     index, group = get_index_group(span, sample)
 
+    both = '1' in span
 
-    return api_formato.format_linea_hist(df_response, index, group, tipo)
+    return api_formato.format_linea_hist(df_response, index, group, tipo=tipo, both=both)
 
 
 @app.get('/table')

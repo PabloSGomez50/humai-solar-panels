@@ -27,8 +27,8 @@ def consumo_last_7d(df: pd.DataFrame) -> list:
     """
     
     # df = get_consumo(user_id)
-    t_min, t_max = get_datetimes()
-    df = df[df['Datetime'].between(t_min, t_max)].copy()
+    # t_min, t_max = get_datetimes(days=6)
+    df = df[df['Datetime'].between(* get_datetimes(days=6))].copy()
     df['Dia'] = df['Datetime'].dt.day
 
     df_ = df.groupby('Dia').aggregate({'Datetime': 'first','Total': 'sum'})
@@ -85,13 +85,12 @@ def consumo_month(df: pd.DataFrame) -> pd.DataFrame:
 def horas(df: pd.DataFrame) -> list:
 
     # Preparar el dataframe
-    t_min, t_max = get_datetimes()
-    df = df[df['Datetime'].between(t_min, t_max)].copy()
+    df = df[df['Datetime'].between(*get_datetimes(days=6))].copy()
     df['hora'] = df['Datetime'].dt.hour
 
     # Hacer groupby y armar las columnas
-    df2 = df.groupby('hora').aggregate({'Produccion': 'sum'})
-    df2 = df2[df2['Produccion'] > 0.1]
+    df2 = df.groupby('hora').aggregate({'Produccion': 'mean'})
+    df2 = df2[df2['Produccion'] > 0.01]
     df2.reset_index(inplace=True)
 
     df2.rename(columns={'Produccion': 'total'}, inplace=True)

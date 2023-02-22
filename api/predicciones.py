@@ -1,13 +1,18 @@
 import pickle
 import numpy as np
 
-MODEL_PATH = '../obtener_predicciones/LSTM_BatchSize_2_Epochs_10_NumLayers_2_NumUnits_8_look_back_12.pkl'
-SCALER_PATH = '../obtener_predicciones/scaler.pkl'
+MODEL_PATH = './data/LSTM_BatchSize_2_Epochs_10_NumLayers_2_NumUnits_8_look_back_12.pkl'
+SCALER_PATH = './data/obtener_predicciones/scaler.pkl'
 
-model = pickle.load(open(MODEL_PATH, 'rb'))
-scaler = pickle.load(open(SCALER_PATH, 'rb'))
 
 def hacer_predicciones(valores_entrada, cantidad_predicciones):
+
+    with open(MODEL_PATH, 'rb') as model_file:
+        model = pickle.load(model_file)
+    
+    with open(SCALER_PATH, 'rb') as scaler_file:
+        scaler = pickle.load(scaler_file)
+    
     # Escala los valores de entrada
     valores_entrada = np.array(valores_entrada).reshape(-1, 1)
     valores_entrada = scaler.transform(valores_entrada)

@@ -81,12 +81,14 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan, selectProd, setS
                         Historial de {selectProd ? 'produccion' : 'consumo'}
                     </Typography>
                     
-                    <IconButton>
-                        <LoopIcon
-                            onClick={() => setSelectProd(prev => !prev)}
-                            sx={{ fontSize: "26px", color: colors.secondary[500] }}
-                        />
-                    </IconButton>
+                    {lineSpan.span === '3M' &&
+                        <IconButton>
+                            <LoopIcon
+                                onClick={() => setSelectProd(prev => !prev)}
+                                sx={{ fontSize: "26px", color: colors.secondary[500] }}
+                            />
+                        </IconButton>
+                    }
                 </Box>
 
                 <Box display='flex' alignItems='center' gap='0.75rem'>

@@ -12,7 +12,7 @@ SEMANA = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
 #        'mayo', 'junio', 'julio', 'agosto', 
 #        'septiembre', 'octubre', 'noviembre', 'diciembre']
 
-def format_linea_hist(df, index, group, tipo):
+def format_linea_hist(df, index, group, tipo, both):
     """
     Alterar df en lista formateada para grafico de linea
     Columnas: Datetime | Produccion (suma del dia)
@@ -38,17 +38,25 @@ def format_linea_hist(df, index, group, tipo):
         df2_ = df[df['group'] == key][['x', 'Total']]
         df2_.rename(columns={'Total': 'y'}, inplace=True)
 
-        
-        response.append({
-            'id': f'Produccion {key}',
+        prod = {
+            'id': f'Dia {key} - Prod',
             'color': COLORS[i],
             'data': df1_.to_dict(orient='records')
-        })
-        response.append({
-            'id': f'Consumo {key}',
+        }
+        consumo = {
+            'id': f'Dia {key} - Con',
             'color': COLORS[i + 1],
             'data': df2_.to_dict(orient='records')
-        })
+        }
+        
+        if both:
+            response.append(prod)
+            response.append(consumo)
+        elif tipo:
+            response.append(prod)
+        else:
+            response.append(consumo)
+
 
         i += 2
 
