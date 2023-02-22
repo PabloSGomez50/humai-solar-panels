@@ -24,6 +24,7 @@ const Dashboard = () => {
     const colors = tokens(theme.palette.mode);
 
     const [ year, setYear ] = useState(2012);
+    const [ selectProd, setSelectProd ] = useState(true);
     const [ lineSpan, setLineSpan ] = useState({span: '1M', sample: '1D'});
 
     const [daily, setDaily] = useState([]);
@@ -47,14 +48,14 @@ const Dashboard = () => {
     useEffect(() => {
         
         const requestRendimiento = async () => {
-            const response = await axiosI(`line/${lineSpan.span}/${lineSpan.sample}`);
+            const response = await axiosI(`hist/${selectProd}/${lineSpan.span}/${lineSpan.sample}`);
 
             console.log('EXECUTE: rendimiento');
             setLineData(response.data);
         }
 
         requestRendimiento();
-    }, [lineSpan.span])
+    }, [lineSpan.span, selectProd])
 
     useEffect(() => {
         
@@ -250,6 +251,8 @@ const Dashboard = () => {
                     colors={colors}
                     lineSpan={lineSpan}
                     setLineSpan={setLineSpan}
+                    selectProd={selectProd}
+                    setSelectProd={setSelectProd}
                 />
 
                 <DashClima 

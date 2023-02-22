@@ -1,12 +1,12 @@
 import { Box, Button, ButtonGroup, IconButton, Typography } from "@mui/material";
 import LineChart from "../../Graficos/Line";
 
-import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
+import LoopIcon from '@mui/icons-material/Loop';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import { useEffect, useState } from "react";
 
 
-const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
+const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan, selectProd, setSelectProd }) => {
 
     const [ticks, setTicks] = useState(undefined);
 
@@ -14,8 +14,10 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
         const arr = [];
         if (lineSpan.span === '1W' && lineData.length > 0) {
             for (const value of lineData[0].data) {
-                const time = value.x.split(' ')[0];
-                if (arr.every(item => item.slice(0,2) !== time)) {
+                
+                const time = value.x.split(' ')[1];
+
+                if (arr.every(item => item.split(' ')[1] !== time)) {
                     arr.push(value.x);
                 }
             }
@@ -27,7 +29,8 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
 
     const spans = [
         {
-            text: '1 Año',
+            // text: '1 Año',
+            text: '12 Meses',
             key: {span: '1Y', sample: '1W'}
         },
         {
@@ -39,11 +42,13 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
             key: {span: '1M', sample: '1D'}
         },
         {
-            text: '1 Semana',
+            // text: '1 Semana',
+            text: '7 Dias',
             key: {span: '1W', sample: '2H'}
         },
         {
-            text: '1 Dia',
+            // text: '1 Dia',
+            text: '24 Hs',
             key: {span: '1D', sample: '30T'}
         },
     ]
@@ -64,7 +69,7 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                 alignItems="center"
             >
 
-                <Box display='flex' alignItems='center' gap='0.5rem'>
+                <Box display='flex' alignItems='center' gap='0.75rem'>
                     <TimelineIcon
                         sx={{ fontSize: "26px", color: colors.secondary[500] }}
                     />
@@ -73,8 +78,15 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                         fontWeight="600"
                         color={colors.grey[100]}
                     >
-                        Historial de produccion
+                        Historial de {selectProd ? 'produccion' : 'consumo'}
                     </Typography>
+                    
+                    <IconButton>
+                        <LoopIcon
+                            onClick={() => setSelectProd(prev => !prev)}
+                            sx={{ fontSize: "26px", color: colors.secondary[500] }}
+                        />
+                    </IconButton>
                 </Box>
 
                 <Box display='flex' alignItems='center' gap='0.75rem'>
@@ -94,20 +106,8 @@ const HistoryLine = ({ colors, lineData, lineSpan, setLineSpan }) => {
                         )}
 
                     </ButtonGroup>
-                    <IconButton>
-                        <DownloadOutlinedIcon
-                            sx={{ fontSize: "26px", color: colors.secondary[500] }}
-                        />
-                    </IconButton>
                 </Box>
             </Box>
-            
-            {/* <Box 
-                display='flex'
-                justifyContent='flex-end'
-                p='0 3rem'
-            >
-            </Box> */}
             
             <Box height="16rem">
                 <LineChart

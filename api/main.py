@@ -5,16 +5,21 @@ import pandas as pd
 import os 
 from datetime import datetime, timedelta
 
+from api_utils import get_index_group
+from predicciones import hacer_predicciones
+
 import api_views
 import api_formato
 import clima_scraper
 import clima_limpiar
 
-CSV_CONSUMO = './consumo_user_{0}.csv'
-CSV_PROD = './user_{0}.csv'
-CSV_CLIMA = './clima_{0}_{1}.csv'
+CSV_CONSUMO = './data/consumo_user_{0}.csv'
+CSV_PROD = './data/user_{0}.csv'
+CSV_CLIMA = './data/clima_{0}_{1}.csv'
 DAYS_DIFF = 2 + 365 * 10
 CUSTOMER_ID = 1
+
+CANT_PREDICCIONES = 24
 
 app = FastAPI()
 
@@ -98,7 +103,7 @@ def show_clima():
     today = datetime.today()
     df_clima = pd.read_csv(CSV_CLIMA.format(today.month, today.day), parse_dates=['Datetime'])
 
-    df_clima.sort_index(ascending=False, inplace=True)
+    df_clima.sort_index(inplace=True)
 
     response = api_formato.format_clima(df_clima)
     
@@ -145,38 +150,43 @@ def calendario(year: int):
 
 
 @app.get('/line/{tipo}/{span}/{sample}')
-def historia(tipo: bool = True, span: str ='1M', sample: str ='1D', telegram: bool = False):
-
+def historia_telegram(tipo: bool, span: str='1M', sample: str='1D'):
 
     if tipo:
         df = get_prod(CUSTOMER_ID)
-        print('Usa prod')
     else:
         df = get_consumo(CUSTOMER_ID)
-        print('Usa CONSUMO')
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
-    if sample.endswith('W'):
-        index = '%m-%d'
-        group='%Y'
+    index, group = get_index_group(span, sample)
 
-    elif sample.endswith('D'):
-        index='%d'
-        group='%m'
-        
-    elif sample.endswith('H'):
-        index='%d'
-        group='%m'
+    return api_formato.format_linea_telegram(df_response, index, tipo=tipo)
 
-    else:
-        index='%H:%M'
-        group='%d'
 
-    if telegram:
-        return api_formato.format_linea_telegram(df_response, index, group, tipo)
-    
-    else:
-        return api_formato.format_linea_hist(df_response, index, group, tipo)
+@app.get('/hist/{tipo}/{span}/{sample}')
+def historia(tipo: bool, span: str='1M', sample: str='1D'):
+    df1 = get_prod(CUSTOMER_ID)
+    df2 = get_consumo(CUSTOMER_ID)
+
+    df2.drop(columns=['GC', 'CL'], inplace=True)
+
+    # print(df1.head())
+    # print(df2.head())
+    df = pd.merge(df1, df2, left_on='Datetime', right_on='Datetime')
+
+    # print(df.head())
+
+    # if tipo:
+    #     df = df1
+    # else:
+    #     df = df2
+
+    df_response = api_views.prod_history(df, span=span, sample=sample)
+
+    index, group = get_index_group(span, sample)
+
+
+    return api_formato.format_linea_hist(df_response, index, group, tipo)
 
 
 @app.get('/table')
@@ -207,3 +217,19 @@ def test_bot_prod():
     response = df_response.to_dict(orient='records')
 
     return response[0]
+
+
+@app.get('/prediccion')
+def prediccion():
+
+    df = get_prod(CUSTOMER_ID)
+
+    df_response = api_views.get_prediccion(df)
+
+    data = list(df_response['Produccion'])
+    print(data[:12])
+
+    predicciones = hacer_predicciones(data, CANT_PREDICCIONES)
+    print(predicciones)
+
+    return data[:12]
