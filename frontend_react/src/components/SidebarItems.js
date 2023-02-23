@@ -46,7 +46,7 @@ export default [
         ]
     },
     {
-        name: 'Control',
+        name: 'Acerca de',
         data: [
             // {
             //     title: 'Cuenta',
@@ -58,11 +58,11 @@ export default [
                 to: '/faq',
                 icon: HelpOutlinedIcon
             },
-            {
-                title: 'Configuracion',
-                to: '/settings',
-                icon: SettingsOutlinedIcon
-            },
+            // {
+            //     title: 'Configuracion',
+            //     to: '/settings',
+            //     icon: SettingsOutlinedIcon
+            // },
         
         ],
     },

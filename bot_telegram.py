@@ -20,19 +20,13 @@ def start(message):
 
 #Datos del usuario
 @bot.message_handler(commands = ['datos'])
-def datos(message):
-    '''Pregunta el nombre de usuario'''
-    markup = ForceReply()
-    msg = bot.send_message(message.chat.id, '¿Cuál es tu nombre?', reply_markup=markup)
-    bot.register_next_step_handler(msg, cliente_id)
-
 
 def cliente_id(message):
     '''Pregunta al usuario su número de cliente'''
-    usuarios[message.chat.id] = {}
     
     markup = ForceReply()
     msg = bot.send_message(message.chat.id, '¿Cuál es tu número de cliente?', reply_markup=markup)
+    id = msg
 
 
     
@@ -74,7 +68,7 @@ def grafico_consumo(message):
 
     elif respuesta_usuario == 'S':
         # Logica para mostrar el consumo semanal
-        data = solicitar('line/false/1W/2H')
+        data = solicitar('line/false/1W/6H')
         grafico = crear_grafico(data, 'Grafico de consumo semanal')
         bot.send_message(message.chat.id, 'Mostrando consumo semanal...')
         bot.send_photo(message.chat.id, InputFile('Foto.png'))
@@ -120,7 +114,7 @@ def grafico_produccion(message):
         
     elif respuesta_usuario == 'S':
         bot.send_message(message.chat.id, 'Mostrando la producción semanal')
-        data = solicitar('line/true/1W/2H')
+        data = solicitar('line/true/1W/6H')
         grafico = crear_grafico(data, 'Grafico de producción semanal')
         bot.send_photo(message.chat.id, InputFile('Foto.png'))
 

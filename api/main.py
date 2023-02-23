@@ -5,16 +5,23 @@ import pandas as pd
 import os 
 from datetime import datetime, timedelta
 
+from api_utils import get_index_group
+from predicciones import hacer_predicciones
+from scritps.limpiar_consumo import get_df_consumo
+from scritps.limpiar_prod import get_prod_customer
+
 import api_views
 import api_formato
 import clima_scraper
 import clima_limpiar
 
-CSV_CONSUMO = './consumo_user_{0}.csv'
-CSV_PROD = './user_{0}.csv'
-CSV_CLIMA = './clima_{0}_{1}.csv'
+CSV_CONSUMO = './data/consumo/consumo_user_{0}.csv'
+CSV_PROD = './data/produccion/user_{0}.csv'
+CSV_CLIMA = './data/clima_{0}_{1}.csv'
 DAYS_DIFF = 2 + 365 * 10
 CUSTOMER_ID = 1
+
+CANT_PREDICCIONES = 24
 
 app = FastAPI()
 
@@ -71,11 +78,28 @@ def root():
     return {'message': 'Hello World'}
 
 
+@app.get('/select_user/{user_id}')
+def select_user(user_id: int):
+    """
+    Opcion para seleccionar un usuario desde la 
+    """
+    if not os.path.exists(CSV_CONSUMO.format(user_id)):
+        print('Se va a crear el archivo de consumo')
+        df_con = get_df_consumo(user_id)
+        df_con.to_csv(CSV_CONSUMO.format(user_id))
+    
+    if not os.path.exists(CSV_PROD.format(user_id)):
+        print('Se va a crear el archivo de produccion')
+        df_prod = get_prod_customer(user_id)
+        df_prod.to_csv(CSV_PROD.format(user_id))
+    
+    return user_id
+
 
 @app.get('/consumo')
-def consumo_last_7d():
+def consumo_last_7d(user_id: int=CUSTOMER_ID):
 
-    df = get_consumo(CUSTOMER_ID)
+    df = get_consumo(user_id)
     df_response = api_views.consumo_last_7d(df)
     response = api_formato.format_summary(df_response)
 
@@ -83,9 +107,9 @@ def consumo_last_7d():
 
 
 @app.get('/prod')
-def resumen():
+def resumen(user_id: int=CUSTOMER_ID):
 
-    df = get_prod(CUSTOMER_ID)
+    df = get_prod(user_id)
     df_response = api_views.prod_last_7(df)
     response = api_formato.format_summary(df_response)
     
@@ -98,7 +122,7 @@ def show_clima():
     today = datetime.today()
     df_clima = pd.read_csv(CSV_CLIMA.format(today.month, today.day), parse_dates=['Datetime'])
 
-    df_clima.sort_index(ascending=False, inplace=True)
+    df_clima.sort_index(inplace=True)
 
     response = api_formato.format_clima(df_clima)
     
@@ -106,10 +130,10 @@ def show_clima():
 
 
 @app.get('/summary')
-def summary():
+def summary(user_id: int=CUSTOMER_ID):
 
-    df_con = get_consumo(CUSTOMER_ID)
-    df_prod = get_prod(CUSTOMER_ID)
+    df_con = get_consumo(user_id)
+    df_prod = get_prod(user_id)
 
     consumo_7d = api_views.consumo_last_7d(df_con)
     prod_7d = api_views.prod_last_7(df_prod)
@@ -125,8 +149,8 @@ def summary():
 
 
 @app.get('/hours')
-def horas():
-    df = get_prod(CUSTOMER_ID)
+def horas(user_id: int=CUSTOMER_ID):
+    df = get_prod(user_id)
     df_response = api_views.horas(df)
     response = df_response.to_dict(orient='records')
     # response = api_formato.format_summary(df_response)
@@ -135,9 +159,9 @@ def horas():
     
 
 @app.get('/calendar/{year}')
-def calendario(year: int):
+def calendario(year: int, user_id: int=CUSTOMER_ID):
 
-    df = get_prod(CUSTOMER_ID)
+    df = get_prod(user_id)
     df_response = api_views.prod_calendar(df, year)
     response = api_formato.format_calendario(df_response)
 
@@ -145,45 +169,42 @@ def calendario(year: int):
 
 
 @app.get('/line/{tipo}/{span}/{sample}')
-def historia(tipo: bool = True, span: str ='1M', sample: str ='1D', telegram: bool = False):
-
+def historia_telegram(tipo: bool, span: str='1M', sample: str='1D', user_id: int=CUSTOMER_ID):
 
     if tipo:
-        df = get_prod(CUSTOMER_ID)
-        print('Usa prod')
+        df = get_prod(user_id)
     else:
-        df = get_consumo(CUSTOMER_ID)
-        print('Usa CONSUMO')
+        df = get_consumo(user_id)
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
-    if sample.endswith('W'):
-        index = '%m-%d'
-        group='%Y'
+    index, group = get_index_group(span, sample)
 
-    elif sample.endswith('D'):
-        index='%d'
-        group='%m'
-        
-    elif sample.endswith('H'):
-        index='%d'
-        group='%m'
+    return api_formato.format_linea_telegram(df_response, index, tipo=tipo)
 
-    else:
-        index='%H:%M'
-        group='%d'
 
-    if telegram:
-        return api_formato.format_linea_telegram(df_response, index, group, tipo)
-    
-    else:
-        return api_formato.format_linea_hist(df_response, index, group, tipo)
+@app.get('/hist/{tipo}/{span}/{sample}')
+def historia(tipo: bool, span: str='1M', sample: str='1D', user_id: int=CUSTOMER_ID):
+    df1 = get_prod(user_id)
+    df2 = get_consumo(user_id)
+
+    # df2.drop(columns=['GC', 'CL'], inplace=True)
+
+    df = pd.merge(df1, df2, left_on='Datetime', right_on='Datetime')
+
+    df_response = api_views.prod_history(df, span=span, sample=sample)
+
+    index, group = get_index_group(span, sample)
+
+    both = '1' in span
+
+    return api_formato.format_linea_hist(df_response, index, group, tipo=tipo, both=both)
 
 
 @app.get('/table')
-def table():
+def table(user_id: int=CUSTOMER_ID):
 
-    df_prod = get_prod(CUSTOMER_ID)
-    df_con = get_consumo(CUSTOMER_ID)
+    df_prod = get_prod(user_id)
+    df_con = get_consumo(user_id)
     df_response = api_views.get_table(df_con, df_prod)
     response = df_response.to_dict(orient='records')
 
@@ -191,19 +212,35 @@ def table():
 
 
 @app.get('/consumo_now')
-def test_bot_cons():
+def test_bot_cons(user_id: int=CUSTOMER_ID):
 
-    df_con = get_consumo(CUSTOMER_ID)
+    df_con = get_consumo(user_id)
     df_response = api_views.data_now(df_con)
     response = df_response.to_dict(orient='records')
 
     return response[0]
 
 @app.get('/produccion_now')
-def test_bot_prod():
+def test_bot_prod(user_id: int=CUSTOMER_ID):
 
-    df = get_prod(CUSTOMER_ID)
+    df = get_prod(user_id)
     df_response = api_views.data_now(df)
     response = df_response.to_dict(orient='records')
 
     return response[0]
+
+
+@app.get('/prediccion')
+def prediccion(user_id: int=CUSTOMER_ID):
+
+    df = get_prod(user_id)
+
+    df_response = api_views.get_prediccion(df)
+
+    data = list(df_response['Produccion'])
+    print(data[:12])
+
+    predicciones = hacer_predicciones(data, CANT_PREDICCIONES)
+    print(predicciones)
+
+    return data[:12]

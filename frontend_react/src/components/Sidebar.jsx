@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Box, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, IconButton, Input, Typography, useTheme } from '@mui/material';
 import { Sidebar, Menu, MenuItem, useProSidebar } from 'react-pro-sidebar';
 import { tokens } from '../theme';
 
@@ -11,6 +11,8 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import StarIcon from '@mui/icons-material/Star';
+import CheckIcon from '@mui/icons-material/Check';
+import axiosI from '../api';
 
 const Item = ({ title, to, icon, selected }) => {
 
@@ -30,19 +32,58 @@ const Item = ({ title, to, icon, selected }) => {
     )
 }
 
-const SideBar = () => {
+const SideBar = ({ userId, setUserId }) => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
     const location = useLocation();
-
     const gitHubRef = useRef();
-
     const { collapseSidebar, collapsed } = useProSidebar();
+    const [ modId, setModId ] = useState(userId);
+    const [ mod, setMod ] = useState(false);
 
     const redirectGithub = () => {
         gitHubRef.current.click();
+    }
+
+    const handleSend = async () => {
+        try {
+            const response = await axiosI(`select_user/${modId}`);
+            
+            if(typeof(response.data) === 'number') {
+                setMod(false);
+                if (userId !== modId) {
+                    if (modId === '') {
+                        setUserId(1);
+                    } else {
+                        setUserId(modId);
+                    }
+                }
+            }
+        } catch (err){
+            // console.error(err);
+            console.error('El usuario ' + modId + ' no esta disponible para los datos');
+            setUserId(1);
+        }
+    }
+
+    const handleUserId = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const value = e.target.value;
+        if((value > 0 && value <= 300) || value === '') {
+            setModId(value);
+            setMod(true);
+        }
+    }
+
+    const handleBlur = () => {
+        if (modId === '') {
+            setModId(1);
+            setMod(true);
+        }
     }
 
 
@@ -82,7 +123,7 @@ const SideBar = () => {
             <Sidebar style={{ border: 'none', borderRight: `${colors.grey[400]} solid 2px`}} >
                 <Menu>
                     <MenuItem
-                        onClick={() => collapseSidebar()}
+                        // onClick={() => collapseSidebar()}
                         icon={collapsed ? <MenuOutlinedIcon /> : undefined}
                     >
                         {!collapsed && (
@@ -100,15 +141,16 @@ const SideBar = () => {
                                     Proyecto Humai
                                 </Typography>
 
-                                <IconButton>
+                                <MenuOutlinedIcon />
+                                {/* <IconButton>
                                     <MenuOutlinedIcon />
-                                </IconButton>
+                                </IconButton> */}
                             </Box>
                         )}
                     </MenuItem>
 
                     {!collapsed && (
-                        <Box m='1.5rem 0'>
+                        <Box m='1.5rem 0 0.25rem'>
                             <Box display='flex' justifyContent='center' alignItems='center'>
                                 <img
                                     alt='profile-user'
@@ -131,6 +173,31 @@ const SideBar = () => {
                             </Box>
                         </Box>
                     )}
+
+                    <Box display='flex' justifyContent='center' alignItems='flex-end' gap='0.75rem'>
+                        <Typography>
+                            Id usuario:
+                        </Typography>
+                        <Input
+                            // type='number'
+                            value={modId}
+                            onChange={handleUserId}
+                            onBlur={handleBlur}
+                            sx={{
+                                width: '2.5rem',
+                                '& input': {
+                                    textAlign: 'center'
+                                }
+                            }}
+                        />
+                        <CheckIcon
+                            onClick={handleSend}
+                            color='secondary'
+                            sx={{
+                                'opacity': mod ? 1 : 0
+                            }}
+                        />
+                    </Box>
 
                     {!collapsed && (
                         <Box paddingLeft={collapsed ? undefined : '10%'}>

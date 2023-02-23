@@ -25,7 +25,7 @@ const columns = [
         flex: 1,
     },
     {
-        field: "Consumo general",
+        field: "GC",
         headerName: "Consumo general (Kw)",
         type: "number",
         headerAlign: "left",
@@ -34,7 +34,7 @@ const columns = [
         flex: 1,
     },
     {
-        field: "Consumo controlado",
+        field: "CL",
         headerName: "Consumo controlado (Kw)",
         type: "number",
         headerAlign: "left",
@@ -64,7 +64,7 @@ const columns = [
         )}
     },
     {
-        field: "Consumo Total",
+        field: "Total",
         headerName: "Consumo Total (Kw)",
         type: "number",
         headerAlign: "left",

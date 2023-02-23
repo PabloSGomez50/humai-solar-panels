@@ -51,7 +51,7 @@ const LineChart = ({ data, rotate = false, tickValues }) => {
       data={data}
       theme={chartTheme}
       colors={{ datum: "color" }} // nivo | paired | category10
-      margin={{ top: 8, right: 100, bottom: 48, left: 60 }}
+      margin={{ top: 8, right: 128, bottom: 48, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",

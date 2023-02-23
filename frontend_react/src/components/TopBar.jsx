@@ -56,14 +56,14 @@ const TopBar = () => {
                     <NotificationsOutlinedIcon />
                 </IconButton> */}
 
-                <IconButton onClick={() => navigate('/settings')}>
+                {/* <IconButton onClick={() => navigate('/settings')}>
                     <SettingsOutlinedIcon />
-                </IconButton>
+                </IconButton> */}
 
                 <IconButton onClick={() => instagramRef.current.click()}>
                     <PersonOutlinedIcon />
                 </IconButton>
-                <a hidden href='https://www.instagram.com/pablito_gomez03/' target='_blank' ref={instagramRef}/>
+                <a hidden href='https://github.com/PabloSGomez50' target='_blank' ref={instagramRef}/>
             </Box>
         </Box>
     )

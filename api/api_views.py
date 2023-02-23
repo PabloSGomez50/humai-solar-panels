@@ -1,35 +1,5 @@
 import pandas as pd
-from datetime import datetime, timedelta
-
-
-DAYS_DIFF = 2 + 365 * 10
-
-def get_datetimes(days = 6, months = 0, minutes = 0):
-    """
-    Funcion para obtener los registros de interes, de una semana o varios meses
-    """
-    
-    today = datetime.today() - timedelta(days=DAYS_DIFF)
-
-    if months != 0:
-        mes = today.month + 1
-        # dia = today.day
-        anio = today.year
-        
-        if mes - months < 1:
-            mes += 12
-            anio -= 1 
-
-        min_day = datetime(year=anio, month=mes - months, day=1)
-    else:
-        min_day = today - timedelta(days=days, minutes = minutes)
-
-
-    lim_min = min_day.strftime('%Y-%m-%d')
-    # lim_max = today.strftime('%Y-%m-%d') + ' 23:59'
-    lim_max = today.strftime('%Y-%m-%d %H:%M')
-
-    return (lim_min, lim_max)
+from api_utils import get_datetimes
 
 
 def data_now(df: pd.DataFrame) -> pd.DataFrame:
@@ -57,8 +27,8 @@ def consumo_last_7d(df: pd.DataFrame) -> list:
     """
     
     # df = get_consumo(user_id)
-    t_min, t_max = get_datetimes()
-    df = df[df['Datetime'].between(t_min, t_max)].copy()
+    # t_min, t_max = get_datetimes(days=6)
+    df = df[df['Datetime'].between(* get_datetimes(days=6))].copy()
     df['Dia'] = df['Datetime'].dt.day
 
     df_ = df.groupby('Dia').aggregate({'Datetime': 'first','Total': 'sum'})
@@ -78,7 +48,7 @@ def prod_last_7(df: pd.DataFrame) -> pd.DataFrame:
     Output: df -> 'Datetime' | 'total'
     """
     
-    df = df[df['Datetime'].between(*get_datetimes())].copy()
+    df = df[df['Datetime'].between(*get_datetimes(days=6))].copy()
 
     df1 = df.resample('1D', on='Datetime').sum()
     # total = round(df1['Produccion'].sum(), 3)
@@ -115,13 +85,12 @@ def consumo_month(df: pd.DataFrame) -> pd.DataFrame:
 def horas(df: pd.DataFrame) -> list:
 
     # Preparar el dataframe
-    t_min, t_max = get_datetimes()
-    df = df[df['Datetime'].between(t_min, t_max)].copy()
+    df = df[df['Datetime'].between(*get_datetimes(days=6))].copy()
     df['hora'] = df['Datetime'].dt.hour
 
     # Hacer groupby y armar las columnas
-    df2 = df.groupby('hora').aggregate({'Produccion': 'sum'})
-    df2 = df2[df2['Produccion'] > 0.1]
+    df2 = df.groupby('hora').aggregate({'Produccion': 'mean'})
+    df2 = df2[df2['Produccion'] > 0.01]
     df2.reset_index(inplace=True)
 
     df2.rename(columns={'Produccion': 'total'}, inplace=True)
@@ -152,6 +121,7 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
     Funcion para el grafico de lineas
     Busca clasificar la produccion de los ultimos tres meses por dia
     """
+    hours = 0
     if span == '1Y':
         days = 0
         months = 12
@@ -167,13 +137,15 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
     else: 
         days = 0
         months = 0
+        hours = 24
 
     # t_min, t_max = get_datetimes(days=days, months=months)
     
     # Filtrar un par de meses
-    df = df[df['Datetime'].between(*get_datetimes(days=days, months=months))]
+    df = df[df['Datetime'].between(*get_datetimes(months=months, days=days, hours=hours))]
 
     df = df.resample(sample, on='Datetime').sum()
+    # print(df)
 
     return df
 
@@ -200,3 +172,18 @@ def get_table(df_con: pd.DataFrame, df_prod:pd.DataFrame) -> pd.DataFrame:
     df_final.rename(columns=names,inplace=True)
 
     return df_final
+
+
+def get_prediccion(df):
+    """
+    Funcion para limpiar el dataframe de la prediccion
+    """
+
+    
+    df = df[df['Datetime'].between(*get_datetimes(hours=12))]
+    print(df)
+    df = df.resample('1H', on='Datetime').sum()
+
+    df = df.round(decimals=3)
+
+    return df

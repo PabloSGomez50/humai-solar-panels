@@ -9,10 +9,10 @@ COLORS = ['#80558C', '#E4D192', '#6096B4',
 SEMANA_LONG = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 SEMANA = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
 # MES = ['Enero', 'Febrero', 'Marzo', 'abril',
-#         'mayo', 'junio', 'julio', 'agosto', 
-#         'septiembre', 'octubre', 'noviembre', 'diciembre']
+#        'mayo', 'junio', 'julio', 'agosto', 
+#        'septiembre', 'octubre', 'noviembre', 'diciembre']
 
-def format_linea_hist(df, index, group, tipo):
+def format_linea_hist(df, index, group, tipo, both):
     """
     Alterar df en lista formateada para grafico de linea
     Columnas: Datetime | Produccion (suma del dia)
@@ -21,25 +21,49 @@ def format_linea_hist(df, index, group, tipo):
 
     df['x'] = df.index.strftime(index)
     df['group'] = df.index.strftime(group)
-    if tipo:
-        df.rename(columns={'Produccion': 'y'}, inplace=True)
-    else:
-        df = df[['Total','x','group']].copy()
-        df.rename(columns={'Total': 'y'}, inplace=True)
+    # if tipo:
+    #     df.rename(columns={'Produccion': 'y'}, inplace=True)
+    # else:
+    #     df = df[['Total','x','group']].copy()
+    #     df.rename(columns={'Total': 'y'}, inplace=True)
 
+    # print(df.head())
     response = []
+    i = 0
 
-    for i, key in enumerate(df['group'].unique()):
-        df_ = df[df['group'] == key][['x', 'y']]
-        response.append({
-            'id': key,
+    for key in df['group'].unique():
+        df1_ = df[df['group'] == key][['x', 'Produccion']]
+        df1_.rename(columns={'Produccion': 'y'}, inplace=True)
+        
+        df2_ = df[df['group'] == key][['x', 'Total']]
+        df2_.rename(columns={'Total': 'y'}, inplace=True)
+
+        prod = {
+            'id': f'Dia {key} - Prod',
             'color': COLORS[i],
-            'data': df_.to_dict(orient='records')
-        })
+            'data': df1_.to_dict(orient='records')
+        }
+        consumo = {
+            'id': f'Dia {key} - Con',
+            'color': COLORS[i + 1],
+            'data': df2_.to_dict(orient='records')
+        }
+        
+        if both:
+            response.append(prod)
+            response.append(consumo)
+        elif tipo:
+            response.append(prod)
+        else:
+            response.append(consumo)
+
+
+        i += 2
 
     return response
 
-def format_linea_telegram(df, index, group, tipo):
+
+def format_linea_telegram(df, index, tipo):
     
     df['Datetime'] = df.index.strftime(index)
     key = 'Produccion' if tipo else 'Total'
