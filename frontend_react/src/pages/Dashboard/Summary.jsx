@@ -17,7 +17,7 @@ const Summary = ({ colors, data }) => {
     
     return (
         <Box
-            gridColumn='span 5'
+            gridColumn='span 6'
             gridRow='span 2'
 
             // p='0.25rem'

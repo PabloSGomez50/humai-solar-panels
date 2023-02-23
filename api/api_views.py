@@ -1,5 +1,8 @@
 import pandas as pd
-from api_utils import get_datetimes
+from api_utils import get_datetimes, get_time_predict, get_time_future_predict
+from predicciones import hacer_predicciones
+
+CANT_PREDICCIONES = 24
 
 
 def data_now(df: pd.DataFrame) -> pd.DataFrame:
@@ -122,6 +125,7 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
     Busca clasificar la produccion de los ultimos tres meses por dia
     """
     hours = 0
+    months = 0
     if span == '1Y':
         days = 0
         months = 12
@@ -133,10 +137,10 @@ def prod_history(df: pd.DataFrame, span: str, sample: str) -> pd.DataFrame:
         months = 1
     elif span == '1W':
         days = 6
-        months = 0
+    elif span == '2D':
+        days = 2
     else: 
         days = 0
-        months = 0
         hours = 24
 
     # t_min, t_max = get_datetimes(days=days, months=months)
@@ -183,9 +187,20 @@ def get_prediccion(df):
     """
 
     
-    df = df[df['Datetime'].between(*get_datetimes(hours=12))]
+    df = df[df['Datetime'].between(*get_time_predict())]
     df = df.resample('1H', on='Datetime').sum()
 
     df = df.round(decimals=3)
+    times = get_time_future_predict()
+    # print(get_time_predict())
+    # print(len(times), times)
 
-    return df
+    predicciones = pd.Series(hacer_predicciones(df['Produccion'], CANT_PREDICCIONES))
+    # data = {'Produccion': predicciones}
+
+    df_test = pd.DataFrame({'Produccion': predicciones})
+    df_test['Datetime'] = pd.to_datetime(times)
+    df_test.set_index('Datetime', inplace=True)
+    # print(df_test)
+
+    return df_test

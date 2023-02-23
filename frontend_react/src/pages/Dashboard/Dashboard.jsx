@@ -115,7 +115,7 @@ const Dashboard = ({ userId }) => {
                 m='0.75rem'
             >
                 {/* 1ra fila 2da Columna */}
-                <Box
+                {/* <Box
                     gridColumn='span 2'
                     gridRow='span 2'
                     backgroundColor={colors.grey[500]}
@@ -131,7 +131,7 @@ const Dashboard = ({ userId }) => {
                     <Typography variant='h6' color={colors.secondary[400]}>
                         Capacidad instalada: 3.7 Kw
                     </Typography>
-                </Box>
+                </Box> */}
 
                 <Summary
                     colors={colors}
@@ -142,7 +142,7 @@ const Dashboard = ({ userId }) => {
 
                 {/* 1ra fila 3er columna */}
                 <Box
-                    gridColumn='span 5'
+                    gridColumn='span 6'
                     gridRow='span 1'
                     backgroundColor={colors.grey[500]}
                     display='flex'
@@ -170,7 +170,7 @@ const Dashboard = ({ userId }) => {
 
                 {/* Calendario */}
                 <Box
-                    gridColumn="span 5"
+                    gridColumn="span 6"
                     gridRow="span 1"
                     backgroundColor={colors.grey[500]}
                     // display='flex'

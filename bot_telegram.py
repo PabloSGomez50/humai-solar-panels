@@ -207,9 +207,18 @@ def historial_produccion(message):
 @bot.message_handler(commands = ['5'])
 def produccion_prevista(message):
     '''Ver la producción prevista: Predice la producción de energía basándose en el clima y otros factores.'''
-    mensaje = 'aca iria la predicción de la producción'
+    mensaje = 'Se esta procesando el grafico de la prediccion'
     bot.send_message(message.chat.id, mensaje)
     
+    user_id = check_user_id(message)
+    if not user_id:
+        return None
+
+    data = solicitar('prediccion', user_id)
+
+    crear_grafico(data, 'Prediccion de las proximas 24 Hs')
+
+    bot.send_photo(message.chat.id, InputFile('Foto.png'))
 
 #Comandos no válidos      
 @bot.message_handler(content_types=['text'])

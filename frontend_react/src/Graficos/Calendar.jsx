@@ -43,7 +43,7 @@ const Calendar = ({data}) => {
                 colors.blueAccent[700],
                 colors.blueAccent[800]
             ]}
-            margin={{ top: 0, right: 15, bottom: 40, left: 40 }}
+            margin={{ top: 0, right: 60, bottom: 40, left: 60 }}
             yearSpacing={40}
             monthBorderColor={colors.grey[800]}
             dayBorderColor={colors.grey[600]}

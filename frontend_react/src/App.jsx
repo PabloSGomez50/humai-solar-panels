@@ -8,7 +8,7 @@ import TopBar from './components/TopBar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Table from './pages/Table';
-import Insights from './pages/Insights';
+import Insights from './pages/Insights/Insights';
 import Config from './pages/Config';
 import FAQ from './pages/FAQ';
 
