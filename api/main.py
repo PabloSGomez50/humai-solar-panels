@@ -179,7 +179,7 @@ def historia_telegram(tipo: bool, span: str='1M', sample: str='1D', user_id: int
         df = get_consumo(user_id)
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
-    index, group = get_index_group(span, sample)
+    index, group = get_index_group(sample, True)
 
     return api_formato.format_linea_telegram(df_response, index, tipo=tipo)
 
@@ -195,7 +195,7 @@ def historia(tipo: bool, span: str='1M', sample: str='1D', user_id: int=CUSTOMER
 
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
-    index, group = get_index_group(span, sample)
+    index, group = get_index_group(sample, False)
 
     both = '1' in span
 

@@ -8,7 +8,36 @@ token = '6113092305:AAEQFPxaNDtn5JIocQlP1SmEVLKqsNPG35I'
 bot = telebot.TeleBot(token)
 
 #variable donde guardamos los datos del usuario
-usuarios = {}
+usuarios = {
+
+}
+
+def ask_user_id(message):
+    """
+    Obtener el id del customer
+    """
+    try:
+        user_id = int(message.text)
+        if user_id < 1 or user_id > 300:
+            raise ValueError
+
+        usuarios[message.chat.id] = user_id
+        bot.send_message(message.chat.id, f'Se agrego exitosamente el id {user_id}')
+    except ValueError:
+        bot.send_message(message.chat.id, 'Se debe ingresar un entero entre 1 y 300')
+
+def get_or_peek_id(message):
+    """
+    La funcion permite seleccionar el id de usuario actual
+    """
+    print('Get_or_peek:', usuarios)
+    print('Get_or_peek:', message.chat.id)
+    # if message.chat.id in usuarios:
+    #     return None
+
+    bot.send_message(message.chat.id, 'Introducir un numero de Customer (1-300)')
+    bot.register_next_step_handler(message, ask_user_id)
+
 
 
 #responde al comando /start
@@ -16,7 +45,7 @@ usuarios = {}
 def start(message):
     '''Da la bienvenida al usuario del bot'''
     bot.reply_to(message,'¡Bienvenido! Soy panel_solar_bot , un bot diseñado para ayudarte con el consumo y la producción de tu sistema fotovoltaico. \n \n Puedes controlarme usando los siguientes comandos disponibles: \n \n /datos Para almacenar tus datos \n/1 Consultar el consumo actual: Permite al usuario ver la cantidad de energía que consumió en la última hora. \n /2 Consultar la producción actual: Permite al usuario ver la cantidad de energía que está produciendo el sistema fotovoltaico en tiempo real. \n /3 Ver el historial de consumo: Muestra al usuario un gráfico con el consumo de energía del panel solar a lo largo del tiempo: (dia, semana, mes, año) \n /4 Ver el historial de consumo: Muestra al usuario un gráfico con la producción de energía del panel solar a lo largo del tiempo: (dia, semana, mes, año) \n /5 Ver la producción prevista: Predice la producción de energía basándose en el clima y otros factores. \n \n ¿En qué puedo ayudarte hoy?')
-
+    get_or_peek_id(message)
 
 #Datos del usuario
 @bot.message_handler(commands = ['datos'])
@@ -26,7 +55,7 @@ def cliente_id(message):
     
     markup = ForceReply()
     msg = bot.send_message(message.chat.id, '¿Cuál es tu número de cliente?', reply_markup=markup)
-    id = msg
+    id = message.cat.id
 
 
     
@@ -34,7 +63,8 @@ def cliente_id(message):
 @bot.message_handler(commands = ['1'])
 def consumo_actual(message):
     '''Consultar el consumo actual: Permite al usuario ver la cantidad de energía que consumió en la última media hora.'''
-    data = solicitar('consumo_now')
+    get_or_peek_id(message)
+    data = solicitar('consumo_now', usuarios[message.chat.id])
 
     hora = data['Datetime'].split('T')[1]
 
@@ -46,6 +76,7 @@ def consumo_actual(message):
 @bot.message_handler(commands = ['2'])
 def consumo_actual(message):
     '''Consultar la producción actual: Permite al usuario ver la cantidad de energía que está produciendo el sistema fotovoltaico en tiempo real.'''
+    get_or_peek_id(message)
     data = solicitar('produccion_now')
     
     hora = data['Datetime'].split('T')[1]

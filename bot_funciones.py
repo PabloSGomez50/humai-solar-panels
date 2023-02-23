@@ -26,7 +26,7 @@ def crear_grafico(data: dict = {}, titulo: str = ''):
     ax.set_xticklabels(data[x],rotation=90)
     fig.set_size_inches(8,6)
 
-    fig.savefig('Foto.png')
+    fig.savefig('Foto.png', bbox_inches='tight')
     
 
   
