@@ -23,7 +23,6 @@ def start(message):
 
 def cliente_id(message):
     '''Pregunta al usuario su número de cliente'''
-    
     markup = ForceReply()
     msg = bot.send_message(message.chat.id, '¿Cuál es tu número de cliente?', reply_markup=markup)
     id = msg
