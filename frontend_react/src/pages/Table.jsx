@@ -52,7 +52,7 @@ const columns = [
         renderCell: (d) => {
             const value = d.formattedValue;
             const positive = value >= 0;
-            console.log(d);
+            // console.log(d);
             
             return (
             <Box 
@@ -74,7 +74,7 @@ const columns = [
     },
 ];
 
-const Table = () => {
+const Table = ({ userId }) => {
 
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -83,14 +83,14 @@ const Table = () => {
 
     useEffect(() => {
         const requestData = async () => {
-            const response = await axiosI('table')
+            const response = await axiosI(`table?user_id=${userId}`)
             console.log(response.data)
 
             setTableData(response.data);
         }
 
         requestData();
-    }, [])
+    }, [userId]);
 
     return (
         <Box>

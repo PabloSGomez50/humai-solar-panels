@@ -169,7 +169,10 @@ def get_table(df_con: pd.DataFrame, df_prod:pd.DataFrame) -> pd.DataFrame:
     df_final['Fecha'] = df_final.index.strftime('%Y-%m-%d')
     df_final.reset_index(drop=True, inplace=True)
     df_final['id'] = df_final.index
-    df_final.rename(columns=names,inplace=True)
+    print(df_final.head())
+    # df_final.rename(columns=names,inplace=True)
+    # print(df_final.head())
+
 
     return df_final
 
@@ -181,7 +184,6 @@ def get_prediccion(df):
 
     
     df = df[df['Datetime'].between(*get_datetimes(hours=12))]
-    print(df)
     df = df.resample('1H', on='Datetime').sum()
 
     df = df.round(decimals=3)

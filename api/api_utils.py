@@ -7,7 +7,7 @@ def get_datetimes(months = 0, days = 0, hours = 0, minutes = 0):
     Funcion para obtener los registros de interes, de una semana o varios meses
     """
     
-    today = datetime.utcnow() - timedelta(days=DAYS_DIFF, hours=3)
+    today = datetime.utcnow() - timedelta(days=DAYS_DIFF, hours=3) + timedelta(hours=7)
 
     if months != 0:
         mes = today.month + 1

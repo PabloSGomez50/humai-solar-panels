@@ -16,5 +16,14 @@ Crear una API REST que sirva de conexion entre los datos en S3 (formato .csv) y 
 
 ## Conexion aws
 
+Acceder a la configuracion de nginx
 - sudo vim /etc/nginx/sites-enabled/fastapi_nginx
+
+Reiniciar nginx
 - sudo service nginx restart
+
+Lista de conecciones activas del servidor
+- ss -ltup 
+
+Eliminar un proceso
+- kill < pid >

@@ -27,7 +27,9 @@ app = FastAPI()
 
 origins = [
     'http://127.0.0.1:5173',
-    'https://humai-solar-panels.vercel.app'
+    'https://humai-solar-panels.vercel.app',
+    'https://frontend-humai-solar.vercel.app'
+    
 ]
 
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -238,9 +240,11 @@ def prediccion(user_id: int=CUSTOMER_ID):
     df_response = api_views.get_prediccion(df)
 
     data = list(df_response['Produccion'])
-    print(data[:12])
+    data = data[:12]
+    print(len(data), data)
 
     predicciones = hacer_predicciones(data, CANT_PREDICCIONES)
+
     print(predicciones)
 
-    return data[:12]
+    return [float(x) for x in predicciones]
