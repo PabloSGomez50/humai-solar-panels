@@ -32,11 +32,11 @@ def get_datetimes(months = 0, days = 0, hours = 0, minutes = 0):
 def get_time_predict():
     """ Fucion que devuelve los limites para utilizar las horas correspondientes"""
     today = datetime.utcnow() - timedelta(days=DAYS_DIFF, hours=3)
-    today = datetime(year=today.year, month=today.month, day=today.day)
-    print(today.minute, today.hour)
+    # today = datetime(year=today.year, month=today.month, day=today.day)
+    # print(today.minute, today.hour)
 
-    # if today.minute <= 30:
-    #     today = today - timedelta(hours=1)
+    if today.minute <= 30:
+        today = today - timedelta(hours=1)
 
     l_max = today.strftime('%Y-%m-%d %H:00')
     t_min = today - timedelta(hours=11)
@@ -51,11 +51,11 @@ def get_time_future_predict():
     """ Fucion que devuelve los limites para utilizar las horas correspondientes"""
     values = []
     today = datetime.utcnow() - timedelta(days=DAYS_DIFF, hours=3) 
-    today = datetime(year=today.year, month=today.month, day=today.day)
-    print(today.minute, today.hour)
+    # today = datetime(year=today.year, month=today.month, day=today.day)
+    # print(today.minute, today.hour)
 
-    # if today.minute <= 30:
-    #     today = today - timedelta(hours=1)
+    if today.minute <= 30:
+        today = today - timedelta(hours=1)
 
     today = today + timedelta(hours=1)
     # l_min = today.strftime('%Y-%m-%d %H:00')

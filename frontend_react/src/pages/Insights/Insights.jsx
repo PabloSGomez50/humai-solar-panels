@@ -12,66 +12,19 @@ import { DataGrid } from "@mui/x-data-grid";
 const columns = [
     { field: "id", headerName: "ID" },
     {
-        field: "Fecha",
+        field: "x",
+        headerName: "Fecha",
         //   headerName: "Name",
         type: 'date',
         //   width: '5rem',
         cellClassName: "name-column--cell",
     },
     {
-        field: "Produccion",
+        field: "y",
         headerName: "Produccion (Kw)",
         type: "number",
-        headerAlign: "left",
+        headerAlign: "center",
         align: "center",
-        flex: 1,
-    },
-    {
-        field: "GC",
-        headerName: "Consumo general (Kw)",
-        type: "number",
-        headerAlign: "left",
-        align: "center",
-        
-        flex: 1,
-    },
-    {
-        field: "CL",
-        headerName: "Consumo controlado (Kw)",
-        type: "number",
-        headerAlign: "left",
-        align: "center",
-        
-        flex: 1,
-    },
-    {
-        field: "Diferencia",
-        headerName: "Diferencia (Kw)",
-        type: "number",
-        headerAlign: "left",
-        align: "center",
-        flex: 1,
-        renderCell: (d) => {
-            const value = d.formattedValue;
-            const positive = value >= 0;
-            // console.log(d);
-            
-            return (
-            <Box 
-                color={positive ? '#9CFF2E': '#F00'}
-                fontWeight='bold'
-            >
-                {positive && '+'} {value} Kw
-            </Box>
-        )}
-    },
-    {
-        field: "Total",
-        headerName: "Consumo Total (Kw)",
-        type: "number",
-        headerAlign: "left",
-        align: "center",
-        
         flex: 1,
     },
 ];
@@ -194,7 +147,7 @@ const Insights = ({ userId }) => {
             
             </Box>
 
-            {/* {predict && predict[0] && 
+            {predict && predict[0] && 
             <Box
                 m="16px 0 0 0"
                 height="30vh"
@@ -227,11 +180,11 @@ const Insights = ({ userId }) => {
             >
                 <DataGrid
                     checkboxSelection 
-                    rows={predict[0].data} 
+                    rows={predict[0].data.map((item, i) =>( {...item, id: i}))} 
                     columns={columns} 
                 />
             </Box>
-        } */}
+        }
         </Box>
     )
 }
