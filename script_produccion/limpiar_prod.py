@@ -2,7 +2,8 @@ import pandas as pd
 
 FILE_NAME_ZIP_SOLAR_HOME = './2012-2013 Solar home electricity data v2.csv.zip'
 FILE_NAME_ZIP_SOLAR_GLOBAL = './script_produccion/2012-2013 Solar home electricity data v2.csv.zip'
-URL = 'https://humai-solar-project.s3.amazonaws.com/2012-2013_Solar_data.csv'
+# URL = 'https://humai-solar-project.s3.amazonaws.com/2012-2013_Solar_data.csv'
+URL = ''
 CUSTOMER_ID = 1
 DEBUG = True
 

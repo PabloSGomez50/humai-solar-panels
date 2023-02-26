@@ -6,8 +6,8 @@ import os
 from datetime import datetime, timedelta
 
 from api_utils import get_index_group
-from scritps.limpiar_consumo import get_df_consumo
-from scritps.limpiar_prod import get_prod_customer
+from scritps.consumo_limpiar import get_df_consumo
+from scritps.prod_limpiar import get_prod_customer
 
 import api_views
 import api_formato
@@ -16,7 +16,7 @@ import clima_limpiar
 
 CSV_CONSUMO = './data/consumo/consumo_user_{0}.csv'
 CSV_PROD = './data/produccion/user_{0}.csv'
-CSV_CLIMA = './data/clima_{0}_{1}.csv'
+CSV_CLIMA = './data/clima/clima_{0}_{1}.csv'
 DAYS_DIFF = 2 + 365 * 10
 CUSTOMER_ID = 1
 

@@ -1,7 +1,6 @@
 import telebot
 from telebot.types import ForceReply, InputFile #para citar un mensaje
-from telebot import types
-import requests
+
 from bot_funciones import solicitar, crear_grafico
 
 token = '6113092305:AAEQFPxaNDtn5JIocQlP1SmEVLKqsNPG35I'

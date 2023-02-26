@@ -6,13 +6,10 @@ CANT_PREDICCIONES = 24
 
 
 def data_now(df: pd.DataFrame) -> pd.DataFrame:
+    """Datos de la ultima media hora
+        Input: user_id -> int
+        Output: response -> DataFrame
     """
-    Accede al dataset y devuelve una lista con los datos de la ultima media hora
-
-    Input: user_id -> int
-    Output: response -> DataFrame
-    """
-
     df = df[df['Datetime'].between(*get_datetimes(minutes=55))]
     # df_ = df.tail(1)
 
@@ -21,14 +18,10 @@ def data_now(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def consumo_last_7d(df: pd.DataFrame) -> list:
+    """Datos de los ultimos 7 dias y el total de consumo
+        Input: user_id -> int
+        Output: response -> list[{'day', 'value'}]
     """
-    Accede al dataset y devuelve una lista con los datos de los ultimos 7 dias
-    y el total de consumo
-
-    Input: user_id -> int
-    Output: response -> list[{'day', 'value'}]
-    """
-    
     # df = get_consumo(user_id)
     # t_min, t_max = get_datetimes(days=6)
     df = df[df['Datetime'].between(* get_datetimes(days=6))].copy()
@@ -42,13 +35,10 @@ def consumo_last_7d(df: pd.DataFrame) -> list:
 
 def prod_last_7(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Accede al dataset de producciony devuelve una lista 
-    con los datos relevantes de los ultimos 7 dias
-    
-    Datos: Total diario | Promedio diario | Horas de mayor produccion
-
-    Input: user_id -> int
-    Output: df -> 'Datetime' | 'total'
+    Datos relevantes de los ultimos 7 dias
+    Columnas: Total diario | Promedio diario | Horas de mayor produccion
+        Input: user_id -> int
+        Output: df -> 'Datetime' | 'total'
     """
     
     df = df[df['Datetime'].between(*get_datetimes(days=6))].copy()

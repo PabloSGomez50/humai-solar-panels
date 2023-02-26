@@ -1,8 +1,6 @@
 import pandas as pd
 
-# URL = 'https://humai-solar-project.s3.amazonaws.com/2012-2013_Solar_data.csv'
-# PATH_LOCAL = '../script_produccion/2012-2013 Solar home electricity data v2.csv.zip'
-PATH_LOCAL = './data/solar.parquet'
+PATH_LOCAL = '../data/solar.parquet'
 CUSTOMER_ID = 1
 DEBUG = True
 
