@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Box, IconButton, Input, Typography, useTheme } from '@mui/material';
 import { Sidebar, Menu, MenuItem, useProSidebar } from 'react-pro-sidebar';
 import { tokens } from '../theme';
@@ -38,6 +38,7 @@ const SideBar = ({ userId, setUserId }) => {
     const colors = tokens(theme.palette.mode);
 
     const location = useLocation();
+    const navigate = useNavigate();
     const gitHubRef = useRef();
     const { collapseSidebar, collapsed } = useProSidebar();
     const [ modId, setModId ] = useState(userId);
@@ -132,6 +133,7 @@ const SideBar = ({ userId, setUserId }) => {
                                 justifyContent="space-between"
                                 alignItems="center"
                                 ml="0.5rem"
+                                onClick={() => navigate('/')}
                             >
                                 <Typography 
                                     color={colors.grey[100]}
@@ -174,7 +176,7 @@ const SideBar = ({ userId, setUserId }) => {
                         </Box>
                     )}
 
-                    <Box display='flex' justifyContent='center' alignItems='flex-end' gap='0.75rem'>
+                    <Box display='flex' justifyContent='center' alignItems='flex-end' gap='0.5rem'>
                         <Typography>
                             Id usuario:
                         </Typography>
@@ -190,13 +192,15 @@ const SideBar = ({ userId, setUserId }) => {
                                 }
                             }}
                         />
-                        <CheckIcon
+                        <IconButton
                             onClick={handleSend}
-                            color='secondary'
                             sx={{
                                 'opacity': mod ? 1 : 0
+                                
                             }}
-                        />
+                        >
+                            <CheckIcon color='secondary' />
+                        </IconButton>
                     </Box>
 
                     {!collapsed && (

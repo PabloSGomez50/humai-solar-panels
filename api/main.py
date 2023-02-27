@@ -27,7 +27,9 @@ app = FastAPI()
 
 origins = [
     'http://127.0.0.1:5173',
-    'https://humai-solar-panels.vercel.app'
+    'https://humai-solar-panels.vercel.app',
+    'https://frontend-humai-solar.vercel.app'
+    
 ]
 
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -177,7 +179,7 @@ def historia_telegram(tipo: bool, span: str='1M', sample: str='1D', user_id: int
         df = get_consumo(user_id)
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
-    index, group = get_index_group(span, sample)
+    index, group = get_index_group(sample, True)
 
     return api_formato.format_linea_telegram(df_response, index, tipo=tipo)
 
@@ -193,7 +195,7 @@ def historia(tipo: bool, span: str='1M', sample: str='1D', user_id: int=CUSTOMER
 
     df_response = api_views.prod_history(df, span=span, sample=sample)
 
-    index, group = get_index_group(span, sample)
+    index, group = get_index_group(sample, False)
 
     both = '1' in span
 
@@ -238,9 +240,11 @@ def prediccion(user_id: int=CUSTOMER_ID):
     df_response = api_views.get_prediccion(df)
 
     data = list(df_response['Produccion'])
-    print(data[:12])
+    data = data[:12]
+    print(len(data), data)
 
     predicciones = hacer_predicciones(data, CANT_PREDICCIONES)
+
     print(predicciones)
 
-    return data[:12]
+    return [float(x) for x in predicciones]

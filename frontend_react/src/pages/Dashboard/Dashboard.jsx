@@ -70,14 +70,12 @@ const Dashboard = ({ userId }) => {
             const response = await axiosI(`hours?user_id=${userId}`);
 
             console.log('EXECUTE: Cartas');
-            // console.log(response.data);
             setbarData(response.data);
         }
         const requestClima = async () => {
             const response = await axiosI(`clima`);
 
             console.log('EXECUTE: Clima');
-            // console.log(response.data);
             setClima(response.data);
         }
 

@@ -30,9 +30,9 @@ def get_datetimes(months = 0, days = 0, hours = 0, minutes = 0):
     return (lim_min, lim_max)
 
 
-def get_index_group(span, sample):
+def get_index_group(sample, telegram):
 
-    print('El valor de span:', span, 'no esta en uso')
+    # print('El valor de span:', span, 'no esta en uso')
     if sample.endswith('W'):
         index = '%m-%d'
         group = '%Y'
@@ -42,7 +42,10 @@ def get_index_group(span, sample):
         group = '%m'
 
     elif sample.endswith('H'):
-        index = 'Dia %d %H:%M'
+        if telegram:
+            index = 'Dia %d %HHs'
+        else:
+            index = 'Dia %d %H:%M'
         group = '%m'
 
     else:
