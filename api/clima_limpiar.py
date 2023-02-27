@@ -4,7 +4,7 @@ import re
 from clima_scraper import get_clima
 
 DEBUG = True
-FILE_NAME = './scraper_clima/clima_sydney_limpio3.csv'
+# FILE_NAME = './scraper_clima/clima_sydney_limpio3.csv'
 VAR_CAT_N = 5
 
 def clean_df(df: pd.DataFrame = None):
@@ -21,7 +21,7 @@ def clean_df(df: pd.DataFrame = None):
     #df = normalizacion(df)
     df = fix_datetime(df)
 
-    # df.to_csv(FILE_NAME)
+    # df.to_csv('clima_sydney_limpio3.csv')
     return df
 
 
@@ -33,7 +33,7 @@ def weather_one_hot(df_temp):
     df_temp['Weather'] = var_categorica(VAR_CAT_N, df_temp)
     df_temp['Weather'] = df_temp['Weather'].interpolate(method='pad')
     # df_temp = df_temp.join(pd.get_dummies(df_temp['Weather']))
-    #df_temp = df_temp.drop(columns='Weather')
+    # df_temp = df_temp.drop(columns='Weather')
 
     return df_temp.copy()
 
@@ -126,7 +126,5 @@ def fix_datetime(df_temp):
 if __name__ == '__main__':
     df_init = get_clima()
     df_final = clean_df(df_init)
-    # # Cuantas valores quedaron en la columna Weather
-    # print(len(df_final['Weather'].unique()), df_final['Weather'].unique())
-    # # df_final.to_csv('clima.csv')
+    
     print(df_final.head())

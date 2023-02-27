@@ -12,6 +12,42 @@ SEMANA = ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom']
 #        'mayo', 'junio', 'julio', 'agosto', 
 #        'septiembre', 'octubre', 'noviembre', 'diciembre']
 
+def format_linea_predict(df, index, group):
+    """
+    Alterar df en lista formateada para grafico de linea
+    Columnas: Datetime | Produccion (suma del dia)
+    Retorna: datos clasificados segun index y group (DateTime Formaters)
+    """
+
+    df['x'] = df.index.strftime(index)
+    df['group'] = df.index.strftime(group)
+    # if tipo:
+    #     df.rename(columns={'Produccion': 'y'}, inplace=True)
+    # else:
+    #     df = df[['Total','x','group']].copy()
+    #     df.rename(columns={'Total': 'y'}, inplace=True)
+
+    response = []
+    i = 0
+
+    for key in df['group'].unique():
+        df1_ = df[df['group'] == key][['x', 'Produccion']]
+        df1_.rename(columns={'Produccion': 'y'}, inplace=True)
+        
+        # df2_ = df[df['group'] == key][['x', 'Total']]
+        # df2_.rename(columns={'Total': 'y'}, inplace=True)
+
+        data = {
+            'id': f'Dia {key} - Predict',
+            'color': COLORS[len(COLORS) - 1 - i],
+            'data': df1_.to_dict(orient='records')
+        }
+
+        response.append(data)
+
+    return response
+
+
 def format_linea_hist(df, index, group, tipo, both):
     """
     Alterar df en lista formateada para grafico de linea
@@ -74,6 +110,15 @@ def format_linea_telegram(df, index, tipo):
         'Horas': list(df['Datetime'])
     }
 
+def format_linea_predict_telegram(df, format):
+
+    df['Datetime'] = df.index.strftime(format)
+
+    return {
+        'columnas': ('Horas', 'Prediccion'),
+        'Prediccion': list(df['Produccion']),
+        'Horas': list(df['Datetime'])
+    }
 
 def format_calendario(df_):
     """

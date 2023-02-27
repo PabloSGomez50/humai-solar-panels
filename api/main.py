@@ -6,9 +6,8 @@ import os
 from datetime import datetime, timedelta
 
 from api_utils import get_index_group
-from predicciones import hacer_predicciones
-from scritps.limpiar_consumo import get_df_consumo
-from scritps.limpiar_prod import get_prod_customer
+from scritps.consumo_limpiar import get_df_consumo
+from scritps.prod_limpiar import get_prod_customer
 
 import api_views
 import api_formato
@@ -17,11 +16,10 @@ import clima_limpiar
 
 CSV_CONSUMO = './data/consumo/consumo_user_{0}.csv'
 CSV_PROD = './data/produccion/user_{0}.csv'
-CSV_CLIMA = './data/clima_{0}_{1}.csv'
+CSV_CLIMA = './data/clima/clima_{0}_{1}.csv'
 DAYS_DIFF = 2 + 365 * 10
 CUSTOMER_ID = 1
 
-CANT_PREDICCIONES = 24
 
 app = FastAPI()
 
@@ -233,18 +231,15 @@ def test_bot_prod(user_id: int=CUSTOMER_ID):
 
 
 @app.get('/prediccion')
-def prediccion(user_id: int=CUSTOMER_ID):
+def prediccion(user_id: int=CUSTOMER_ID, telegram: bool = False):
 
     df = get_prod(user_id)
 
     df_response = api_views.get_prediccion(df)
 
-    data = list(df_response['Produccion'])
-    data = data[:12]
-    print(len(data), data)
+    if telegram:
+        response = api_formato.format_linea_predict_telegram(df_response, 'Dia %d %H:%M')
+    else:
+        response = api_formato.format_linea_predict(df_response, 'Dia %d %H:%M', '%m')
 
-    predicciones = hacer_predicciones(data, CANT_PREDICCIONES)
-
-    print(predicciones)
-
-    return [float(x) for x in predicciones]
+    return response
