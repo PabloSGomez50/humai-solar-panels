@@ -14,6 +14,7 @@ import FAQ from './pages/FAQ';
 
 import { tokens } from './theme';
 import { useEffect, useState } from 'react';
+import SidebarNew from './components/SidebarNew';
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -32,6 +33,7 @@ function App() {
           <CssBaseline />
           <div className="app">
             <Sidebar userId={userId} setUserId={setUserId} />
+            {/* <SidebarNew userId={userId} setUserId={setUserId} /> */}
             <main className='content'>
               <TopBar />
                 <Box 

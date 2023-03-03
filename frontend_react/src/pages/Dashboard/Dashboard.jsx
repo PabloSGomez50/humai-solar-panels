@@ -257,6 +257,10 @@ const Dashboard = ({ userId }) => {
                     clima={clima}
                     colors={colors}
                 />
+                <DashClima 
+                    clima={clima}
+                    colors={colors}
+                />
             </Box>
         </Box>
     )
